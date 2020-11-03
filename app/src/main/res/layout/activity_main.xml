@@ -1,29 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/menu_background"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/buttonsContainer"
-        android:layout_height="0dp"
+    <!-- main menu -->
+    <androidx.cardview.widget.CardView
         android:layout_width="0dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
+        android:layout_height="0dp"
         app:layout_constraintWidth_default="spread"
         app:layout_constraintHeight_default="spread"
-        android:background="@color/cardview_shadow_start_color"
+        app:cardBackgroundColor="@color/menu_background"
+        app:cardCornerRadius="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/topMenuGuid"
-        app:layout_constraintBottom_toBottomOf="@id/bottomMenuGuid"
-        android:orientation="horizontal">
-    </LinearLayout>
+        app:layout_constraintBottom_toBottomOf="@id/bottomMenuGuid">
 
+        <!-- line container -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!-- first line -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="155dp"
+                android:layout_weight="0.25"
+                android:layout_marginBottom="1dp">
+
+                <ImageButton
+                    android:id="@+id/movie_1_1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/texet"/>
+                <ImageButton
+                    android:contentDescription=""
+                    android:id="@+id/movie_1_2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/texet"/>
+                <ImageButton
+                    android:id="@+id/movie_1_3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/texet"/>
+                <ImageButton
+                    android:id="@+id/movie_1_4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/texet"/>
+            </LinearLayout>
+
+            <!-- second line -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="155dp"
+                android:layout_weight="0.25"
+                android:layout_marginBottom="1dp">
+
+                <ImageButton
+                    android:id="@+id/movie_2_1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/texet"/>
+                <ImageButton
+                    android:id="@+id/movie_2_2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/texet"/>
+                <ImageButton
+                    android:id="@+id/movie_2_3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/texet"/>
+                <ImageButton
+                    android:id="@+id/movie_2_4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/texet"/>
+            </LinearLayout>
+
+            <!-- third line -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="155dp"
+                android:layout_weight="0.25"
+                android:layout_marginBottom="1dp">
+
+                <ImageButton
+                    android:id="@+id/movie_3_1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/texet"/>
+                <ImageButton
+                    android:id="@+id/movie_3_2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/texet"/>
+                <ImageButton
+                    android:id="@+id/movie_3_3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/texet"/>
+                <ImageButton
+                    android:id="@+id/movie_3_4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/texet"/>
+            </LinearLayout>
+
+            <!-- fourth line -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="155dp"
+                android:layout_weight="0.25"
+                android:layout_marginBottom="1dp">
+
+                <ImageButton
+                    android:id="@+id/movie_4_1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/texet"/>
+                <ImageButton
+                    android:id="@+id/movie_4_2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/texet"/>
+                <ImageButton
+                    android:id="@+id/movie_4_3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/texet"/>
+                <ImageButton
+                    android:id="@+id/movie_4_4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/texet"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- top bar menu -->
     <LinearLayout
         android:id="@+id/topMenuContainer"
         android:layout_width="0dp"
@@ -36,8 +208,33 @@
         app:layout_constraintTop_toTopOf="parent"
         android:background="@color/purple_200"
         android:orientation="horizontal">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/movies_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.33"
+            android:background="@drawable/bottom_button_ripple"
+            android:text="Movies"
+            android:textColor="@color/button_text_color_active"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/series_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.33"
+            android:background="@drawable/bottom_button_ripple"
+            android:text="Series"
+            android:textColor="@color/button_text_color_active"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/shows_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.33"
+            android:background="@drawable/bottom_button_ripple"
+            android:text="Shows"
+            android:textColor="@color/button_text_color_active"/>
     </LinearLayout>
 
+    <!-- bottom bar menu -->
     <LinearLayout
         android:id="@+id/bottomMenuContainer"
         android:layout_width="0dp"
@@ -48,10 +245,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/bottomMenuGuid"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/teal_200"
         android:orientation="horizontal">
+        <include layout="@layout/bottom_tabs"/>
     </LinearLayout>
 
+    <!-- guide line for the top menu -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/topMenuGuid"
         android:layout_width="wrap_content"
@@ -59,6 +257,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="48dp"/>
 
+    <!-- guide line for the bottom menu -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/bottomMenuGuid"
         android:layout_width="wrap_content"
