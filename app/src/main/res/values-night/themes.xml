@@ -13,4 +13,18 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="DarkYellowTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/button_background</item>
+        <item name="colorPrimaryVariant">@color/button_background</item>
+        <item name="colorOnPrimary">@color/button_color_active</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/button_text_color_active</item>
+        <item name="colorSecondaryVariant">@color/button_outline_2</item>
+        <item name="colorOnSecondary">@color/button_text_color_passive</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:colorBackground">@color/button_background</item>
+        <!-- Customize your theme here. -->
+    </style>
 </resources>

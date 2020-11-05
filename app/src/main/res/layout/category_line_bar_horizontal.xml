@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:parentTag="android.widget.LinearLayout"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/tom_movie_button"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:textAlignment="textStart"
+        android:text="Top Movie"
+        style="@style/ActiveButton"/>
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/movie_buttons_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/movie_1_1"
+                android:layout_width="135dp"
+                android:layout_height="200dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                android:src="@drawable/texet"/>
+            <ImageButton
+                android:id="@+id/movie_1_2"
+                android:layout_width="135dp"
+                android:layout_height="200dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                android:src="@drawable/texet"/>
+            <ImageButton
+                android:id="@+id/movie_1_3"
+                android:layout_width="135dp"
+                android:layout_height="200dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                android:src="@drawable/texet"/>
+            <ImageButton
+                android:id="@+id/movie_1_4"
+                android:layout_width="135dp"
+                android:layout_height="200dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                android:src="@drawable/texet"/>
+        </LinearLayout>
+    </HorizontalScrollView>
+</merge>

@@ -4,7 +4,6 @@
     android:layout_width="103dp"
     android:layout_height="48dp"
     android:text="@string/default_text_button"
-    android:textColor="@color/button_text_color_passive"
-    android:background="@color/button_color_active">
+    style="@style/ActiveButton">
 
 </androidx.appcompat.widget.AppCompatButton>

@@ -1,67 +1,149 @@
 package com.lefarmico.moviesfinder
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.ActionMode
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.Toast
-import kotlinx.android.synthetic.*
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.bottom_tabs.*
+import kotlinx.android.synthetic.main.category_line_bar_horizontal.view.*
+import kotlinx.android.synthetic.main.top_bar.*
 
 class MainActivity : AppCompatActivity() {
+    private var actionMode: ActionMode? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val movieList = mutableListOf<ImageButton>()
-
-
-        movieList.add(movie_1_1)
-        movieList.add(movie_1_2)
-        movieList.add(movie_1_3)
-        movieList.add(movie_1_4)
-        movieList.add(movie_2_1)
-        movieList.add(movie_2_2)
-        movieList.add(movie_2_3)
-        movieList.add(movie_2_4)
-        movieList.add(movie_3_1)
-        movieList.add(movie_3_2)
-        movieList.add(movie_3_3)
-        movieList.add(movie_3_4)
-        movieList.add(movie_4_1)
-        movieList.add(movie_4_2)
-        movieList.add(movie_4_3)
-        movieList.add(movie_4_4)
-        movie_1_1.setImageResource(R.drawable.jocker)
-        movie_1_2.setImageResource(R.drawable.avengers_endgame)
-        movie_1_3.setImageResource(R.drawable.blade_runner)
-        movie_1_4.setImageResource(R.drawable.doctor_sleep)
-        movie_2_1.setImageResource(R.drawable.good_fellas)
-        movie_2_2.setImageResource(R.drawable.james_bond)
-        movie_2_3.setImageResource(R.drawable.lord_of_the_rings)
-        movie_2_4.setImageResource(R.drawable.matrix)
-        movie_3_1.setImageResource(R.drawable.pulp_fiction)
-        movie_3_2.setImageResource(R.drawable.rocky)
-        movie_3_3.setImageResource(R.drawable.shawshank_redemption)
-        movie_3_4.setImageResource(R.drawable.spider_man_3)
-        movie_4_1.setImageResource(R.drawable.texet)
-        movie_4_2.setImageResource(R.drawable.jaws)
-        movie_4_3.setImageResource(R.drawable.big_lebovski)
-        movie_4_4.setImageResource(R.drawable.parasite)
-
-        for (i in 0 until movieList.size){
-        movieList[i].setOnClickListener { Toast.makeText(this, "You push on the movie", Toast.LENGTH_SHORT).show() }
+        top_bar.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.fav -> {
+                    Toast.makeText(this, "Add to favorite", Toast.LENGTH_SHORT).show()
+                    true
+                }
+            else -> false
+            }
         }
 
-        movies_button.setOnClickListener { Toast.makeText(this, "choose your movie", Toast.LENGTH_SHORT).show() }
-        series_button.setOnClickListener { Toast.makeText(this, "choose your series", Toast.LENGTH_SHORT).show() }
-        shows_button.setOnClickListener { Toast.makeText(this, "choose your shows", Toast.LENGTH_SHORT).show() }
-        genre.setOnClickListener { Toast.makeText(this, "search movie by genre", Toast.LENGTH_SHORT).show() }
-        trends.setOnClickListener { Toast.makeText(this, "search movie by trends", Toast.LENGTH_SHORT).show() }
-        recommendations.setOnClickListener { Toast.makeText(this, "look at you recommendations", Toast.LENGTH_SHORT).show() }
-        top_seen.setOnClickListener { Toast.makeText(this, "top seen", Toast.LENGTH_SHORT).show() }
-        collections.setOnClickListener { Toast.makeText(this, "user collections", Toast.LENGTH_SHORT).show() }
+
+        val movieList = mutableListOf<ImageButton>()
+        movieList.add(top_movie.movie_1_1)
+        movieList.add(top_movie.movie_1_2)
+        movieList.add(top_movie.movie_1_3)
+        movieList.add(top_movie.movie_1_4)
+
+        top_movie.movie_1_1.setImageResource(R.drawable.jocker)
+        top_movie.movie_1_2.setImageResource(R.drawable.avengers_endgame)
+        top_movie.movie_1_3.setImageResource(R.drawable.blade_runner)
+        top_movie.movie_1_4.setImageResource(R.drawable.doctor_sleep)
+
+        movieList.add(hottest_movie.movie_1_1)
+        movieList.add(hottest_movie.movie_1_2)
+        movieList.add(hottest_movie.movie_1_3)
+        movieList.add(hottest_movie.movie_1_4)
+
+        hottest_movie.movie_1_1.setImageResource(R.drawable.jocker)
+        hottest_movie.movie_1_2.setImageResource(R.drawable.avengers_endgame)
+        hottest_movie.movie_1_3.setImageResource(R.drawable.blade_runner)
+        hottest_movie.movie_1_4.setImageResource(R.drawable.doctor_sleep)
+
+        movieList.add(recommendations.movie_1_1)
+        movieList.add(recommendations.movie_1_2)
+        movieList.add(recommendations.movie_1_3)
+        movieList.add(recommendations.movie_1_4)
+
+        recommendations.movie_1_1.setImageResource(R.drawable.jocker)
+        recommendations.movie_1_2.setImageResource(R.drawable.avengers_endgame)
+        recommendations.movie_1_3.setImageResource(R.drawable.blade_runner)
+        recommendations.movie_1_4.setImageResource(R.drawable.doctor_sleep)
+
+        movieList.add(last_seen.movie_1_1)
+        movieList.add(last_seen.movie_1_2)
+        movieList.add(last_seen.movie_1_3)
+        movieList.add(last_seen.movie_1_4)
+
+        last_seen.movie_1_1.setImageResource(R.drawable.jocker)
+        last_seen.movie_1_2.setImageResource(R.drawable.avengers_endgame)
+        last_seen.movie_1_3.setImageResource(R.drawable.blade_runner)
+        last_seen.movie_1_4.setImageResource(R.drawable.doctor_sleep)
+
+
+        for (i in 0 until movieList.size) {
+            movieList[i].setOnClickListener {
+                Toast.makeText(this, "You push on the movie", Toast.LENGTH_SHORT).show()
+
+                actionMode = startActionMode(object : ActionMode.Callback {
+                    override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+                        val inflater = mode?.menuInflater
+                        inflater?.inflate(R.menu.top_app_bar, menu)
+                        mode?.title = "Select option"
+                        return true
+                    }
+
+                    override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+                        return false
+                    }
+
+                    override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+                        return when (item?.itemId) {
+                            R.id.fav -> {
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "Add to favorite",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                true
+                            }
+                            R.id.search -> {
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "Search movie",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                true
+                            }
+                            R.id.more -> {
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "Open menu",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+
+                    override fun onDestroyActionMode(mode: ActionMode?) {
+                    }
+
+                })
+
+            }
+        }
+
+        movies_button.setOnClickListener {
+            Toast.makeText(
+                this,
+                "choose your movie",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        series_button.setOnClickListener {
+            Toast.makeText(
+                this,
+                "choose your series",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        shows_button.setOnClickListener {
+            Toast.makeText(
+                this,
+                "choose your shows",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 }
