@@ -9,11 +9,10 @@
     <color name="white">#FFFFFF</color>
 
     <!-- button bars colors -->
-    <color name="button_text_color_active">#F0E82D</color>
-    <color name="button_color_active">#F0E82D</color>
-    <color name="button_text_color_passive">#3B4C5E</color>
+    <color name="color_of_active_element">#F0E82D</color>
+    <color name="color_of_passive_element">#3B4C5E</color>
     <color name="button_outline">#0F232C</color>
-    <color name="button_background">#0B1C24</color>
+    <color name="background_color_dark">#0B1C24</color>
     <color name="button_outline_2">#52A4BF</color>
 
     <!-- menu colors -->

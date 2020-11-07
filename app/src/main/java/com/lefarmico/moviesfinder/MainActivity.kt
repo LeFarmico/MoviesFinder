@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.category_line_bar_horizontal.view.*
-import kotlinx.android.synthetic.main.top_bar.*
 
 class MainActivity : AppCompatActivity() {
     private var actionMode: ActionMode? = null
@@ -29,6 +28,12 @@ class MainActivity : AppCompatActivity() {
 
 
         val movieList = mutableListOf<ImageButton>()
+
+        top_movie.category_name.text = "TOP MOVIE"
+        hottest_movie.category_name.text = "HOTTEST MOVIE"
+        recommendations.category_name.text = "RECCOMENDATIONS"
+        last_seen.category_name.text = "LAST_SEEN"
+        
         movieList.add(top_movie.movie_1_1)
         movieList.add(top_movie.movie_1_2)
         movieList.add(top_movie.movie_1_3)
@@ -115,35 +120,9 @@ class MainActivity : AppCompatActivity() {
                             else -> false
                         }
                     }
-
-                    override fun onDestroyActionMode(mode: ActionMode?) {
-                    }
-
+                    override fun onDestroyActionMode(mode: ActionMode?) {}
                 })
-
             }
-        }
-
-        movies_button.setOnClickListener {
-            Toast.makeText(
-                this,
-                "choose your movie",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-        series_button.setOnClickListener {
-            Toast.makeText(
-                this,
-                "choose your series",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-        shows_button.setOnClickListener {
-            Toast.makeText(
-                this,
-                "choose your shows",
-                Toast.LENGTH_SHORT
-            ).show()
         }
     }
 }

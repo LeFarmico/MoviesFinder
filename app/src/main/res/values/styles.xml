@@ -3,15 +3,24 @@
 
     <style name="PassiveButton">
         <item name="android:background">@drawable/bottom_button_ripple</item>
-        <item name="android:textColor">@color/button_text_color_active</item>
+        <item name="android:textColor">@color/color_of_active_element</item>
     </style>
 
     <style name="ActiveButton">
-        <item name="android:textColor">@color/button_text_color_passive</item>
-        <item name="android:background">@color/button_color_active</item>
+        <item name="android:textColor">@color/color_of_passive_element</item>
+        <item name="android:background">@color/color_of_active_element</item>
     </style>
 
     <style name="BackgroundColor" parent="DarkYellowTheme">
         <item name="android:background">#E0FFFF</item>
+    </style>
+
+    <style name="MoviePosterButtonStyle">
+        <item name="android:layout_width">135dp</item>
+        <item name="android:layout_height">200dp</item>
+        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:stateListAnimator">@animator/poster_elevation</item>
+
     </style>
 </resources>

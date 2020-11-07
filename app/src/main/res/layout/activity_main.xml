@@ -19,10 +19,10 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="Movie Finder"
-            app:titleTextColor="@color/button_text_color_passive"
+            app:titleTextColor="@color/color_of_passive_element"
             app:navigationIcon="@drawable/ic_baseline_menu_24"
             app:menu="@menu/default_top_bar"
-            style="@style/DarkYellowTheme"/>
+            style="@style/BackgroundColor"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -31,13 +31,12 @@
         android:layout_height="?attr/actionBarSize"
         app:itemIconTint="@drawable/bottom_navigation_selector"
         app:itemTextColor="@drawable/bottom_navigation_selector"
-        app:labelVisibilityMode="auto"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_navigation_bar"
         style="@style/BackgroundColor"/>
 
 
-    <!-- main menu -->
+    <!-- Active menu -->
     <ScrollView
         android:id="@+id/movies_container_layout"
         android:layout_width="0dp"
@@ -47,12 +46,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
-        app:layout_constraintBottom_toBottomOf="@id/topMenuContainer">
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_bar">
 
         <!-- line container -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <!-- first line -->
             <com.lefarmico.moviesfinder.MovieGroupView
@@ -79,65 +78,7 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
-
     </ScrollView>
-
-    <!-- top bar menu -->
-    <LinearLayout
-        android:id="@+id/topMenuContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintWidth_default="spread"
-        app:layout_constraintHeight_default="spread"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/movies_container_layout"
-        android:background="@color/purple_200"
-        android:orientation="horizontal">
-        <!-- MOVIES Button -->
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/movies_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.33"
-            android:text="Movies"
-            style="@style/PassiveButton" />
-        <!-- SERIES Button -->
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/series_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.33"
-            android:background="@drawable/bottom_button_ripple"
-            android:text="Series"
-            android:textColor="@color/button_text_color_active"/>
-        <!-- SHOWS Button -->
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/shows_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.33"
-            android:background="@drawable/bottom_button_ripple"
-            android:text="Shows"
-            android:textColor="@color/button_text_color_active"/>
-    </LinearLayout>
-
-    <!-- guide line for the top menu -->
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/topMenuGuid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="48dp"/>
-
-    <!-- guide line for the bottom menu -->
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/bottomMenuGuid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="48dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

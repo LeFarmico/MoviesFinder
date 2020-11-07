@@ -3,15 +3,15 @@
 
     <style name="PassiveButton">
         <item name="android:background">@drawable/bottom_button_ripple</item>
-        <item name="android:textColor">@color/button_text_color_active</item>
+        <item name="android:textColor">@color/color_of_active_element</item>
     </style>
 
     <style name="ActiveButton">
-        <item name="android:textColor">@color/button_text_color_passive</item>
-        <item name="android:background">@color/button_color_active</item>
+        <item name="android:textColor">@color/color_of_passive_element</item>
+        <item name="android:background">@color/color_of_active_element</item>
     </style>
 
     <style name="BackgroundColor" parent="DarkYellowTheme">
-        <item name="android:background">@color/button_background</item>
+        <item name="android:background">@color/background_color_dark</item>
     </style>
 </resources>

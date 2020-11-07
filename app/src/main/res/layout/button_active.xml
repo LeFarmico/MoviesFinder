@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.AppCompatButton
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="103dp"
-    android:layout_height="48dp"
-    android:text="@string/default_text_button"
-    style="@style/ActiveButton">
-
-</androidx.appcompat.widget.AppCompatButton>
