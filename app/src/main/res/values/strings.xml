@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MoviesFinder</string>
     <string name="default_text_button">Кнопка</string>
+    <string name="movie_container_name">Test text</string>
 </resources>

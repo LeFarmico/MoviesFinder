@@ -8,262 +8,43 @@
     android:background="@color/menu_background"
     tools:context=".MainActivity">
 
-    <!-- main menu -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintWidth_default="spread"
-        app:layout_constraintHeight_default="spread"
-        app:cardBackgroundColor="@color/menu_background"
-        app:cardCornerRadius="40dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/topMenuGuid"
-        app:layout_constraintBottom_toBottomOf="@id/bottomMenuGuid">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- line container -->
-        <LinearLayout
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <!-- first line -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="155dp"
-                android:layout_weight="0.25"
-                android:layout_marginBottom="1dp">
+            android:layout_height="?attr/actionBarSize"
+            app:title="Movie Finder"
+            app:titleTextColor="@color/color_of_passive_element"
+            app:navigationIcon="@drawable/ic_baseline_menu_24"
+            app:menu="@menu/default_top_bar"
+            style="@style/BackgroundColor"/>
+    </com.google.android.material.appbar.AppBarLayout>
 
-                <ImageButton
-                    android:id="@+id/movie_1_1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/texet"/>
-                <ImageButton
-                    android:contentDescription=""
-                    android:id="@+id/movie_1_2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/texet"/>
-                <ImageButton
-                    android:id="@+id/movie_1_3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/texet"/>
-                <ImageButton
-                    android:id="@+id/movie_1_4"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/texet"/>
-            </LinearLayout>
-
-            <!-- second line -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="155dp"
-                android:layout_weight="0.25"
-                android:layout_marginBottom="1dp">
-
-                <ImageButton
-                    android:id="@+id/movie_2_1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/texet"/>
-                <ImageButton
-                    android:id="@+id/movie_2_2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/texet"/>
-                <ImageButton
-                    android:id="@+id/movie_2_3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/texet"/>
-                <ImageButton
-                    android:id="@+id/movie_2_4"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/texet"/>
-            </LinearLayout>
-
-            <!-- third line -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="155dp"
-                android:layout_weight="0.25"
-                android:layout_marginBottom="1dp">
-
-                <ImageButton
-                    android:id="@+id/movie_3_1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/texet"/>
-                <ImageButton
-                    android:id="@+id/movie_3_2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/texet"/>
-                <ImageButton
-                    android:id="@+id/movie_3_3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/texet"/>
-                <ImageButton
-                    android:id="@+id/movie_3_4"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/texet"/>
-            </LinearLayout>
-
-            <!-- fourth line -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="155dp"
-                android:layout_weight="0.25"
-                android:layout_marginBottom="1dp">
-
-                <ImageButton
-                    android:id="@+id/movie_4_1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/texet"/>
-                <ImageButton
-                    android:id="@+id/movie_4_2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/texet"/>
-                <ImageButton
-                    android:id="@+id/movie_4_3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/texet"/>
-                <ImageButton
-                    android:id="@+id/movie_4_4"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/texet"/>
-            </LinearLayout>
-        </LinearLayout>
-
-
-    </androidx.cardview.widget.CardView>
-
-    <!-- top bar menu -->
-    <LinearLayout
-        android:id="@+id/topMenuContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintWidth_default="spread"
-        app:layout_constraintHeight_default="spread"
-        app:layout_constraintBottom_toBottomOf="@id/topMenuGuid"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/purple_200"
-        android:orientation="horizontal">
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/movies_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.33"
-            android:background="@drawable/bottom_button_ripple"
-            android:text="Movies"
-            android:textColor="@color/button_text_color_active"/>
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/series_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.33"
-            android:background="@drawable/bottom_button_ripple"
-            android:text="Series"
-            android:textColor="@color/button_text_color_active"/>
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/shows_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.33"
-            android:background="@drawable/bottom_button_ripple"
-            android:text="Shows"
-            android:textColor="@color/button_text_color_active"/>
-    </LinearLayout>
-
-    <!-- bottom bar menu -->
-    <LinearLayout
-        android:id="@+id/bottomMenuContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintWidth_default="spread"
-        app:layout_constraintHeight_default="spread"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/bottomMenuGuid"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:itemIconTint="@drawable/bottom_navigation_selector"
+        app:itemTextColor="@drawable/bottom_navigation_selector"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:orientation="horizontal">
-        <include layout="@layout/bottom_tabs"/>
-    </LinearLayout>
+        app:menu="@menu/bottom_navigation_bar"
+        style="@style/BackgroundColor"/>
 
-    <!-- guide line for the top menu -->
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/topMenuGuid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="48dp"/>
-
-    <!-- guide line for the bottom menu -->
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/bottomMenuGuid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="48dp"/>
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/items_container"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        tools:ignore="RtlSymmetry"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_bar"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
