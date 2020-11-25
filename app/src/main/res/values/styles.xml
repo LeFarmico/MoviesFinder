@@ -12,15 +12,12 @@
     </style>
 
     <style name="BackgroundColor" parent="DarkYellowTheme">
-        <item name="android:background">#E0FFFF</item>
+        <item name="android:background">@color/light_primary_color</item>
     </style>
 
-    <style name="MoviePosterButtonStyle">
+    <style name="MoviePosterStyle" >
         <item name="android:layout_width">135dp</item>
         <item name="android:layout_height">200dp</item>
-        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
-        <item name="android:scaleType">centerInside</item>
         <item name="android:stateListAnimator">@animator/poster_elevation</item>
-
     </style>
 </resources>

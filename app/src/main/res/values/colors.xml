@@ -14,6 +14,7 @@
     <color name="button_outline">#0F232C</color>
     <color name="background_color_dark">#0B1C24</color>
     <color name="button_outline_2">#52A4BF</color>
+    <color name="light_primary_color">#E0FFFF</color>
 
     <!-- menu colors -->
     <color name="menu_background">#0F232C</color>
