@@ -18,7 +18,7 @@
         style="@style/ActiveButton"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/movies_horizontal_container"
+        android:id="@+id/recycler_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="0dp"

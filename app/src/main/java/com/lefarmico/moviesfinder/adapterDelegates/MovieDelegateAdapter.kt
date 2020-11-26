@@ -9,23 +9,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapterDelegates.item.Item
-import com.lefarmico.moviesfinder.adapterDelegates.item.Movie
+import com.lefarmico.moviesfinder.adapterDelegates.item.MovieModel
 
-class MovieDelegateAdapter: AbsListItemAdapterDelegate<Movie, Item, MovieDelegateAdapter.ViewHolder>() {
+class MovieDelegateAdapter: AbsListItemAdapterDelegate<MovieModel, Item, MovieDelegateAdapter.ViewHolder>() {
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val poster = itemView.findViewById<ImageView>(R.id.poster)
         val title = itemView.findViewById<TextView>(R.id.movie_title)
     }
 
     override fun isForViewType(item: Item, items: MutableList<Item>, position: Int): Boolean {
-        return item is Movie
+        return item is MovieModel
     }
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
-        return  ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.movie_item, parent, false))
+        return  ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.child_recycler, parent, false))
     }
 
-    override fun onBindViewHolder(item: Movie, holder: ViewHolder, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(item: MovieModel, holder: ViewHolder, payloads: MutableList<Any>) {
         holder.poster.setImageResource(item.poster)
         holder.title.text = item.title
     }
