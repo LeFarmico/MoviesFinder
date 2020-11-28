@@ -5,7 +5,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import com.xwray.groupie.kotlinandroidextensions.Item
 
-import kotlinx.android.synthetic.main.category_line_bar_horizontal.*
+import kotlinx.android.synthetic.main.parent_recycler.*
 
 
 class MovieContainerItem(
@@ -15,19 +15,19 @@ class MovieContainerItem(
     ) : Item() {
 
     private var groupAdapter = GroupAdapter<GroupieViewHolder>()
-    override fun getLayout() = R.layout.category_line_bar_horizontal
+    override fun getLayout() = R.layout.parent_recycler
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.category_name.text = categoryName
-        viewHolder.movies_horizontal_container.adapter =
+        viewHolder.recycler_child.adapter =
             groupAdapter.apply {
                 addAll(items)
             }
-        groupAdapter.setOnItemClickListener { item, _ ->
-            if (item is MovieItem) {
-//            Toast.makeText(this@MainActivity, "Clicked on movie called: " + item.movieContent.title, Toast.LENGTH_SHORT).show()
-            }
-        }
+//        groupAdapter.setOnItemClickListener { item, _ ->
+//            if (item is MovieItem) {
+////            Toast.makeText(this@MainActivity, "Clicked on movie called: " + item.movieContent.title, Toast.LENGTH_SHORT).show()
+//            }
+//        }
     }
 
 }

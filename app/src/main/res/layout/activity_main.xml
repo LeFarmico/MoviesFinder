@@ -36,15 +36,13 @@
         style="@style/BackgroundColor"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/items_container"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:id="@+id/recycler_parent"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:visibility="visible"
         tools:ignore="RtlSymmetry"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_bar"/>
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
