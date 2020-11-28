@@ -6,7 +6,7 @@ import com.xwray.groupie.kotlinandroidextensions.Item
 import kotlinx.android.synthetic.main.child_recycler.*
 
 
-class MovieItem(val movieContent: MovieContent) : Item(){
+class MovieModel(val movieContent: MovieContent) : Item(){
 
     override fun getLayout() = R.layout.child_recycler
 

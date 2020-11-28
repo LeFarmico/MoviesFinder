@@ -19,7 +19,7 @@ class MovieContainerItem(
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.category_name.text = categoryName
-        viewHolder.recycler_container.adapter =
+        viewHolder.recycler_child.adapter =
             groupAdapter.apply {
                 addAll(items)
             }

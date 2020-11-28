@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder
+package com.lefarmico.moviesfinder.castomViews
 
 import android.content.Context
 import android.util.AttributeSet
@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.Nullable
 import androidx.recyclerview.widget.RecyclerView
+import com.lefarmico.moviesfinder.R
 import kotlinx.android.synthetic.main.parent_recycler.view.*
 
 class CategoryView(context: Context, @Nullable attributeSet: AttributeSet): LinearLayout(context, attributeSet) {
@@ -17,6 +18,6 @@ class CategoryView(context: Context, @Nullable attributeSet: AttributeSet): Line
         LayoutInflater.from(context).inflate(R.layout.parent_recycler, this)
         this.orientation = VERTICAL
         categoryName = category_name
-        moviesContainer = recycler_container
+        moviesContainer = recycler_child
     }
 }

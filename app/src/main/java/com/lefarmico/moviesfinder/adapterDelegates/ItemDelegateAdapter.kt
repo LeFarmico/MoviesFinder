@@ -9,23 +9,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapterDelegates.item.Item
-import com.lefarmico.moviesfinder.adapterDelegates.item.MovieModel
+import com.lefarmico.moviesfinder.adapterDelegates.item.MovieItem
+import kotlinx.android.synthetic.main.child_recycler.view.*
 
-class MovieDelegateAdapter: AbsListItemAdapterDelegate<MovieModel, Item, MovieDelegateAdapter.ViewHolder>() {
+class ItemDelegateAdapter(): AbsListItemAdapterDelegate<MovieItem, Item, ItemDelegateAdapter.ViewHolder>() {
+    //Создаем холдер, для связи с view из Item
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        val poster = itemView.findViewById<ImageView>(R.id.poster)
-        val title = itemView.findViewById<TextView>(R.id.movie_title)
+        val poster: ImageView = itemView.poster
+        val title: TextView = itemView.movie_title
     }
 
+    //Определяем тип Item
     override fun isForViewType(item: Item, items: MutableList<Item>, position: Int): Boolean {
-        return item is MovieModel
+        return item is MovieItem
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         return  ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.child_recycler, parent, false))
     }
 
-    override fun onBindViewHolder(item: MovieModel, holder: ViewHolder, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(item: MovieItem, holder: ViewHolder, payloads: MutableList<Any>) {
         holder.poster.setImageResource(item.poster)
         holder.title.text = item.title
     }

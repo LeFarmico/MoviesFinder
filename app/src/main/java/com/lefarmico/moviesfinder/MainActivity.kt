@@ -8,11 +8,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lefarmico.moviesfinder.adapterDelegates.ParentAdapter
-import com.lefarmico.moviesfinder.adapterDelegates.item.MovieModel
-import com.lefarmico.moviesfinder.adapterDelegates.item.ParentModel
+import com.lefarmico.moviesfinder.adapter.ParentRecyclerViewAdapter
+import com.lefarmico.moviesfinder.adapterDelegates.ContainerAdapter
+import com.lefarmico.moviesfinder.adapterDelegates.container.ParentModel
 import com.lefarmico.moviesfinder.groupie.MovieContainerItem
-import com.lefarmico.moviesfinder.groupie.MovieItem
+import com.lefarmico.moviesfinder.groupie.MovieModel
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.OnItemClickListener
@@ -25,37 +25,44 @@ class MainActivity : AppCompatActivity() {
     private var actionMode: ActionMode? = null
     lateinit var recyclerView: RecyclerView
 
+    private val movieModel =
+        com.lefarmico.moviesfinder.adapterDelegates.item.MovieItem(R.drawable.jaws, "Челюсти")
+    private val parentModel = ParentModel(
+        "Hottest",
+        arrayListOf(movieModel, movieModel, movieModel,
+            movieModel, movieModel, movieModel,))
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
 
+
         initToolsBar()
-        initRecycler()
-
-
+        initDelegatesRecycler()
 
     }
-    private fun initRecycler(){
-        recyclerView = items_container
+    private fun initDelegatesRecycler(){
+        recyclerView = recycler_parent
         recyclerView.apply {
             layoutManager = LinearLayoutManager(
                 this@MainActivity,
-                RecyclerView.HORIZONTAL,
+                RecyclerView.VERTICAL,
                 false
             )
-            adapter = ParentAdapter()
-            (adapter as ParentAdapter).items = arrayListOf(
-                ParentModel("Hottest",
-                    arrayListOf(
-                        MovieModel(R.drawable.jaws, "Челюсти"),
-                        MovieModel(R.drawable.jaws, "Челюсти"),
-                        MovieModel(R.drawable.jaws, "Челюсти"),
-                        MovieModel(R.drawable.jaws, "Челюсти"),
-                        MovieModel(R.drawable.jaws, "Челюсти"),
-                        MovieModel(R.drawable.jaws, "Челюсти"),
-                    ))
+            adapter = ContainerAdapter()
+            (adapter as ContainerAdapter).items = arrayListOf(parentModel, parentModel, parentModel, parentModel, parentModel, parentModel)
+        }
+    }
+    private fun initRecycler() {
+        recyclerView = recycler_parent
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(
+                this@MainActivity,
+                RecyclerView.VERTICAL,
+                false
             )
+            adapter = ParentRecyclerViewAdapter(arrayListOf(parentModel, parentModel, parentModel))
         }
     }
     private fun initGroupieRecycler(){
@@ -65,12 +72,12 @@ class MainActivity : AppCompatActivity() {
         )
 
         val onItemClickListener = OnItemClickListener { item, _ ->
-            if (item is MovieItem) {
+            if (item is MovieModel) {
                 Toast.makeText(this@MainActivity, "Clicked on movie called: " + item.movieContent.title, Toast.LENGTH_SHORT).show()
             }
         }
 
-        items_container.adapter = groupAdapter.apply {
+        recycler_parent.adapter = groupAdapter.apply {
             addAll(movieCategories)
         }
         groupAdapter.setOnItemClickListener { item, view ->
