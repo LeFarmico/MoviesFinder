@@ -7,6 +7,7 @@ class ItemAdapter: ListDelegationAdapter<List<Item>>() {
     //Создаем delegate для Ячеек Родительского адаптера
     init {
         delegatesManager.addDelegate(ItemDelegateAdapter()) //movieDelegateAdaptor
+
     }
 
     override fun setItems(items: List<Item>?) {
