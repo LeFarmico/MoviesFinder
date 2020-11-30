@@ -27,36 +27,4 @@
         android:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:ignore="RtlSymmetry" />
-
-<!--    <HorizontalScrollView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:scrollbars="none">-->
-
-<!--        <GridLayout-->
-<!--            android:id="@+id/movie_buttons_list"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layoutAnimation="@anim/starting_posters_animation_layout"-->
-<!--            android:rowCount="3"-->
-<!--            android:orientation="horizontal">-->
-
-<!--            <ImageButton-->
-<!--                android:id="@+id/movie_1_1"-->
-<!--                app:srcCompat="@drawable/texet"-->
-<!--                style="@style/MoviePosterButtonStyle" />-->
-<!--            <ImageButton-->
-<!--                android:id="@+id/movie_1_2"-->
-<!--                app:srcCompat="@drawable/texet"-->
-<!--                style="@style/MoviePosterButtonStyle"/>-->
-<!--            <ImageButton-->
-<!--                android:id="@+id/movie_1_3"-->
-<!--                app:srcCompat="@drawable/texet"-->
-<!--                style="@style/MoviePosterButtonStyle"/>-->
-<!--            <ImageButton-->
-<!--                android:id="@+id/movie_1_4"-->
-<!--                app:srcCompat="@drawable/texet"-->
-<!--                style="@style/MoviePosterButtonStyle"/>-->
-<!--        </GridLayout>-->
-<!--    </HorizontalScrollView>-->
 </LinearLayout>

@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,21 +36,22 @@ class ContainerDelegateAdapter: AbsListItemAdapterDelegate<ParentModel, Containe
     //Заполняем recycler холдерами
     override fun onBindViewHolder(item: ParentModel, holder: ViewHolder, payloads: MutableList<Any>) {
         holder.category.text = item.categoryName
-        val childLayoutManager = LinearLayoutManager(
-            holder.recyclerView.context,
-            RecyclerView.HORIZONTAL,
-        false)
+        applyItemRecycleViewSetting(holder, item) //принимаем параметры для RV
+        addOnContainerClick(holder) //добавляем реакцию на нажатие на контейнер
 
-        childLayoutManager.initialPrefetchItemCount = 4
+    }
 
+    private fun applyItemRecycleViewSetting(holder: ViewHolder, item: ParentModel){
         holder.recyclerView.apply {
-            layoutManager = childLayoutManager
+            (layoutManager as LinearLayoutManager).initialPrefetchItemCount = 4
             adapter = ItemAdapter()
             (adapter as ItemAdapter).items = item.items //Передаем items из ParentAdapter (Очень важно)
             setRecycledViewPool(viewPool)
             layoutAnimation = AnimationUtils.loadLayoutAnimation(context, R.anim.starting_posters_animation_layout)
             scheduleLayoutAnimation()
         }
+    }
+    private fun addOnContainerClick(holder: ViewHolder){
         holder.category.setOnClickListener{
             if (holder.recyclerView.layoutManager is GridLayoutManager)
                 holder.recyclerView.layoutManager = LinearLayoutManager(
@@ -68,6 +68,5 @@ class ContainerDelegateAdapter: AbsListItemAdapterDelegate<ParentModel, Containe
                 holder.recyclerView.layoutParams
             }
         }
-
     }
 }

@@ -35,8 +35,12 @@ class ItemDelegateAdapter(): AbsListItemAdapterDelegate<MovieItem, Item, ItemDel
         holder.poster.setImageResource(item.poster)
         holder.title.text = item.title
 
+        setOnItemClick(holder)
+    }
+
+    private fun setOnItemClick(holder: ViewHolder) {
         holder.poster.setOnClickListener {
-            Toast.makeText( it.context, "push", Toast.LENGTH_SHORT).show()
+            Toast.makeText(it.context, "push", Toast.LENGTH_SHORT).show()
         }
     }
 }
