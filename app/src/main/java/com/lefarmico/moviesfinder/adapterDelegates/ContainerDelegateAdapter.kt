@@ -3,7 +3,10 @@ package com.lefarmico.moviesfinder.adapterDelegates
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.TextView
+import android.widget.Toast
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
@@ -46,6 +49,23 @@ class ContainerDelegateAdapter: AbsListItemAdapterDelegate<ParentModel, Containe
             adapter = ItemAdapter()
             (adapter as ItemAdapter).items = item.items //Передаем items из ParentAdapter (Очень важно)
             setRecycledViewPool(viewPool)
+            layoutAnimation = AnimationUtils.loadLayoutAnimation(context, R.anim.starting_posters_animation_layout)
+            scheduleLayoutAnimation()
+        }
+        holder.category.setOnClickListener{
+            if (holder.recyclerView.layoutManager is GridLayoutManager)
+                holder.recyclerView.layoutManager = LinearLayoutManager(
+                    holder.recyclerView.context,
+                    RecyclerView.HORIZONTAL,
+                    false)
+            else {
+                holder.recyclerView.layoutManager = GridLayoutManager(
+                    holder.recyclerView.context,
+                    3,
+                    RecyclerView.VERTICAL,
+                    false
+                )
+            }
         }
 
     }

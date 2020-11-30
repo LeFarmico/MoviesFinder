@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,32 +12,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.adapter.ParentRecyclerViewAdapter
 import com.lefarmico.moviesfinder.adapterDelegates.ContainerAdapter
 import com.lefarmico.moviesfinder.adapterDelegates.container.ParentModel
-import com.lefarmico.moviesfinder.groupie.MovieContainerItem
-import com.lefarmico.moviesfinder.groupie.MovieModel
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.OnItemClickListener
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.parent_recycler.*
+import kotlinx.android.synthetic.main.parent_recycler.view.*
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val groupAdapter = GroupAdapter<GroupieViewHolder>()
     private var actionMode: ActionMode? = null
     lateinit var recyclerView: RecyclerView
-
-    private val movieModel =
-        com.lefarmico.moviesfinder.adapterDelegates.item.MovieItem(R.drawable.jaws, "Челюсти")
-    private val parentModel = ParentModel(
-        "Hottest",
-        arrayListOf(movieModel, movieModel, movieModel,
-            movieModel, movieModel, movieModel,))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-
 
         initToolsBar()
         initDelegatesRecycler()
@@ -51,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                 false
             )
             adapter = ContainerAdapter()
-            (adapter as ContainerAdapter).items = arrayListOf(parentModel, parentModel, parentModel, parentModel, parentModel, parentModel)
+            (adapter as ContainerAdapter).items = ContainerDataFactory().getContainerModel(10, 10)
         }
     }
     private fun initRecycler() {
@@ -62,28 +54,7 @@ class MainActivity : AppCompatActivity() {
                 RecyclerView.VERTICAL,
                 false
             )
-            adapter = ParentRecyclerViewAdapter(arrayListOf(parentModel, parentModel, parentModel))
-        }
-    }
-    private fun initGroupieRecycler(){
-        val movieCategories = listOf(
-            GetMovieContainers().getPopularMovies(),
-            GetMovieContainers().getPopularMovies(),
-        )
-
-        val onItemClickListener = OnItemClickListener { item, _ ->
-            if (item is MovieModel) {
-                Toast.makeText(this@MainActivity, "Clicked on movie called: " + item.movieContent.title, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        recycler_parent.adapter = groupAdapter.apply {
-            addAll(movieCategories)
-        }
-        groupAdapter.setOnItemClickListener { item, view ->
-            if (item is MovieContainerItem) {
-                Toast.makeText(this@MainActivity, "Clicked on container", Toast.LENGTH_SHORT).show()
-            }
+            adapter = ParentRecyclerViewAdapter(ContainerDataFactory().getContainerModel(10, 10))
         }
     }
     private fun initActionToolBar(){

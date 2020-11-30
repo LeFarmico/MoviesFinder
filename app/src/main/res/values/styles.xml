@@ -16,8 +16,8 @@
     </style>
 
     <style name="MoviePosterStyle" >
-        <item name="android:layout_width">135dp</item>
-        <item name="android:layout_height">200dp</item>
+        <item name="android:layout_width"> 120dp</item>
+        <item name="android:layout_height">180dp</item>
         <item name="android:stateListAnimator">@animator/poster_elevation</item>
     </style>
 </resources>
