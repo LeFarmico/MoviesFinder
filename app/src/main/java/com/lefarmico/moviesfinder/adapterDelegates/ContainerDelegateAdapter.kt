@@ -65,6 +65,7 @@ class ContainerDelegateAdapter: AbsListItemAdapterDelegate<ParentModel, Containe
                     RecyclerView.VERTICAL,
                     false
                 )
+                holder.recyclerView.layoutParams
             }
         }
 

@@ -5,8 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
+import com.lefarmico.moviesfinder.MainActivity
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapterDelegates.item.Item
 import com.lefarmico.moviesfinder.adapterDelegates.item.MovieItem
@@ -32,5 +34,9 @@ class ItemDelegateAdapter(): AbsListItemAdapterDelegate<MovieItem, Item, ItemDel
     override fun onBindViewHolder(item: MovieItem, holder: ViewHolder, payloads: MutableList<Any>) {
         holder.poster.setImageResource(item.poster)
         holder.title.text = item.title
+
+        holder.poster.setOnClickListener {
+            Toast.makeText( it.context, "push", Toast.LENGTH_SHORT).show()
+        }
     }
 }
