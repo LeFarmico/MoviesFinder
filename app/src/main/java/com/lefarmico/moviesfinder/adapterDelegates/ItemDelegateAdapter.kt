@@ -1,15 +1,16 @@
 package com.lefarmico.moviesfinder.adapterDelegates
 
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
-import com.lefarmico.moviesfinder.MainActivity
+import com.lefarmico.moviesfinder.DetailsActivity
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapterDelegates.item.Item
 import com.lefarmico.moviesfinder.adapterDelegates.item.MovieItem
@@ -36,12 +37,21 @@ class ItemDelegateAdapter(): AbsListItemAdapterDelegate<MovieItem, Item, ItemDel
         holder.poster.setImageResource(item.poster)
         holder.title.text = item.title
 
-        setOnItemClick(holder)
+        setOnItemClick(holder, item)
     }
 
-    private fun setOnItemClick(holder: ViewHolder) {
+    private fun setOnItemClick(holder: ViewHolder, item: MovieItem) {
         holder.poster.setOnClickListener {
-            Toast.makeText(it.context, "push", Toast.LENGTH_SHORT).show()
+            //Создаем бандл и кладем туда объект с данными фильма
+            val bundle = Bundle()
+            //Первым параметром указывается ключ, по которому потом будем искать, вторым сам
+            //передаваемый объект
+            bundle.putParcelable("movieItem", item)
+            val intent = Intent(it.context, DetailsActivity::class.java)
+            //Прикрепляем бандл к интенту
+            intent.putExtras(bundle)
+            //переход на новое activity
+            startActivity(it.context, intent, null)
         }
     }
 }

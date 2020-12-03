@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/menu_background"
+
     tools:context=".MainActivity">
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -19,11 +19,11 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="Movie Finder"
-            app:titleTextColor="@color/color_of_passive_element"
             app:navigationIcon="@drawable/ic_baseline_menu_24"
             app:menu="@menu/default_top_bar"
-            style="@style/BackgroundColor"/>
+            style="@style/ToolBarStyle"/>
     </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_parent"
         android:layout_width="match_parent"
@@ -45,16 +45,12 @@
         android:layout_gravity="bottom|end"
         android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
         app:layout_behavior="com.google.android.material.floatingactionbutton.FloatingActionButton$Behavior" />
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:layout_gravity="bottom"
         android:id="@+id/bottom_navigation_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:itemIconTint="@drawable/bottom_navigation_selector"
-        app:itemTextColor="@drawable/bottom_navigation_selector"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_navigation_bar"
-        style="@style/BackgroundColor"
+        android:layout_gravity="bottom"
+        style="@style/BottomNavigatorStyle"
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

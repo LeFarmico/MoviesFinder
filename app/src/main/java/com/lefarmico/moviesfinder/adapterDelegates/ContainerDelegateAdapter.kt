@@ -4,14 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.TextView
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapterDelegates.container.Container
-
 import com.lefarmico.moviesfinder.adapterDelegates.container.ParentModel
 import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.parent_recycler.view.*
@@ -36,7 +33,6 @@ class ContainerDelegateAdapter: AbsListItemAdapterDelegate<ParentModel, Containe
     //Заполняем recycler холдерами
     override fun onBindViewHolder(item: ParentModel, holder: ViewHolder, payloads: MutableList<Any>) {
         applyItemRecycleViewSetting(holder, item) //принимаем параметры для RV
-//        addOnContainerClick(holder) //добавляем реакцию на нажатие на контейнер
 
     }
 
@@ -51,22 +47,4 @@ class ContainerDelegateAdapter: AbsListItemAdapterDelegate<ParentModel, Containe
             addItemDecoration(TopSpacingItemDecoration(2))
         }
     }
-//    private fun addOnContainerClick(holder: ViewHolder){
-//        holder.category.setOnClickListener{
-//            if (holder.recyclerView.layoutManager is GridLayoutManager)
-//                holder.recyclerView.layoutManager = LinearLayoutManager(
-//                    holder.recyclerView.context,
-//                    RecyclerView.HORIZONTAL,
-//                    false)
-//            else {
-//                holder.recyclerView.layoutManager = GridLayoutManager(
-//                    holder.recyclerView.context,
-//                    3,
-//                    RecyclerView.VERTICAL,
-//                    false
-//                )
-//                holder.recyclerView.layoutParams
-//            }
-//        }
-//    }
 }

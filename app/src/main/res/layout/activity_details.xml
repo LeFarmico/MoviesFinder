@@ -53,8 +53,7 @@
         android:backgroundTint="@color/color_of_active_element"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|right"
-        app:srcCompat="@drawable/ic_baseline_share_24"
-        android:tint="@android:color/white"/>
+        app:srcCompat="@drawable/ic_baseline_share_24" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -66,6 +65,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:background="@color/background_color_dark"
+            android:textColor="@color/white"
             tools:text="@tools:sample/lorem/random" />
 
     </androidx.core.widget.NestedScrollView>

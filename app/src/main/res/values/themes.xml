@@ -16,14 +16,14 @@
     <style name="DarkYellowTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/light_primary_color</item>
-        <item name="colorPrimaryVariant">@color/light_primary_color</item>
+        <item name="colorPrimaryVariant">@color/color_of_passive_element</item>
         <item name="colorOnPrimary">@color/color_of_active_element</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/button_outline_2</item>
         <item name="colorSecondaryVariant">@color/button_outline_2</item>
         <item name="colorOnSecondary">@color/color_of_passive_element</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
         <!-- Customize your theme here. -->
     </style>

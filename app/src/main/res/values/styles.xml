@@ -7,17 +7,28 @@
     </style>
 
     <style name="ActiveButton">
-        <item name="android:textColor">@color/color_of_passive_element</item>
-        <item name="android:background">@color/color_of_active_element</item>
+        <item name="android:textColor">@color/light_primary_color</item>
+        <item name="android:background">@color/color_of_passive_element</item>
     </style>
 
     <style name="BackgroundColor" parent="DarkYellowTheme">
         <item name="android:background">@color/light_primary_color</item>
     </style>
 
+    <style name="ToolBarStyle" parent="DarkYellowTheme">
+        <item name="android:background">@color/light_primary_color</item>
+        <item name="titleTextColor">@color/color_of_passive_element</item>
+    </style>
+
     <style name="MoviePosterStyle" >
         <item name="android:layout_width"> 120dp</item>
         <item name="android:layout_height">180dp</item>
         <item name="android:stateListAnimator">@animator/poster_elevation</item>
+    </style>
+
+    <style name="BottomNavigatorStyle">
+        <item name="android:background">@color/color_of_passive_element</item>
+        <item name="itemIconTint">@drawable/bottom_navigation_selector_light</item>
+        <item name="itemTextColor">@drawable/bottom_navigation_selector_light</item>
     </style>
 </resources>
