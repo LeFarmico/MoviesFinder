@@ -1,5 +1,7 @@
 package com.lefarmico.moviesfinder
 
+import com.lefarmico.moviesfinder.adapterDelegates.container.Container
+import com.lefarmico.moviesfinder.adapterDelegates.container.HeaderModel
 import com.lefarmico.moviesfinder.adapterDelegates.container.ParentModel
 import com.lefarmico.moviesfinder.adapterDelegates.item.MovieItem
 import kotlin.random.Random
@@ -25,18 +27,20 @@ class ContainerDataFactory {
         MovieItem(R.drawable.james_bond, "james Bond"),
         MovieItem(R.drawable.blade_runner, "Blade Runner"),
             )
-    fun getContainerModel(movieCount: Int, categoryCount: Int): List<ParentModel>{
-        val parentModelList = mutableListOf<ParentModel>()
+    fun getContainerModel(movieCount: Int, categoryCount: Int): List<Container>{
+        val parentModelList = mutableListOf<Container>()
         repeat(categoryCount){
             val movieItemList = mutableListOf<MovieItem>()
+            parentModelList.add(getHeader())
             repeat(movieCount){
                 movieItemList.add(getRandomMovie())
             }
-            parentModelList.add(ParentModel(getRandomCategory(), movieItemList))
+            parentModelList.add(ParentModel(movieItemList))
         }
         return  parentModelList
     }
 
+    private fun getHeader(): HeaderModel = HeaderModel(getRandomCategory())
     private fun getRandomMovie(): MovieItem = moviesItems[random.nextInt(0,moviesItems.size-1)]
     private fun getRandomCategory(): String = categoryTitle[random.nextInt(0,categoryTitle.size-1)]
 }

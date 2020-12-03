@@ -7,9 +7,12 @@ class ContainerAdapter: ListDelegationAdapter<List<Container>>() {
     //Создаем делегат для родительского адаптера
     init {
         delegatesManager.addDelegate(ContainerDelegateAdapter())
+        delegatesManager.addDelegate(HeaderDelegateAdapter())
         //Заставляем перерисовываться только те объекты, которые изменились
         setHasStableIds(true)
+        notifyDataSetChanged()
     }
+
     override fun setItems(items: List<Container>?) {
         super.setItems(items)
         notifyDataSetChanged()
@@ -18,4 +21,5 @@ class ContainerAdapter: ListDelegationAdapter<List<Container>>() {
     override fun getItemId(position: Int): Long {
         return super.getItemId(position)
     }
+
 }

@@ -15,7 +15,7 @@
     </style>
     <style name="DarkYellowTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/background_color_dark</item>
+        <item name="colorPrimary">@color/button_outline</item>
         <item name="colorPrimaryVariant">@color/background_color_dark</item>
         <item name="colorOnPrimary">@color/color_of_active_element</item>
         <!-- Secondary brand color. -->
