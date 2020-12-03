@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.parent_recycler.view.*
 class ParentRecyclerViewAdapter(private val parents : List<ParentModel>) : RecyclerView.Adapter<ParentRecyclerViewAdapter.ViewHolder>() {
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val recyclerView: RecyclerView = itemView.recycler_child
-        val title: TextView = itemView.category_name
+
     }
 
     private val viewPool = RecyclerView.RecycledViewPool()
@@ -26,7 +26,6 @@ class ParentRecyclerViewAdapter(private val parents : List<ParentModel>) : Recyc
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val parent = parents[position]
-        holder.title.text = parent.categoryName
         val childLayoutManager = LinearLayoutManager(
             holder.recyclerView.context,
             RecyclerView.HORIZONTAL,

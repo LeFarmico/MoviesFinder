@@ -9,8 +9,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.lefarmico.moviesfinder.adapter.ParentRecyclerViewAdapter
 import com.lefarmico.moviesfinder.adapterDelegates.ContainerAdapter
+import com.lefarmico.moviesfinder.adapterDelegates.container.HeaderModel
 import com.lefarmico.moviesfinder.adapterDelegates.container.ParentModel
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -29,10 +31,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-
         initToolsBar()
         initDelegatesRecycler()
-
+        onFloatingActionButtonClick()
     }
     private fun initDelegatesRecycler(){
         recyclerView = recycler_parent
@@ -44,17 +45,6 @@ class MainActivity : AppCompatActivity() {
             )
             adapter = ContainerAdapter()
             (adapter as ContainerAdapter).items = ContainerDataFactory().getContainerModel(10, 10)
-        }
-    }
-    private fun initRecycler() {
-        recyclerView = recycler_parent
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(
-                this@MainActivity,
-                RecyclerView.VERTICAL,
-                false
-            )
-            adapter = ParentRecyclerViewAdapter(ContainerDataFactory().getContainerModel(10, 10))
         }
     }
     private fun initActionToolBar(){
@@ -112,5 +102,7 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+    }
+    private fun onFloatingActionButtonClick(){
     }
 }

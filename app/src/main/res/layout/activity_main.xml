@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:id="@+id/activity_main"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,13 +8,12 @@
     android:layout_height="match_parent"
     android:background="@color/menu_background"
     tools:context=".MainActivity">
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:layout_constraintTop_toTopOf="parent">
-
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
@@ -24,8 +24,30 @@
             app:menu="@menu/default_top_bar"
             style="@style/BackgroundColor"/>
     </com.google.android.material.appbar.AppBarLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        tools:ignore="RtlSymmetry"
+        android:layout_marginTop="?attr/actionBarSize"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:layout_marginEnd="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginBottom="70dp"
+        app:elevation="10dp"
+        android:backgroundTint="@color/color_of_active_element"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
+        app:layout_behavior="com.google.android.material.floatingactionbutton.FloatingActionButton$Behavior" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_gravity="bottom"
         android:id="@+id/bottom_navigation_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -33,17 +55,6 @@
         app:itemTextColor="@drawable/bottom_navigation_selector"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_navigation_bar"
-        style="@style/BackgroundColor"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_parent"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="visible"
-        tools:ignore="RtlSymmetry"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_bar"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        style="@style/BackgroundColor"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

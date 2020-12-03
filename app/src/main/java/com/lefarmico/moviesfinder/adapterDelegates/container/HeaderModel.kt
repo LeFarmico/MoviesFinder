@@ -1,4 +1,3 @@
 package com.lefarmico.moviesfinder.adapterDelegates.container
 
-class HeaderItem {
-}
+data class HeaderModel(val title: String) : Container
