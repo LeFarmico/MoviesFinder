@@ -35,18 +35,19 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
         android:layout_marginEnd="20dp"
+        android:layout_marginBottom="70dp"
+        app:layout_anchorGravity="bottom|end"
         android:clickable="true"
         android:focusable="true"
-        android:layout_marginBottom="70dp"
         app:elevation="10dp"
+        app:layout_anchor="@id/bottom_navigation_bar_view"
+        android:contentDescription="Navigation menu"
         android:backgroundTint="@color/color_of_active_element"
-        android:layout_gravity="bottom|end"
-        android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
-        app:layout_behavior="com.google.android.material.floatingactionbutton.FloatingActionButton$Behavior" />
+        android:src="@drawable/ic_baseline_keyboard_arrow_up_24"/>
+    <include layout="@layout/fab_menu"/>
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation_bar"
+        android:id="@+id/bottom_navigation_bar_view"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:menu="@menu/bottom_navigation_bar"
