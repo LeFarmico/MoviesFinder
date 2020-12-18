@@ -1,5 +1,6 @@
 package com.lefarmico.moviesfinder.adapterDelegates
 
+import android.app.ActivityManager
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,10 +9,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
-import com.lefarmico.moviesfinder.DetailsActivity
-import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.*
 import com.lefarmico.moviesfinder.adapterDelegates.item.Item
 import com.lefarmico.moviesfinder.adapterDelegates.item.MovieItem
 import kotlinx.android.synthetic.main.child_recycler.view.*

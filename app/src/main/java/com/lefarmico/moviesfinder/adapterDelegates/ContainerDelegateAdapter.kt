@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
+import androidx.core.view.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
@@ -33,14 +35,13 @@ class ContainerDelegateAdapter: AbsListItemAdapterDelegate<ParentModel, Containe
     //Заполняем recycler холдерами
     override fun onBindViewHolder(item: ParentModel, holder: ViewHolder, payloads: MutableList<Any>) {
         applyItemRecycleViewSetting(holder, item) //принимаем параметры для RV
-
     }
 
     private fun applyItemRecycleViewSetting(holder: ViewHolder, item: ParentModel){
         holder.recyclerView.apply {
             (layoutManager as LinearLayoutManager).initialPrefetchItemCount = 4
             adapter = ItemAdapter()
-            (adapter as ItemAdapter).items = item.items //Передаем items из ParentAdapter (Очень важно)
+            (adapter as ItemAdapter).items = item.items //Передаем items из ContainerAdapter (Очень важно)
             setRecycledViewPool(viewPool)
             layoutAnimation = AnimationUtils.loadLayoutAnimation(context, R.anim.starting_posters_animation_layout)
             scheduleLayoutAnimation()

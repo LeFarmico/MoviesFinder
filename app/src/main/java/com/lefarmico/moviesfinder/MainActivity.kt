@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.adapterDelegates.ContainerAdapter
+import com.lefarmico.moviesfinder.adapterDelegates.item.MovieItem
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fab_menu.*
 import kotlinx.android.synthetic.main.parent_recycler.*
@@ -15,29 +16,33 @@ import kotlinx.android.synthetic.main.parent_recycler.view.*
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var recyclerView: RecyclerView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
         initToolsBar()
-        initDelegatesRecycler()
+//        initDelegatesRecycler()
         onFloatingActionButtonClick()
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.fragment_placeholder, HomeFragment())
+            .addToBackStack(null)
+            .commit()
+
         setFabAboveBottomNavigationBar() //пока не работает
     }
-    private fun initDelegatesRecycler(){
-        recyclerView = recycler_parent
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(
-                this@MainActivity,
-                RecyclerView.VERTICAL,
-                false
-            )
-            adapter = ContainerAdapter()
-            (adapter as ContainerAdapter).items = ContainerDataFactory().getContainerModel(10, 10)
-        }
-    }
+//    fun launchDetailsFragment(movie: MovieItem){
+//        val bundle = Bundle()
+//        bundle.putParcelable("movie", movie)
+//        val fragment = DetailsFragment()
+//        fragment.arguments = bundle
+//
+//        supportFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.fragment_placeholder, fragment)
+//            .addToBackStack(null)
+//            .commit()
+//    }
     private fun initToolsBar(){
         top_bar.setOnMenuItemClickListener {
             when(it.itemId){
@@ -84,6 +89,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun setFabAboveBottomNavigationBar(){
-
     }
+
 }
