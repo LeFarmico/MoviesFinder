@@ -1,18 +1,12 @@
 package com.lefarmico.moviesfinder.adapterDelegates
 
-import android.content.Intent
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.core.view.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
-import com.lefarmico.moviesfinder.DetailsActivity
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapterDelegates.container.Container
 import com.lefarmico.moviesfinder.adapterDelegates.container.ParentModel
@@ -21,7 +15,9 @@ import com.lefarmico.moviesfinder.adapterDelegates.item.MovieItem
 import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.parent_recycler.view.*
 
-class ContainerDelegateAdapter: AbsListItemAdapterDelegate<ParentModel, Container, ContainerDelegateAdapter.ViewHolder>() {
+class ContainerDelegateAdapter(
+    private val containerItemClickListener: ContainerAdapter.OnContainerClickListener):
+    AbsListItemAdapterDelegate<ParentModel, Container, ContainerDelegateAdapter.ViewHolder>() {
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         var recyclerView: RecyclerView = itemView.recycler_child
     }
@@ -50,16 +46,17 @@ class ContainerDelegateAdapter: AbsListItemAdapterDelegate<ParentModel, Containe
             adapter = ItemAdapter(object : ItemAdapter.OnItemClickListener{
                 override fun click(item: Item) {
                     if(item is MovieItem){
-                        //Создаем бандл и кладем туда объект с данными фильма
-                        val bundle = Bundle()
-                        //Первым параметром указывается ключ, по которому потом будем искать, вторым сам
-                        //передаваемый объект
-                        bundle.putParcelable("movieItem", item)
-                        val intent = Intent(context, DetailsActivity::class.java)
-                        //Прикрепляем бандл к интенту
-                        intent.putExtras(bundle)
-                        //переход на новое activity
-                        ContextCompat.startActivity(context, intent, null)
+                        containerItemClickListener.click(item)
+//                        //Создаем бандл и кладем туда объект с данными фильма
+//                        val bundle = Bundle()
+//                        //Первым параметром указывается ключ, по которому потом будем искать, вторым сам
+//                        //передаваемый объект
+//                        bundle.putParcelable("movieItem", item)
+//                        val intent = Intent(context, DetailsActivity::class.java)
+//                        //Прикрепляем бандл к интенту
+//                        intent.putExtras(bundle)
+//                        //переход на новое activity
+//                        ContextCompat.startActivity(context, intent, null)
                     }
                     else return
                 }

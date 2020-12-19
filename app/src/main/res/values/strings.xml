@@ -4,4 +4,7 @@
     <string name="movie_container_name">Test text</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="share">Share</string>
+    <string name="add_to_favorites">Add to Favorites</string>
+    <string name="navigation_menu">Navigation menu</string>
 </resources>

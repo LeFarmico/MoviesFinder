@@ -53,7 +53,9 @@ class FavoritesFragment : Fragment() {
         favorites_recycler.apply {
             adapter = ItemAdapter(object : ItemAdapter.OnItemClickListener{
                 override fun click(item: Item) {
-                    (requireActivity() as MainActivity).
+                    if(item is MovieItem)
+                        (requireActivity() as MainActivity).launchDetailsFragment(item)
+                    else return
                 }
             })
             val decorator = TopSpacingItemDecoration(8)
@@ -61,27 +63,6 @@ class FavoritesFragment : Fragment() {
 
             layoutManager = LinearLayoutManager(requireContext())
 
-
         }
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FavoritesFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FavoritesFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }

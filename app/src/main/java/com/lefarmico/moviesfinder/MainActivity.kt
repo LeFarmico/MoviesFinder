@@ -2,13 +2,17 @@ package com.lefarmico.moviesfinder
 
 import android.animation.ValueAnimator
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
 import com.lefarmico.moviesfinder.adapterDelegates.ContainerAdapter
 import com.lefarmico.moviesfinder.adapterDelegates.item.MovieItem
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_toolbar.*
 import kotlinx.android.synthetic.main.fab_menu.*
 import kotlinx.android.synthetic.main.parent_recycler.*
 import kotlinx.android.synthetic.main.parent_recycler.view.*
@@ -19,30 +23,29 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        //Запуск activity_main
         setContentView(R.layout.activity_main)
+        //Запуск ToolsBar
         initToolsBar()
-//        initDelegatesRecycler()
+        //Запуск адаптивного fab
         onFloatingActionButtonClick()
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragment_placeholder, HomeFragment())
-            .addToBackStack(null)
-            .commit()
+        //Запуск HomeFragment
+        launchHomeFragment()
 
         setFabAboveBottomNavigationBar() //пока не работает
     }
-//    fun launchDetailsFragment(movie: MovieItem){
-//        val bundle = Bundle()
-//        bundle.putParcelable("movie", movie)
-//        val fragment = DetailsFragment()
-//        fragment.arguments = bundle
-//
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fragment_placeholder, fragment)
-//            .addToBackStack(null)
-//            .commit()
-//    }
+
+    override fun onResume() {
+        super.onResume()
+        supportActionBar?.show()
+        Log.i("MainActivity", "onResume()")
+    }
+    override fun onPause() {
+        super.onPause()
+        supportActionBar?.hide()
+        Log.i("MainActivity", "onPause()")
+    }
+
     private fun initToolsBar(){
         top_bar.setOnMenuItemClickListener {
             when(it.itemId){
@@ -88,7 +91,26 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+    private fun launchHomeFragment(){
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.fragment_placeholder, HomeFragment())
+            .addToBackStack(null)
+            .commit()
+    }
     private fun setFabAboveBottomNavigationBar(){
     }
 
+    fun launchDetailsFragment(movie: MovieItem){
+        val bundle = Bundle()
+        bundle.putParcelable("movie", movie)
+        val fragment = DetailsFragment()
+        fragment.arguments = bundle
+
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_placeholder, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
 }

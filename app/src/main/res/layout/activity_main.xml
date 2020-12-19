@@ -13,15 +13,17 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:fitsSystemWindows="true"
+
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/top_bar"
+            android:fitsSystemWindows="true"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="Movie Finder"
             app:navigationIcon="@drawable/ic_baseline_menu_24"
             app:menu="@menu/default_top_bar"
-            style="@style/ToolBarStyle"/>
+            style="@style/ToolBarStyle" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
@@ -39,7 +41,7 @@
         android:focusable="true"
         app:elevation="10dp"
         app:layout_anchor="@id/bottom_navigation_bar_view"
-        android:contentDescription="Navigation menu"
+        android:contentDescription="@string/navigation_menu"
         android:backgroundTint="@color/color_of_active_element"
         android:src="@drawable/ic_baseline_keyboard_arrow_up_24"/>
     <include layout="@layout/fab_menu"/>

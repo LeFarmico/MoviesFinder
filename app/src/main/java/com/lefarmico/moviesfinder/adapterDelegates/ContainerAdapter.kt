@@ -2,11 +2,12 @@ package com.lefarmico.moviesfinder.adapterDelegates
 
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.lefarmico.moviesfinder.adapterDelegates.container.Container
+import com.lefarmico.moviesfinder.adapterDelegates.item.Item
 
-class ContainerAdapter: ListDelegationAdapter<List<Container>>() {
+class ContainerAdapter(private val clickListener: OnContainerClickListener): ListDelegationAdapter<List<Container>>() {
     //Создаем делегат для родительского адаптера
     init {
-        delegatesManager.addDelegate(ContainerDelegateAdapter())
+        delegatesManager.addDelegate(ContainerDelegateAdapter(clickListener))
         delegatesManager.addDelegate(HeaderDelegateAdapter())
         //Заставляем перерисовываться только те объекты, которые изменились
         setHasStableIds(true)
@@ -22,4 +23,7 @@ class ContainerAdapter: ListDelegationAdapter<List<Container>>() {
         return super.getItemId(position)
     }
 
+    interface OnContainerClickListener{
+        fun click(item: Item)
+    }
 }
