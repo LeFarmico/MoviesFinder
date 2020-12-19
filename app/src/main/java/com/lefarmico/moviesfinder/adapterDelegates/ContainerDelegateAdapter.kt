@@ -40,7 +40,7 @@ class ContainerDelegateAdapter: AbsListItemAdapterDelegate<ParentModel, Containe
     private fun applyItemRecycleViewSetting(holder: ViewHolder, item: ParentModel){
         holder.recyclerView.apply {
             (layoutManager as LinearLayoutManager).initialPrefetchItemCount = 4
-            adapter = ItemAdapter()
+            adapter = ItemAdapter(context)
             (adapter as ItemAdapter).items = item.items //Передаем items из ContainerAdapter (Очень важно)
             setRecycledViewPool(viewPool)
             layoutAnimation = AnimationUtils.loadLayoutAnimation(context, R.anim.starting_posters_animation_layout)
