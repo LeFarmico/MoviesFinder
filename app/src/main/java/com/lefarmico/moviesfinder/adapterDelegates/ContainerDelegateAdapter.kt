@@ -1,17 +1,23 @@
 package com.lefarmico.moviesfinder.adapterDelegates
 
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
+import com.lefarmico.moviesfinder.DetailsActivity
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapterDelegates.container.Container
 import com.lefarmico.moviesfinder.adapterDelegates.container.ParentModel
+import com.lefarmico.moviesfinder.adapterDelegates.item.Item
+import com.lefarmico.moviesfinder.adapterDelegates.item.MovieItem
 import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.parent_recycler.view.*
 
@@ -40,9 +46,28 @@ class ContainerDelegateAdapter: AbsListItemAdapterDelegate<ParentModel, Containe
     private fun applyItemRecycleViewSetting(holder: ViewHolder, item: ParentModel){
         holder.recyclerView.apply {
             (layoutManager as LinearLayoutManager).initialPrefetchItemCount = 4
-            adapter = ItemAdapter(context)
+
+            adapter = ItemAdapter(object : ItemAdapter.OnItemClickListener{
+                override fun click(item: Item) {
+                    if(item is MovieItem){
+                        //Создаем бандл и кладем туда объект с данными фильма
+                        val bundle = Bundle()
+                        //Первым параметром указывается ключ, по которому потом будем искать, вторым сам
+                        //передаваемый объект
+                        bundle.putParcelable("movieItem", item)
+                        val intent = Intent(context, DetailsActivity::class.java)
+                        //Прикрепляем бандл к интенту
+                        intent.putExtras(bundle)
+                        //переход на новое activity
+                        ContextCompat.startActivity(context, intent, null)
+                    }
+                    else return
+                }
+            })
             (adapter as ItemAdapter).items = item.items //Передаем items из ContainerAdapter (Очень важно)
+
             setRecycledViewPool(viewPool)
+
             layoutAnimation = AnimationUtils.loadLayoutAnimation(context, R.anim.starting_posters_animation_layout)
             scheduleLayoutAnimation()
             addItemDecoration(TopSpacingItemDecoration(2))

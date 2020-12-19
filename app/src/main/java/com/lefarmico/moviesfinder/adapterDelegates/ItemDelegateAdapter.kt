@@ -12,7 +12,7 @@ import com.lefarmico.moviesfinder.adapterDelegates.item.Item
 import com.lefarmico.moviesfinder.adapterDelegates.item.MovieItem
 import kotlinx.android.synthetic.main.child_recycler.view.*
 
-class ItemDelegateAdapter(private val clickListenerMovie: OnMovieItemClickListener): AbsListItemAdapterDelegate<MovieItem, Item, ItemDelegateAdapter.ViewHolder>() {
+class ItemDelegateAdapter(private val clickListenerMovie: ItemAdapter.OnItemClickListener): AbsListItemAdapterDelegate<MovieItem, Item, ItemDelegateAdapter.ViewHolder>() {
     //Создаем холдер, для связи с view из Item
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val poster: ImageView = itemView.poster
@@ -35,8 +35,5 @@ class ItemDelegateAdapter(private val clickListenerMovie: OnMovieItemClickListen
         holder.poster.setOnClickListener {
             clickListenerMovie.click(item)
         }
-    }
-    interface OnMovieItemClickListener{
-        fun click(movie: MovieItem)
     }
 }
