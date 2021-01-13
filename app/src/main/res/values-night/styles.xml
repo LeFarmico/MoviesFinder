@@ -12,6 +12,17 @@
     </style>
 
     <style name="BackgroundColor" parent="DarkYellowTheme">
-        <item name="android:background">@color/background_color_dark</item>
+        <item name="android:background">@color/button_outline</item>
+    </style>
+
+    <style name="ToolBarStyle" parent="DarkYellowTheme">
+        <item name="android:background">@color/button_outline</item>
+        <item name="titleTextColor">@color/color_of_passive_element</item>
+    </style>
+
+    <style name="BottomNavigatorStyle">
+        <item name="android:background">@color/menu_background</item>
+        <item name="itemIconTint">@drawable/bottom_navigation_selector</item>
+        <item name="itemTextColor">@drawable/bottom_navigation_selector</item>
     </style>
 </resources>

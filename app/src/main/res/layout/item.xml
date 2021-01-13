@@ -7,18 +7,19 @@
     <ImageView
         android:id="@+id/poster"
         style="@style/MoviePosterStyle"
+        android:scaleType="centerCrop"
         android:src="@drawable/texet"
-        android:layout_margin="2dp"
+        android:contentDescription="@string/movie_title"
         />
     <TextView
         android:id="@+id/movie_title"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:textSize="16sp"
-        android:text="Movie title"
+        android:layout_height="wrap_content"
+        android:text="@string/movie_title"
         android:textColor="@color/color_of_passive_element"
         android:textAlignment="textStart"
         android:layout_marginTop="2dp"
+        android:layout_marginBottom="4dp"
         android:layout_marginStart="2dp"
         android:textStyle="bold"
         android:maxLines="2"
