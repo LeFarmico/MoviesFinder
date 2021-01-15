@@ -1,8 +1,9 @@
-package com.lefarmico.moviesfinder
+package com.lefarmico.moviesfinder.activities
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.fargments.MovieFragment
 

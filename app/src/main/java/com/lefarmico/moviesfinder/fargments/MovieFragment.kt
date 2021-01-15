@@ -9,19 +9,22 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lefarmico.moviesfinder.ContainerDataFactory
 import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.adapters.HeaderAdapter
+import com.lefarmico.moviesfinder.data.Header
+import com.lefarmico.moviesfinder.data.IHeader
+import com.lefarmico.moviesfinder.data.ItemsData
 import com.lefarmico.moviesfinder.databinding.FragmentItemsBinding
-import com.lefarmico.moviesfinder.models.MovieMenuModel
-import com.lefarmico.moviesfinder.presenters.MenuPresenter
-import com.lefarmico.moviesfinder.presenters.MovieMenuPresenter
+import com.lefarmico.moviesfinder.models.ItemsModel
+import com.lefarmico.moviesfinder.presenters.ItemsPresenter
 
 class MovieFragment : Fragment() {
 
     lateinit var recyclerView: RecyclerView
     private var _binding: FragmentItemsBinding? = null
-    private val model: MovieMenuModel = MovieMenuModel()
 
-    lateinit var presenter: MenuPresenter
+    lateinit var itemsPresenter: ItemsPresenter
 
     private val binding get() = _binding!!
     override fun onCreateView(
@@ -35,8 +38,16 @@ class MovieFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        createPresenter()
 
-        presenter = MovieMenuPresenter(this, model)
+        itemsPresenter.setItemsModel(
+            ItemsModel(
+                ItemsData(
+                    ContainerDataFactory().getRandomMovies(10)
+                )
+            )
+        )
+
         val viewPool = RecyclerView.RecycledViewPool()
         viewPool.setMaxRecycledViews(R.layout.item_placeholder_recycler, 5)
         recyclerView = binding.recyclerParent
@@ -44,8 +55,12 @@ class MovieFragment : Fragment() {
         recyclerView.apply {
             adapter = ConcatAdapter()
             setRecycledViewPool(viewPool)
-            // TODO : Добавить items и лямбду на onClick()
         }
-        presenter.setItemsData()
+        itemsPresenter.showAdapters()
+    }
+
+    // TODO : Вынести все приваты в перзентер
+    private fun createPresenter() {
+        itemsPresenter = ItemsPresenter(this)
     }
 }

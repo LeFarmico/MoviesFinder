@@ -35,7 +35,7 @@ class HeaderAdapter : RecyclerView.Adapter<HeaderAdapter.ViewHolder>() {
         holder.bind(items[position])
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = 1
 
     fun addItem(titleHeader: String) {
         items.add(titleHeader)
