@@ -12,6 +12,7 @@ import com.lefarmico.moviesfinder.databinding.ItemBinding
 import com.lefarmico.moviesfinder.view.ItemsViewInterface
 
 class ItemAdapter(
+    private val itemClickListener: OnItemClick
 ) : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
     // TODO : Inject to model
@@ -38,7 +39,7 @@ class ItemAdapter(
         Log.d("TAG", "bind, position = $position")
         holder.bind(items[position])
         holder.itemView.setOnClickListener {
-//            itemClickListener.onClick(item = items[position])
+            itemClickListener.onClick(item = items[position])
         }
     }
 

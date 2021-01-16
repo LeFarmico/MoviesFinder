@@ -5,7 +5,7 @@ import com.lefarmico.moviesfinder.data.Item
 import com.lefarmico.moviesfinder.data.MovieItem
 import kotlin.random.Random
 
-class ContainerDataFactory {
+class DataFactory {
 
     private val categoryTitle = listOf("Hottest", "Top Views", "Favorite", "Hits", "Newest", "Your favorite")
     private val random = Random(123456789)

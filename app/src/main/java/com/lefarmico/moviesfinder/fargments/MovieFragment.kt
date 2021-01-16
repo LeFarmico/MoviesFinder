@@ -9,14 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lefarmico.moviesfinder.ContainerDataFactory
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.adapters.HeaderAdapter
-import com.lefarmico.moviesfinder.data.Header
-import com.lefarmico.moviesfinder.data.IHeader
-import com.lefarmico.moviesfinder.data.ItemsData
 import com.lefarmico.moviesfinder.databinding.FragmentItemsBinding
-import com.lefarmico.moviesfinder.models.ItemsModel
 import com.lefarmico.moviesfinder.presenters.ItemsPresenter
 
 class MovieFragment : Fragment() {
@@ -40,14 +34,6 @@ class MovieFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         createPresenter()
 
-        itemsPresenter.setItemsModel(
-            ItemsModel(
-                ItemsData(
-                    ContainerDataFactory().getRandomMovies(10)
-                )
-            )
-        )
-
         val viewPool = RecyclerView.RecycledViewPool()
         viewPool.setMaxRecycledViews(R.layout.item_placeholder_recycler, 5)
         recyclerView = binding.recyclerParent
@@ -56,10 +42,10 @@ class MovieFragment : Fragment() {
             adapter = ConcatAdapter()
             setRecycledViewPool(viewPool)
         }
-        itemsPresenter.showAdapters()
+        itemsPresenter.loadData()
     }
 
-    // TODO : Вынести все приваты в перзентер
+    // TODO : Вынести в фоновый класс
     private fun createPresenter() {
         itemsPresenter = ItemsPresenter(this)
     }

@@ -17,6 +17,10 @@ class MainActivity : AppCompatActivity() {
 
         initToolsBar()
         launchHomeFragment()
+
+        binding.fab.setOnClickListener {
+            updateFragment().itemsPresenter.updateData()
+        }
     }
 
     private fun initToolsBar() {
@@ -68,11 +72,14 @@ class MainActivity : AppCompatActivity() {
     private fun launchHomeFragment() {
         supportFragmentManager
             .beginTransaction()
-            .add(R.id.fragment_placeholder, MovieFragment())
+            .add(R.id.fragment_placeholder, MovieFragment(), "MovieFragment")
             .addToBackStack(null)
             .commit()
     }
-
+    private fun updateFragment() : MovieFragment {
+        return supportFragmentManager
+            .findFragmentByTag("MovieFragment") as MovieFragment
+    }
 //    fun launchDetailsFragment(movie: MovieItem) {
 //        val bundle = Bundle()
 //        bundle.putParcelable("movie", movie)
