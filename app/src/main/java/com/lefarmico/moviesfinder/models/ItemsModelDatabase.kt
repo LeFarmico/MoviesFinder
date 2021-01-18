@@ -72,9 +72,16 @@ class ItemsModelDatabase() {
 
     private fun getItemsModel(id: Int): ItemsModelInterface? = itemsModels[id]
 
-//    fun getItems(modelId: Int): ItemsData? =
-//        getItemsModel(modelId)?.itemsData
-//
+    fun getItems(modelId: Int): ItemsData? =
+        getItemsModel(modelId)?.itemsData
+
+    fun getAllItems(): List<ItemsData> {
+        val list = mutableListOf<ItemsData>()
+        for (i in idList.indices) {
+            list.add(itemsModels[idList[i]]?.getItems()!!)
+        }
+        return list
+    }
 //    fun getAdapterById(id: Int): ItemsPlaceholderAdapter =
 //        getItemsModel(id)?.adapter!!
 }

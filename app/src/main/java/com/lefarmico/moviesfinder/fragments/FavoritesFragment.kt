@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.fargments
+package com.lefarmico.moviesfinder.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

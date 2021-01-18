@@ -28,6 +28,5 @@ class ItemsModel(
         val adapter = ItemsPlaceholderAdapter()
         adapter.setNestedItemsData(itemsData)
         this.adapter = adapter
-
     }
 }
