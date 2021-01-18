@@ -8,12 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/search_view_bar"
-        android:background="@drawable/background_search_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp" />
     <FrameLayout
         android:id="@+id/fragment_placeholder"
         android:layout_width="match_parent"

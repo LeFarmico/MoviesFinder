@@ -2,12 +2,14 @@ package com.lefarmico.moviesfinder.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.Item
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.fragments.DetailsFragment
+import com.lefarmico.moviesfinder.fragments.FavoritesFragment
 import com.lefarmico.moviesfinder.fragments.MovieFragment
+import com.lefarmico.moviesfinder.fragments.SeriesFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,28 +18,31 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        initToolsBar()
-
         launchHomeFragment()
 
-        binding.fab.setOnClickListener {
-        }
-    }
-
-    private fun initToolsBar() {
-        binding.searchViewBar.setOnClickListener {
-            (it as SearchView).isIconified = false
-        }
-        binding.searchViewBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return true
+        binding.bottomNavigationBarView.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.movies_menu -> {
+                    val tag = "MovieFragment"
+                    val fragment = isFragmentExist(tag)
+                    changeFragment(fragment ?: MovieFragment(), tag)
+                    true
+                }
+                R.id.series_menu -> {
+                    val tag = "SeriesFragment"
+                    val fragment = isFragmentExist(tag)
+                    changeFragment(fragment ?: SeriesFragment(), tag)
+                    true
+                }
+                R.id.favorites_menu -> {
+                    val tag = "FavoritesFragment"
+                    val fragment = isFragmentExist(tag)
+                    changeFragment(fragment ?: FavoritesFragment(), tag)
+                    true
+                }
+                else -> false
             }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return true
-            }
-        })
+        }
     }
     // TODO: Find fab_menu items
 //    private fun onFloatingActionButtonClick(){
@@ -81,16 +86,21 @@ class MainActivity : AppCompatActivity() {
             .addToBackStack(null)
             .commit()
     }
-    private fun updateFragment(): MovieFragment {
-        return supportFragmentManager
-            .findFragmentByTag("MovieFragment") as MovieFragment
+    private fun isFragmentExist(tag: String): Fragment? = supportFragmentManager.findFragmentByTag(tag)
+
+    private fun changeFragment(fragment: Fragment, tag: String) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_placeholder, fragment, tag)
+            .addToBackStack(null)
+            .commit()
     }
+
     fun launchDetailsFragment(movie: Item) {
         val bundle = Bundle()
         bundle.putSerializable("movie", movie)
         val fragment = DetailsFragment()
         fragment.arguments = bundle
-
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_placeholder, fragment)
