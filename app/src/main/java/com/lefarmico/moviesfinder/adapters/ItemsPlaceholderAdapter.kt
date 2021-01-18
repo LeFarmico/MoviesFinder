@@ -1,16 +1,18 @@
 package com.lefarmico.moviesfinder.adapters
 
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lefarmico.moviesfinder.data.Item
+import com.lefarmico.moviesfinder.activities.MainActivity
 import com.lefarmico.moviesfinder.data.ItemsData
 import com.lefarmico.moviesfinder.databinding.ItemPlaceholderRecyclerBinding
+import com.lefarmico.moviesfinder.fragments.DetailsFragment
 
-// TODO : лямбда на setOnItemClickListener
-class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.ViewHolder>() {
+class ItemsPlaceholderAdapter : RecyclerView.Adapter<ItemsPlaceholderAdapter.ViewHolder>() {
 
     private lateinit var itemsData: ItemsData
 
@@ -39,12 +41,14 @@ class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.V
 
         holder.recyclerView.apply {
             layoutManager = itemsLayoutManager
-            adapter = ItemAdapter(object : ItemAdapter.OnItemClick {
-                override fun onClick(item: Item) {
 
-                    // Нужно прокинуть его в активити, или что-то вроде того
-                }
-            })
+            adapter = ItemAdapter {
+                Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
+                val intent = Intent(context, DetailsFragment::class.java)
+                intent.putExtra("movie", it)
+
+                (context as MainActivity).launchDetailsFragment(it)
+            }
             (adapter as ItemAdapter).setItems(itemsData.items)
 
             setRecycledViewPool(viewPool)

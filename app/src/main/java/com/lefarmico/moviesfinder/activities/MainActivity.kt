@@ -1,11 +1,13 @@
 package com.lefarmico.moviesfinder.activities
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.data.Item
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
-import com.lefarmico.moviesfinder.fargments.MovieFragment
+import com.lefarmico.moviesfinder.fragments.DetailsFragment
+import com.lefarmico.moviesfinder.fragments.MovieFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,23 +18,26 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initToolsBar()
+
         launchHomeFragment()
 
         binding.fab.setOnClickListener {
-            updateFragment().itemsPresenter.updateData()
         }
     }
 
     private fun initToolsBar() {
-        binding.topBar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.fav -> {
-                    Toast.makeText(this, "Add to favorite", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                else -> false
-            }
+        binding.searchViewBar.setOnClickListener {
+            (it as SearchView).isIconified = false
         }
+        binding.searchViewBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+        })
     }
     // TODO: Find fab_menu items
 //    private fun onFloatingActionButtonClick(){
@@ -76,20 +81,20 @@ class MainActivity : AppCompatActivity() {
             .addToBackStack(null)
             .commit()
     }
-    private fun updateFragment() : MovieFragment {
+    private fun updateFragment(): MovieFragment {
         return supportFragmentManager
             .findFragmentByTag("MovieFragment") as MovieFragment
     }
-//    fun launchDetailsFragment(movie: MovieItem) {
-//        val bundle = Bundle()
-//        bundle.putParcelable("movie", movie)
-//        val fragment = DetailsFragment()
-//        fragment.arguments = bundle
-//
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fragment_placeholder, fragment)
-//            .addToBackStack(null)
-//            .commit()
-//    }
+    fun launchDetailsFragment(movie: Item) {
+        val bundle = Bundle()
+        bundle.putSerializable("movie", movie)
+        val fragment = DetailsFragment()
+        fragment.arguments = bundle
+
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_placeholder, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
 }

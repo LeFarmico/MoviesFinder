@@ -3,7 +3,7 @@ package com.lefarmico.moviesfinder.presenters
 import androidx.recyclerview.widget.ConcatAdapter
 import com.lefarmico.moviesfinder.DataFactory
 import com.lefarmico.moviesfinder.data.Header
-import com.lefarmico.moviesfinder.fargments.MovieFragment
+import com.lefarmico.moviesfinder.fragments.MovieFragment
 import com.lefarmico.moviesfinder.models.ItemsModelDatabase
 
 class ItemsPresenter(val view: MovieFragment) : MainPresenter {
@@ -44,5 +44,9 @@ class ItemsPresenter(val view: MovieFragment) : MainPresenter {
 
     override fun errorData() {
         TODO("Not yet implemented")
+    }
+
+    fun getAllData() {
+        modelDatabase.getAllItems()
     }
 }

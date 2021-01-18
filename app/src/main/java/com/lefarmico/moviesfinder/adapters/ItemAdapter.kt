@@ -9,10 +9,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.data.Item
 import com.lefarmico.moviesfinder.databinding.ItemBinding
-import com.lefarmico.moviesfinder.view.ItemsViewInterface
 
 class ItemAdapter(
-    private val itemClickListener: OnItemClick
+    private val listener: (Item) -> Unit
 ) : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
     // TODO : Inject to model
@@ -39,7 +38,7 @@ class ItemAdapter(
         Log.d("TAG", "bind, position = $position")
         holder.bind(items[position])
         holder.itemView.setOnClickListener {
-            itemClickListener.onClick(item = items[position])
+            listener(items[position])
         }
     }
 
@@ -53,9 +52,5 @@ class ItemAdapter(
     fun removeItem(position: Int) {
         items.removeAt(position)
         notifyItemRemoved(items.size)
-    }
-
-    interface OnItemClick {
-        fun onClick(item: Item)
     }
 }

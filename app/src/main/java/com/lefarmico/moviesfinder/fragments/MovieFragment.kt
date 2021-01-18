@@ -1,5 +1,5 @@
 
-package com.lefarmico.moviesfinder.fargments
+package com.lefarmico.moviesfinder.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -38,6 +38,7 @@ class MovieFragment : Fragment() {
         viewPool.setMaxRecycledViews(R.layout.item_placeholder_recycler, 5)
         recyclerView = binding.recyclerParent
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.isNestedScrollingEnabled = false
         recyclerView.apply {
             adapter = ConcatAdapter()
             setRecycledViewPool(viewPool)

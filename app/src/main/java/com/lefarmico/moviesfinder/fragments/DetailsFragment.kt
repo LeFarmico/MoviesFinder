@@ -1,5 +1,5 @@
 
-package com.lefarmico.moviesfinder.fargments
+package com.lefarmico.moviesfinder.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,11 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.data.Item
 import com.lefarmico.moviesfinder.data.MovieItem
 import com.lefarmico.moviesfinder.databinding.FragmentDetailsBinding
 
 class DetailsFragment : Fragment() {
-    private lateinit var movieItem: MovieItem
+    private lateinit var movieItem: Item
     private var _binding: FragmentDetailsBinding? = null
 
     private val binding get() = _binding!!
@@ -41,18 +42,14 @@ class DetailsFragment : Fragment() {
         }
 
         binding.fragmentShareFab.setOnClickListener {
-            // создаем интент
             val intent = Intent()
-            // Указываем action
             intent.action = Intent.ACTION_SEND
-            // Передаем данные
             intent.putExtra(
                 Intent.EXTRA_TEXT,
                 "Check out this movie: ${movieItem.title}"
             )
             // УКазываем MIME тип, чтобы система знала, какое приложения предложить
             intent.type = "text/plain"
-            // Запускаем активити
             startActivity(Intent.createChooser(intent, "Share To:"))
         }
     }
