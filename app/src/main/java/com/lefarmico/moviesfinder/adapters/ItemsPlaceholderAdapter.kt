@@ -44,17 +44,16 @@ class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.V
 
         holder.recyclerView.apply {
             layoutManager = itemsLayoutManager
-
-            adapter = ItemAdapter {
-                Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
-                val intent = Intent(context, DetailsFragment::class.java)
-                intent.putExtra("movie", it)
-
-                (context as MainActivity).launchDetailsFragment(it)
-            }
-            (adapter as ItemAdapter).setItems(itemsData.items)
-
             setRecycledViewPool(viewPool)
+            holder.bind(
+                ItemAdapter {
+                    Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
+                    val intent = Intent(context, DetailsFragment::class.java)
+                    intent.putExtra("movie", it)
+                    (context as MainActivity).launchDetailsFragment(it)
+                }
+            )
+            (adapter as ItemAdapter).setItems(itemsData.items)
         }
     }
 

@@ -57,4 +57,9 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'androidx.cardview:cardview:1.0.0'
 
+    // Dagger 2
+    implementation 'com.google.dagger:dagger:2.31'
+    implementation 'com.google.dagger:dagger-android-support:2.31'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.31'
+
 }
