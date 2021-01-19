@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/merge_movie_screen_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,12 +9,4 @@
     android:orientation="vertical"
     tools:context=".fragments.MovieFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_parent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"
-        tools:ignore="RtlSymmetry"
-        android:layout_marginTop="65dp"/>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

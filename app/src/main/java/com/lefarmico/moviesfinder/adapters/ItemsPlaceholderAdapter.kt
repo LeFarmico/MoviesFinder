@@ -12,7 +12,7 @@ import com.lefarmico.moviesfinder.data.ItemsData
 import com.lefarmico.moviesfinder.databinding.ItemPlaceholderRecyclerBinding
 import com.lefarmico.moviesfinder.fragments.DetailsFragment
 
-class ItemsPlaceholderAdapter : RecyclerView.Adapter<ItemsPlaceholderAdapter.ViewHolder>() {
+class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.ViewHolder>() {
 
     private lateinit var itemsData: ItemsData
 
@@ -21,6 +21,10 @@ class ItemsPlaceholderAdapter : RecyclerView.Adapter<ItemsPlaceholderAdapter.Vie
     ) : RecyclerView.ViewHolder(placeholderBinding.root) {
 
         var recyclerView: RecyclerView = placeholderBinding.itemsPlaceholderRecycler
+
+        fun bind(adapter: ItemAdapter) {
+            recyclerView.adapter = adapter
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
@@ -32,7 +36,6 @@ class ItemsPlaceholderAdapter : RecyclerView.Adapter<ItemsPlaceholderAdapter.Vie
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.d("ItemsPlaceHolderAdapter", "${javaClass.name} bind")
-
         // Для плавного горизонтального скролла
         val viewPool = RecyclerView.RecycledViewPool()
         val itemsLayoutManager = LinearLayoutManager(
