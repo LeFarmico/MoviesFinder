@@ -1,17 +1,21 @@
 
 package com.lefarmico.moviesfinder.di
 
+import com.lefarmico.moviesfinder.activities.MainActivity
+import com.lefarmico.moviesfinder.fragments.MovieFragment
 import dagger.Component
 import javax.inject.Singleton
 
-@Component(modules = [PresentersModule::class])
+@Component(modules = [PresentersModule::class, DatabaseModule::class])
 
 @Singleton
 interface AppComponent {
 
     // Activities
-
+    fun inject(activity: MainActivity)
     // Fragments
+    @Singleton
+    fun inject(fragment: MovieFragment)
 }
 
 /*

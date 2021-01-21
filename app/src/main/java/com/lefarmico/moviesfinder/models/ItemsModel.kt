@@ -7,7 +7,7 @@ import com.lefarmico.moviesfinder.data.ItemsData
 
 class ItemsModel(
     @NonNull override var itemsData: ItemsData
-) : ItemsModelInterface {
+) : ModelItems {
 
     init {
         createAdapter()
@@ -15,13 +15,8 @@ class ItemsModel(
     override var id: Int = 0
     override lateinit var adapter: ItemsPlaceholderAdapter
 
-    override fun setItems(itemsData: ItemsData) {
-        this.itemsData = itemsData
-    }
-
-    override fun getItems(): ItemsData = itemsData
-
     override fun updateItems() {
+        // Going to the Data
     }
 
     override fun createAdapter() {
