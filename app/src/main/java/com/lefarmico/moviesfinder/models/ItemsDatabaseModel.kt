@@ -4,35 +4,40 @@ import com.lefarmico.moviesfinder.DataFactory
 import com.lefarmico.moviesfinder.adapters.HeaderAdapter
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.data.IHeader
+import com.lefarmico.moviesfinder.data.Item
 import com.lefarmico.moviesfinder.data.ItemsData
 
-class ItemsModelDatabase() {
+class ItemsDatabaseModel : ModelDataBase {
 
     companion object {
-        lateinit var instance: ItemsModelDatabase
+        lateinit var instance: ItemsDatabaseModel
     }
     init {
         instance = this
     }
 
     private var nextId = 1
-    private val itemsModels = mutableMapOf<Int, ItemsModelInterface>()
-    private val idList = mutableListOf<Int>()
+    override val models = mutableMapOf<Int, ModelItems>()
+    override val modelIds = mutableListOf<Int>()
 
     @Synchronized
-    fun saveItemsModel(itemsModel: ItemsModelInterface) {
+    fun saveItemsModel(model: ModelItems) {
         val id = nextId++
-        idList.add(id)
-        itemsModel.id = id
-        itemsModels[id] = itemsModel
+        modelIds.add(id)
+        model.id = id
+        models[id] = model
     }
 
-    fun loadData() {
+    override fun loadData() {
         setItemsModels(itemsDataGenerator(10))
     }
-    fun updateData() {
-        instance = ItemsModelDatabase()
+    override fun updateData() {
+        instance = ItemsDatabaseModel()
         setItemsModels(itemsDataGenerator(10))
+    }
+
+    override fun updateModelData(modelId: Int) {
+        TODO("Not yet implemented")
     }
 
     private fun setItemsModels(itemsDataList: List<ItemsData>) {
@@ -57,8 +62,8 @@ class ItemsModelDatabase() {
         return adapter
     }
 
-    fun getAdapters(): List<ItemsPlaceholderAdapter> {
-        val ids = getIdList()
+    override fun getAdapters(): List<ItemsPlaceholderAdapter> {
+        val ids = modelIds
         val adapters = mutableListOf<ItemsPlaceholderAdapter>()
         for (i in ids.indices) {
             adapters.add(
@@ -68,20 +73,16 @@ class ItemsModelDatabase() {
         return adapters
     }
 
-    private fun getIdList(): List<Int> = idList
-
-    private fun getItemsModel(id: Int): ItemsModelInterface? = itemsModels[id]
-
-    fun getItems(modelId: Int): ItemsData? =
-        getItemsModel(modelId)?.itemsData
+    override fun getItemsModel(id: Int): ModelItems? = models[id]
+    override fun getSingleInstanceItems(): List<Item> {
+        TODO("Not yet implemented")
+    }
 
     fun getAllItems(): List<ItemsData> {
         val list = mutableListOf<ItemsData>()
-        for (i in idList.indices) {
-            list.add(itemsModels[idList[i]]?.getItems()!!)
+        for (i in modelIds.indices) {
+            list.add(models[modelIds[i]]?.itemsData!!)
         }
         return list
     }
-//    fun getAdapterById(id: Int): ItemsPlaceholderAdapter =
-//        getItemsModel(id)?.adapter!!
 }

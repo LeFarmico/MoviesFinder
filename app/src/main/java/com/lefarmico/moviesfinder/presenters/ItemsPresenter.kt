@@ -4,30 +4,32 @@ import androidx.recyclerview.widget.ConcatAdapter
 import com.lefarmico.moviesfinder.DataFactory
 import com.lefarmico.moviesfinder.data.Header
 import com.lefarmico.moviesfinder.fragments.MovieFragment
-import com.lefarmico.moviesfinder.models.ItemsModelDatabase
+import com.lefarmico.moviesfinder.models.ItemsDatabaseModel
+import javax.inject.Inject
 
-class ItemsPresenter(val view: MovieFragment) : MainPresenter {
+class ItemsPresenter() : MainPresenter {
 
     // TODO : Создать коллбэки типа onItemWasClicked
 
-    private val modelDatabase: ItemsModelDatabase
+    private lateinit var databaseModel: ItemsDatabaseModel
+    private lateinit var view: MovieFragment
 
     companion object {
         lateinit var instance: ItemsPresenter
     }
     init {
         instance = this
-        modelDatabase = ItemsModelDatabase()
+//        databaseModel = view.databaseModel
     }
 
     override fun loadData() {
-        modelDatabase.loadData()
-        val adapters = modelDatabase.getAdapters()
+        databaseModel.loadData()
+        val adapters = databaseModel.getAdapters()
         val headerGenerator = DataFactory()
         for (i in adapters.indices) {
             (view.recyclerView.adapter as ConcatAdapter).apply {
                 addAdapter(
-                    modelDatabase.addCategoryAdapter(
+                    databaseModel.addCategoryAdapter(
                         Header(
                             headerGenerator.getRandomCategory()
                         )
@@ -39,7 +41,7 @@ class ItemsPresenter(val view: MovieFragment) : MainPresenter {
     }
 
     override fun updateData() {
-        modelDatabase.updateData()
+        databaseModel.updateData()
     }
 
     override fun errorData() {
@@ -47,6 +49,12 @@ class ItemsPresenter(val view: MovieFragment) : MainPresenter {
     }
 
     fun getAllData() {
-        modelDatabase.getAllItems()
+        databaseModel.getAllItems()
+    }
+    fun setView(view: MovieFragment) {
+        this.view = view
+    }
+    fun setModel(model: ItemsDatabaseModel) {
+        databaseModel = model
     }
 }

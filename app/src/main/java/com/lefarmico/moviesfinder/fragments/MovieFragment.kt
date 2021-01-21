@@ -6,6 +6,7 @@ import android.transition.Scene
 import android.transition.Slide
 import android.transition.TransitionManager
 import android.transition.TransitionSet
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -15,47 +16,73 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.FragmentItemsBinding
-import com.lefarmico.moviesfinder.databinding.MergeMovieScreenContentBinding
+import com.lefarmico.moviesfinder.models.ItemsDatabaseModel
 import com.lefarmico.moviesfinder.presenters.ItemsPresenter
+import javax.inject.Inject
 
 class MovieFragment : Fragment() {
 
     lateinit var recyclerView: RecyclerView
     private var _binding: FragmentItemsBinding? = null
-
-    lateinit var itemsPresenter: ItemsPresenter
-
     private val binding get() = _binding!!
+
+    @Inject lateinit var databaseModel: ItemsDatabaseModel
+    @Inject lateinit var itemsPresenter: ItemsPresenter
+
+    private val TAG = this.javaClass.canonicalName
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        App.appComponent.inject(this)
+        super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d(TAG, "onDestroyView")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.d(TAG, "onDetach")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d(TAG, "onCreateView")
         _binding = FragmentItemsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d(TAG, "onViewCreated")
         startAppAnimation()
-        createPresenter()
-        val viewPool = RecyclerView.RecycledViewPool()
-        viewPool.setMaxRecycledViews(R.layout.item_placeholder_recycler, 5)
+        initToolsBar()
+
+        itemsPresenter.setView(this)
+        itemsPresenter.setModel(databaseModel)
+
         recyclerView = binding.mergeMovieScreenContent.findViewById(R.id.recycler_parent)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.isNestedScrollingEnabled = false
+
         recyclerView.apply {
+            isNestedScrollingEnabled = false
+            layoutManager = LinearLayoutManager(requireContext())
             adapter = ConcatAdapter()
-            setRecycledViewPool(viewPool)
+            setRecycledViewPool(RecyclerView.RecycledViewPool())
         }
         itemsPresenter.loadData()
-    }
-
-    // TODO : Вынести в фоновый класс
-    private fun createPresenter() {
-        itemsPresenter = ItemsPresenter(this)
     }
 
     private fun initToolsBar() {
