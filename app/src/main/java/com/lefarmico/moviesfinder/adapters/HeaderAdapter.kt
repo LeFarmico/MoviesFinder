@@ -1,11 +1,13 @@
 
 package com.lefarmico.moviesfinder.adapters
 
+import android.content.res.Resources
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.ItemHeaderBinding
 
 class HeaderAdapter : RecyclerView.Adapter<HeaderAdapter.ViewHolder>() {
@@ -37,9 +39,9 @@ class HeaderAdapter : RecyclerView.Adapter<HeaderAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = 1
 
-    fun addItem(titleHeader: String) {
-        items.add(titleHeader)
-        notifyItemChanged(items.size - 1)
+    fun addItem(title: String) {
+        items.add(title)
+        notifyDataSetChanged()
     }
 
     fun removeItem(position: Int) {

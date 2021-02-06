@@ -1,10 +1,13 @@
+
 package com.lefarmico.moviesfinder.view
 
-import com.lefarmico.moviesfinder.data.Item
+import androidx.recyclerview.widget.ConcatAdapter
+import com.lefarmico.moviesfinder.models.Item
 
-interface ItemsViewInterface {
-    var id: Int
-    fun setItems(itemsList: List<Item>)
-    fun updateItems()
-    fun removeItem(position: Int)
+interface MoviesView {
+    fun showCatalog(adapter: ConcatAdapter)
+    fun showError()
+    fun showEmptyCatalog()
+    fun onItemClicked(item: Item)
+    fun onStartLoading()
 }

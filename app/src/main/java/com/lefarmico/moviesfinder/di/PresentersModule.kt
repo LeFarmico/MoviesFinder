@@ -1,15 +1,16 @@
 
 package com.lefarmico.moviesfinder.di
 
-import com.lefarmico.moviesfinder.presenters.ItemsPresenter
+import com.lefarmico.moviesfinder.presenters.MoviePresenter
 import dagger.Module
 import dagger.Provides
+import javax.inject.Singleton
 
 @Module
 class PresentersModule {
 
-    @Provides
-    fun createItemsPresenter(): ItemsPresenter {
-        return ItemsPresenter()
+    @Provides @Singleton
+    fun createItemsPresenter(): MoviePresenter {
+        return MoviePresenter()
     }
 }

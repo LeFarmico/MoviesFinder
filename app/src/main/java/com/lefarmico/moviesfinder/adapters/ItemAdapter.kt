@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.lefarmico.moviesfinder.data.Item
+import com.lefarmico.moviesfinder.models.Item
 import com.lefarmico.moviesfinder.databinding.ItemBinding
 
 class ItemAdapter(

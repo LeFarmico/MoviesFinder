@@ -8,13 +8,13 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.activities.MainActivity
-import com.lefarmico.moviesfinder.data.ItemsData
+import com.lefarmico.moviesfinder.models.ItemsDataModel
 import com.lefarmico.moviesfinder.databinding.ItemPlaceholderRecyclerBinding
 import com.lefarmico.moviesfinder.fragments.DetailsFragment
 
 class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.ViewHolder>() {
 
-    private lateinit var itemsData: ItemsData
+    private lateinit var itemsDataModel: ItemsDataModel
 
     class ViewHolder(
         placeholderBinding: ItemPlaceholderRecyclerBinding
@@ -42,6 +42,7 @@ class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.V
             holder.recyclerView.context, RecyclerView.HORIZONTAL, false
         )
 
+        // Корректно ли это?
         holder.recyclerView.apply {
             layoutManager = itemsLayoutManager
             setRecycledViewPool(viewPool)
@@ -53,13 +54,14 @@ class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.V
                     (context as MainActivity).launchDetailsFragment(it)
                 }
             )
-            (adapter as ItemAdapter).setItems(itemsData.items)
+            (adapter as ItemAdapter).setItems(itemsDataModel.items)
         }
     }
 
     override fun getItemCount(): Int = 1
 
-    fun setNestedItemsData(itemsData: ItemsData) {
-        this.itemsData = itemsData
+    fun setNestedItemsData(itemsDataModel: ItemsDataModel) {
+        this.itemsDataModel = itemsDataModel
+        notifyDataSetChanged()
     }
 }

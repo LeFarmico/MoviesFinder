@@ -10,7 +10,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.data.Item
+import com.lefarmico.moviesfinder.models.Item
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.fragments.DetailsFragment
 import com.lefarmico.moviesfinder.fragments.FavoritesFragment
