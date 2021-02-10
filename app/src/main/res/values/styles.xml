@@ -24,11 +24,19 @@
         <item name="android:layout_width"> 120dp</item>
         <item name="android:layout_height">180dp</item>
         <item name="android:stateListAnimator">@animator/poster_elevation</item>
+        <item name="android:background">@drawable/poster_shape</item>
     </style>
 
     <style name="BottomNavigatorStyle">
         <item name="android:background">@color/color_of_passive_element</item>
         <item name="itemIconTint">@drawable/bottom_navigation_selector_light</item>
         <item name="itemTextColor">@drawable/bottom_navigation_selector_light</item>
+    </style>
+
+    <style name="BottomSheetItemDescription">
+        <item name="android:layout_width"> match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textSize">12sp</item>
     </style>
 </resources>

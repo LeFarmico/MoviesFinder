@@ -40,7 +40,7 @@ class FavoritesFragment : Fragment() {
             adapter = ItemAdapter {
                 val intent = Intent(requireContext(), DetailsFragment::class.java)
                 intent.putExtra("movie", it)
-                (requireActivity() as MainActivity).launchDetailsFragment(it)
+                (requireActivity() as MainActivity).launchMovieDetails(it)
                 val decorator = TopSpacingItemDecoration(8)
                 addItemDecoration(decorator)
                 layoutManager = LinearLayoutManager(requireContext())

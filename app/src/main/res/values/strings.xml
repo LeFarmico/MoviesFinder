@@ -14,4 +14,7 @@
     <string name="hits_category">Hits</string>
     <string name="drama_category">Drama</string>
     <string name="comedy_category">Comedy</string>
+    <string name="actors">Actors:</string>
+    <string name="directors">Directors:</string>
+    <string name="rating">Rating:</string>
 </resources>

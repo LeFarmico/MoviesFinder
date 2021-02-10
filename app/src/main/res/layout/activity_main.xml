@@ -30,6 +30,12 @@
         android:contentDescription="@string/navigation_menu"
         android:backgroundTint="@color/color_of_active_element"
         android:src="@drawable/ic_baseline_keyboard_arrow_up_24"/>
+    <FrameLayout
+        android:id="@+id/black_background_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:alpha="0"/>
     <include
         android:id="@+id/fab_menu"
         layout="@layout/fab_menu"/>
@@ -41,4 +47,8 @@
         android:layout_gravity="bottom"
         style="@style/BottomNavigatorStyle"
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"/>
+    <include
+        android:id="@+id/bottom_sheet"
+        layout="@layout/movie_details_bottom_sheet"
+        />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

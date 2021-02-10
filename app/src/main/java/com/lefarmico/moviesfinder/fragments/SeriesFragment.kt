@@ -21,12 +21,27 @@ class SeriesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         Log.d(TAG, "onCreateView")
-        _binding = FragmentSeriesBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentSeriesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.d(TAG, "onDetach")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d(TAG, "onDestroyView")
     }
 }

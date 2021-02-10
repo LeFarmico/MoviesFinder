@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.recyclerview.widget.ConcatAdapter
 import com.lefarmico.moviesfinder.adapters.HeaderAdapter
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
-import com.lefarmico.moviesfinder.models.Item
 import com.lefarmico.moviesfinder.fragments.MovieFragment
 import com.lefarmico.moviesfinder.models.CategoryModel
+import com.lefarmico.moviesfinder.models.Item
 import com.lefarmico.moviesfinder.providers.MovieItemsProvider
 import javax.inject.Inject
 

@@ -18,5 +18,5 @@
 
     <!-- menu colors -->
     <color name="menu_background">#0F232C</color>
-    <color name="bottom_sheet_background">#E0FFFF</color>
+    <color name="bottom_sheet_background">#0F232C</color>
 </resources>

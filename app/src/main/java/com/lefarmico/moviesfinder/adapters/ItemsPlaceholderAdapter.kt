@@ -51,7 +51,8 @@ class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.V
                     Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
                     val intent = Intent(context, DetailsFragment::class.java)
                     intent.putExtra("movie", it)
-                    (context as MainActivity).launchDetailsFragment(it)
+//                    (context as MainActivity).launchDetailsFragment(it)
+                    (context as MainActivity).launchMovieDetailsBottomSheet(it)
                 }
             )
             (adapter as ItemAdapter).setItems(itemsDataModel.items)

@@ -3,19 +3,23 @@ package com.lefarmico.moviesfinder.activities
 import android.animation.ValueAnimator
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.models.Item
+import com.lefarmico.moviesfinder.adapters.RateMovieAdapter
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.fragments.DetailsFragment
 import com.lefarmico.moviesfinder.fragments.FavoritesFragment
 import com.lefarmico.moviesfinder.fragments.MovieFragment
 import com.lefarmico.moviesfinder.fragments.SeriesFragment
+import com.lefarmico.moviesfinder.models.Item
+import com.lefarmico.moviesfinder.models.MovieItemModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,32 +27,65 @@ class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
 
     private lateinit var binding: ActivityMainBinding
+
     val TAG = this.javaClass.canonicalName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         App.appComponent.inject(this)
         super.onCreate(savedInstanceState)
+
         Log.d(TAG, "onCreate")
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         fragmentLauncher(MovieFragment(), "MovieFragment")
-        onFloatingActionButtonClick()
 
+        binding.fab.setOnClickListener {
+            onFloatingActionButtonClick()
+        }
         binding.bottomNavigationBarView
             .setOnNavigationItemSelectedListener(setMenuChangeListener())
+        // TODO : Обработать поворот экрана
+        binding.bottomSheet.movieDetailsBottomSheet.visibility = View.INVISIBLE
     }
 
-    fun launchDetailsFragment(movie: Item) {
-        val bundle = Bundle()
-        bundle.putSerializable("movie", movie)
-        val fragment = DetailsFragment()
-        fragment.arguments = bundle
+    fun launchMovieDetails(movie: Item) {
+        val bundle = Bundle().apply {
+            putSerializable("movie", movie)
+        }
+
+        val fragment = DetailsFragment().apply {
+            arguments = bundle
+        }
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.nav_host_fragment, fragment)
             .addToBackStack(null)
             .commit()
+    }
+    fun launchMovieDetailsBottomSheet(movie: Item) {
+        binding.bottomSheet.movieDetailsBottomSheet.visibility = View.VISIBLE
+
+        binding.bottomSheet.apply {
+            rateButtonsRecycler.adapter = RateMovieAdapter()
+            posterImageView.setImageResource(movie.posterId)
+            movieTitle.text = movie.title
+        }
+        BottomSheetBehavior.from(binding.bottomSheet.root).apply {
+            skipCollapsed = true
+            state = BottomSheetBehavior.STATE_HALF_EXPANDED
+
+            addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    binding.blackBackgroundFrameLayout.alpha = 0 + slideOffset
+                }
+            })
+        }
+        binding.bottomNavigationBarView.visibility = View.INVISIBLE
     }
 
     private fun onFloatingActionButtonClick() {
@@ -84,6 +121,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun fragmentLauncher(startFragment: Fragment, startFragmentTag: String) {
         if (supportFragmentManager.primaryNavigationFragment == null) {
             launchStartFragment(startFragment, startFragmentTag)
@@ -91,6 +129,7 @@ class MainActivity : AppCompatActivity() {
             launchCurrentFragment()
         }
     }
+
     private fun launchStartFragment(fragment: Fragment, tag: String) {
         supportFragmentManager
             .beginTransaction()
@@ -99,12 +138,15 @@ class MainActivity : AppCompatActivity() {
             .setPrimaryNavigationFragment(fragment)
             .commit()
     }
+
     private fun launchCurrentFragment() {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.nav_host_fragment, supportFragmentManager.primaryNavigationFragment!!)
     }
+
     private fun isFragmentExist(tag: String): Fragment? = supportFragmentManager.findFragmentByTag(tag)
+
     private fun changeFragment(fragment: Fragment, tag: String) {
         if (isFragmentExist(tag) != null) {
             supportFragmentManager
@@ -124,6 +166,7 @@ class MainActivity : AppCompatActivity() {
             .setPrimaryNavigationFragment(fragment)
             .commit()
     }
+
     private fun setMenuChangeListener(): BottomNavigationView.OnNavigationItemSelectedListener {
         return BottomNavigationView.OnNavigationItemSelectedListener {
             when (it.itemId) {
@@ -149,6 +192,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun setNavigationComponentListener(): BottomNavigationView.OnNavigationItemSelectedListener {
         return BottomNavigationView.OnNavigationItemSelectedListener {
             navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment

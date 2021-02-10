@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.models.Item
 import com.lefarmico.moviesfinder.databinding.FragmentItemsBinding
+import com.lefarmico.moviesfinder.models.Item
 import com.lefarmico.moviesfinder.presenters.MoviePresenter
 import com.lefarmico.moviesfinder.providers.MovieItemsProvider
 import com.lefarmico.moviesfinder.view.MoviesView

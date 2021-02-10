@@ -46,7 +46,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'com.google.android.material:material:1.3.0-beta01'
+    implementation 'com.google.android.material:material:1.3.0-rc01'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
@@ -64,8 +64,12 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$daggerVer"
 
     // Navigation Components
-    def nav_version = "2.3.2"
+    def nav_version = "2.3.3"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+
+    // Blurry
+
+    implementation 'jp.wasabeef:blurry:4.0.0'
 }
