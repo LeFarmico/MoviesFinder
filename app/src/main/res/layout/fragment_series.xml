@@ -5,20 +5,24 @@
     android:id="@+id/fragment_series"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:visibility="visible"
     android:background="@drawable/orange_shape"
     tools:context=".fragments.SeriesFragment">
 
-    <com.lefarmico.moviesfinder.customViews.RateView
-        android:layout_width="wrap_content"
+    <HorizontalScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:button_size="100"
-        app:button_space="20"
-        app:buttons_count="3"
-        app:default_color="@color/color_of_passive_element"
-        app:is_buttons_horizontal="true"
-        app:number_size="50"
-        />
+        android:scrollbars="none">
 
+        <com.lefarmico.moviesfinder.customViews.RateView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:button_size="80"
+            app:button_space="10"
+            app:buttons_count="10"
+            app:default_color="@color/color_of_passive_element"
+            app:is_buttons_horizontal="true"
+            app:number_size="50"
+            />
+    </HorizontalScrollView>
 </FrameLayout>
