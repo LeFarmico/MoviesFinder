@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/bottom_sheet_behavior"
-    app:behavior_peekHeight="400dp"
+    app:behavior_peekHeight="800dp"
     app:behavior_hideable="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/bottom_sheet_background">
@@ -78,14 +78,26 @@
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/descriptions"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rate_buttons_recycler"
+    <HorizontalScrollView
+        android:id="@+id/rate_view_scroll"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/rate_text_view"/>
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/rate_text_view">
+
+        <com.lefarmico.moviesfinder.customViews.RateView
+            android:id="@+id/rate_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:button_size="24dp"
+            app:button_space="6dp"
+            app:buttons_count="10"
+            app:default_color="@color/button_outline_2"
+            app:pushed_color="@color/color_of_active_element"
+            app:is_buttons_horizontal="true"
+            app:number_size="16sp"
+            />
+    </HorizontalScrollView>
 
     <TextView
         android:id="@+id/genre_text_view"
@@ -95,7 +107,7 @@
         android:text="GENRE"
         android:textSize="15sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/rate_buttons_recycler"/>
+        app:layout_constraintTop_toBottomOf="@id/rate_view_scroll"/>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

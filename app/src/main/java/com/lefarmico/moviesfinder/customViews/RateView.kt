@@ -37,7 +37,7 @@ class RateView @JvmOverloads constructor(
 
     private var pressedCX = 0f
     private var pressedCY = 0f
-    var pressedB: Int = 3
+    var pressedB: Int = 0
 
     private var abPosX = 0f
     private var abPosY = 0f
@@ -48,13 +48,13 @@ class RateView @JvmOverloads constructor(
         val attributes = context.theme.obtainStyledAttributes(attributeSet, R.styleable.RateView, 0, 0)
 
         try {
-            buttonSize = attributes.getFloat(R.styleable.RateView_button_size, 0f)
+            buttonSize = attributes.getDimension(R.styleable.RateView_button_size, 0f)
             defButtonColor = attributes.getColor(R.styleable.RateView_default_color, Color.WHITE)
             pushedButtonColor = attributes.getColor(R.styleable.RateView_pushed_color, Color.YELLOW)
             buttonsCount = attributes.getInt(R.styleable.RateView_buttons_count, 1)
             isButtonsHorizontal = attributes.getBoolean(R.styleable.RateView_is_buttons_horizontal, true)
-            buttonSpace = attributes.getFloat(R.styleable.RateView_button_space, 0f)
-            numberSize = attributes.getFloat(R.styleable.RateView_number_size, 10f)
+            buttonSpace = attributes.getDimension(R.styleable.RateView_button_space, 0f)
+            numberSize = attributes.getDimension(R.styleable.RateView_number_size, 10f)
         } finally {
             attributes.recycle()
         }
@@ -97,14 +97,16 @@ class RateView @JvmOverloads constructor(
         return buttons
     }
 
-    private fun isButtonPushed() {
-        if (pressedB != 0) {
-            abPosX = b[pressedB + 1].cx
-            abPosY = b[pressedB + 1].cy
+    fun setPushedButton(pushedNumber: Int) {
+        if (pushedNumber != 0) {
+            pressedB = pushedNumber
+            abPosX = b[pushedNumber - 1].cx
+            abPosY = b[pushedNumber - 1].cy
             abRadius = buttonSize
         }
+        invalidate()
     }
-    private val pb = PushedButton(isPushed = false, pressedCX = 0f, pressedCY = 0f, pressedB = 0)
+
     private fun pushButton(cx: Float, cy: Float) {
         for (i in b.indices) {
             if (cx >= b[i].cx - buttonSize && cx <= b[i].cx + buttonSize && cy >= b[i].cy - buttonSize && cy <= b[i].cy + buttonSize) {
@@ -152,6 +154,8 @@ class RateView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        setPushedButton(pressedB)
+
         val corpWidth = b[b.size - 1].cx + buttonSize + buttonSpace
         val corpHeight = b[b.size - 1].cy + buttonSize + buttonSpace
 

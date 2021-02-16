@@ -12,14 +12,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.adapters.RateMovieAdapter
+import com.lefarmico.moviesfinder.customViews.MovieDetailsBSFragment
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.fragments.DetailsFragment
 import com.lefarmico.moviesfinder.fragments.FavoritesFragment
 import com.lefarmico.moviesfinder.fragments.MovieFragment
 import com.lefarmico.moviesfinder.fragments.SeriesFragment
 import com.lefarmico.moviesfinder.models.Item
-import com.lefarmico.moviesfinder.models.MovieItemModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,7 +41,8 @@ class MainActivity : AppCompatActivity() {
         fragmentLauncher(MovieFragment(), "MovieFragment")
 
         binding.fab.setOnClickListener {
-            onFloatingActionButtonClick()
+            MovieDetailsBSFragment().show(supportFragmentManager, "b_h_f")
+//            onFloatingActionButtonClick()
         }
         binding.bottomNavigationBarView
             .setOnNavigationItemSelectedListener(setMenuChangeListener())
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomSheet.movieDetailsBottomSheet.visibility = View.VISIBLE
 
         binding.bottomSheet.apply {
-            rateButtonsRecycler.adapter = RateMovieAdapter()
+            rateView.setPushedButton(3)
             posterImageView.setImageResource(movie.posterId)
             movieTitle.text = movie.title
         }
