@@ -109,7 +109,9 @@ class RateView @JvmOverloads constructor(
 
     private fun pushButton(cx: Float, cy: Float) {
         for (i in b.indices) {
-            if (cx >= b[i].cx - buttonSize && cx <= b[i].cx + buttonSize && cy >= b[i].cy - buttonSize && cy <= b[i].cy + buttonSize) {
+            if (cx >= b[i].cx - buttonSize && cx <= b[i].cx + buttonSize &&
+                cy >= b[i].cy - buttonSize && cy <= b[i].cy + buttonSize
+            ) {
                 pressedCX = b[i].cx
                 pressedCY = b[i].cy
 

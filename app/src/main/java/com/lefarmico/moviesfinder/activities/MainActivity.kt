@@ -1,29 +1,23 @@
 package com.lefarmico.moviesfinder.activities
 
-import android.animation.ValueAnimator
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.customViews.MovieDetailsBSFragment
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
-import com.lefarmico.moviesfinder.fragments.DetailsFragment
+import com.lefarmico.moviesfinder.decorators.FabMenuAnimator
 import com.lefarmico.moviesfinder.fragments.FavoritesFragment
 import com.lefarmico.moviesfinder.fragments.MovieFragment
 import com.lefarmico.moviesfinder.fragments.SeriesFragment
 import com.lefarmico.moviesfinder.models.Item
+import com.lefarmico.moviesfinder.view.MainView
 
-class MainActivity : AppCompatActivity() {
-
-    lateinit var navHost: NavHostFragment
-    lateinit var navController: NavController
+class MainActivity : AppCompatActivity(), MainView {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -32,92 +26,38 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         App.appComponent.inject(this)
         super.onCreate(savedInstanceState)
-
         Log.d(TAG, "onCreate")
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         fragmentLauncher(MovieFragment(), "MovieFragment")
+        launchBottomSheet()
+        fabClick()
 
-        binding.fab.setOnClickListener {
-            MovieDetailsBSFragment().show(supportFragmentManager, "b_h_f")
-//            onFloatingActionButtonClick()
-        }
         binding.bottomNavigationBarView
             .setOnNavigationItemSelectedListener(setMenuChangeListener())
         // TODO : Обработать поворот экрана
-        binding.bottomSheet.movieDetailsBottomSheet.visibility = View.INVISIBLE
     }
 
-    fun launchMovieDetails(movie: Item) {
-        val bundle = Bundle().apply {
-            putSerializable("movie", movie)
-        }
-
-        val fragment = DetailsFragment().apply {
-            arguments = bundle
-        }
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.nav_host_fragment, fragment)
-            .addToBackStack(null)
-            .commit()
-    }
-    fun launchMovieDetailsBottomSheet(movie: Item) {
-        binding.bottomSheet.movieDetailsBottomSheet.visibility = View.VISIBLE
-
-        binding.bottomSheet.apply {
-            rateView.setPushedButton(3)
-            posterImageView.setImageResource(movie.posterId)
-            movieTitle.text = movie.title
-        }
+    private fun launchBottomSheet() {
         BottomSheetBehavior.from(binding.bottomSheet.root).apply {
             skipCollapsed = true
-            state = BottomSheetBehavior.STATE_HALF_EXPANDED
-
-            addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-                override fun onStateChanged(bottomSheet: View, newState: Int) {
-                }
-
-                override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    binding.blackBackgroundFrameLayout.alpha = 0 + slideOffset
-                }
-            })
+            state = BottomSheetBehavior.STATE_HIDDEN
         }
-        binding.bottomNavigationBarView.visibility = View.INVISIBLE
     }
 
-    private fun onFloatingActionButtonClick() {
-        val showAnimator = ValueAnimator.ofFloat(0f, -200f)
-        val hideAnimator = ValueAnimator.ofFloat(-200f, 0f)
-        val showAlphaAnimator = ValueAnimator.ofFloat(0f, 1f)
-        val hideAlphaAnimator = ValueAnimator.ofFloat(1f, 0f)
+    override val fragments: Map<String, Fragment> = mutableMapOf()
 
-        val fabButtonMoveAnim = ValueAnimator.AnimatorUpdateListener {
-            binding.fabMenu.fabMovies.translationX = it.animatedValue as Float
-            binding.fabMenu.fabSeries.translationX = it.animatedValue as Float
-            binding.fabMenu.fabSeries.translationY = it.animatedValue as Float
-            binding.fabMenu.fabShows.translationY = it.animatedValue as Float
-        }
-        val fabButtonAlphaAnimation = ValueAnimator.AnimatorUpdateListener {
-            binding.fabMenu.fabMovies.alpha = it.animatedValue as Float
-            binding.fabMenu.fabSeries.alpha = it.animatedValue as Float
-            binding.fabMenu.fabShows.alpha = it.animatedValue as Float
-        }
-
-        showAnimator.addUpdateListener(fabButtonMoveAnim)
-        hideAnimator.addUpdateListener(fabButtonMoveAnim)
-        showAlphaAnimator.addUpdateListener(fabButtonAlphaAnimation)
-        hideAlphaAnimator.addUpdateListener(fabButtonAlphaAnimation)
-
-        binding.fab.setOnClickListener {
-            if (binding.fabMenu.fabMovies.alpha == 0f) {
-                showAlphaAnimator.start()
-                showAnimator.start()
-            } else if (binding.fabMenu.fabMovies.alpha == 1f) {
-                hideAnimator.start()
-                hideAlphaAnimator.start()
+    private fun fabClick() {
+        FabMenuAnimator(
+            binding.fabMenu.fabMovies,
+            binding.fabMenu.fabSeries,
+            binding.fabMenu.fabShows,
+        ).apply {
+            setAnimator(200)
+            binding.fab.setOnClickListener {
+                onMenuClick()
             }
         }
     }
@@ -143,28 +83,6 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.nav_host_fragment, supportFragmentManager.primaryNavigationFragment!!)
-    }
-
-    private fun isFragmentExist(tag: String): Fragment? = supportFragmentManager.findFragmentByTag(tag)
-
-    private fun changeFragment(fragment: Fragment, tag: String) {
-        if (isFragmentExist(tag) != null) {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.nav_host_fragment, fragment, tag)
-                .addToBackStack(null)
-                .setReorderingAllowed(true)
-                .setPrimaryNavigationFragment(fragment)
-                .commit()
-            return
-        }
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.nav_host_fragment, fragment, tag)
-            .addToBackStack(null)
-            .setReorderingAllowed(true)
-            .setPrimaryNavigationFragment(fragment)
-            .commit()
     }
 
     private fun setMenuChangeListener(): BottomNavigationView.OnNavigationItemSelectedListener {
@@ -193,25 +111,58 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setNavigationComponentListener(): BottomNavigationView.OnNavigationItemSelectedListener {
-        return BottomNavigationView.OnNavigationItemSelectedListener {
-            navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-            navController = navHost.navController
-            when (it.itemId) {
-                R.id.movies_menu -> {
-                    navController.navigate(R.id.movieFragment)
-                    true
-                }
-                R.id.series_menu -> {
-                    navController.navigate(R.id.seriesFragment)
-                    true
-                }
-                R.id.favorites_menu -> {
-                    navController.navigate(R.id.favoritesFragment)
-                    true
-                }
-                else -> false
-            }
+    private fun isFragmentExist(tag: String): Fragment? = supportFragmentManager.findFragmentByTag(tag)
+
+    private fun changeFragment(fragment: Fragment, tag: String) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.nav_host_fragment, fragment, tag)
+            .addToBackStack(null)
+            .setReorderingAllowed(true)
+            .setPrimaryNavigationFragment(fragment)
+            .commit()
+    }
+    override fun launchFragment(fragment: Fragment, tag: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun launchItemDetails(item: Item) {
+        binding.bottomSheet.apply {
+            rateView.setPushedButton(3)
+            posterImageView.setImageResource(item.posterId)
+            movieTitle.text = item.title
         }
+        BottomSheetBehavior.from(binding.bottomSheet.root).apply {
+            skipCollapsed = true
+            state = BottomSheetBehavior.STATE_HALF_EXPANDED
+
+            addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                        binding.blackBackgroundFrameLayout.isClickable = false
+                        binding.bottomNavigationBarView.visibility = View.VISIBLE
+                    } else if (newState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
+                        binding.blackBackgroundFrameLayout.isClickable = true
+                        binding.blackBackgroundFrameLayout.setOnClickListener {
+                            state = BottomSheetBehavior.STATE_HIDDEN
+                            binding.blackBackgroundFrameLayout.isClickable = false
+                        }
+                    }
+                }
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    binding.blackBackgroundFrameLayout.alpha = 0 + slideOffset
+                }
+            })
+        }
+        binding.bottomNavigationBarView.visibility = View.INVISIBLE
+    }
+
+    override fun launchNavigationComponent() {
+        TODO("Not yet implemented")
+    }
+
+    override fun showError() {
+        TODO("Not yet implemented")
     }
 }

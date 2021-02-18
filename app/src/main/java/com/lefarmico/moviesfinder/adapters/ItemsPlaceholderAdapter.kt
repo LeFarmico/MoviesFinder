@@ -52,7 +52,7 @@ class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.V
                     val intent = Intent(context, DetailsFragment::class.java)
                     intent.putExtra("movie", it)
 //                    (context as MainActivity).launchDetailsFragment(it)
-                    (context as MainActivity).launchMovieDetailsBottomSheet(it)
+                    (context as MainActivity).launchItemDetails(it)
                 }
             )
             (adapter as ItemAdapter).setItems(itemsDataModel.items)
