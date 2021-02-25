@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/bottom_sheet_behavior"
-    app:behavior_peekHeight="100dp"
+    app:behavior_peekHeight="0dp"
     android:clickable="true"
     app:behavior_hideable="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -27,7 +27,7 @@
             android:layout_width="120dp"
             android:layout_height="180dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/texet"
+            android:src="@drawable/ic_launcher_foreground"
             android:clickable="false"
             android:contentDescription="@string/movie_title"/>
     </androidx.cardview.widget.CardView>
@@ -37,7 +37,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-
         app:layout_constraintStart_toEndOf="@id/poster_card_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/poster_card_view"
@@ -49,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/movie_title"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:textStyle="bold"/>
         <TextView
             android:id="@+id/movie_rate"
@@ -68,7 +67,7 @@
         <TextView
             android:id="@+id/movie_description"
             style="@style/BottomSheetItemDescription"
-            android:maxLines="5"
+            android:maxLines="3"
             android:text="@tools:sample/lorem/random"
             android:ellipsize="end"/>
     </LinearLayout>

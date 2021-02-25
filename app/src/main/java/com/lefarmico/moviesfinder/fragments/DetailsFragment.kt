@@ -10,9 +10,11 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.databinding.FragmentDetailsBinding
 import com.lefarmico.moviesfinder.models.Item
 import com.lefarmico.moviesfinder.models.MovieItemModel
-import com.lefarmico.moviesfinder.databinding.FragmentDetailsBinding
+import com.lefarmico.moviesfinder.private.PrivateData
+import com.squareup.picasso.Picasso
 
 class DetailsFragment : Fragment() {
     private lateinit var movieItem: Item
@@ -65,5 +67,9 @@ class DetailsFragment : Fragment() {
     private fun setMovieDetails() {
         movieItem = arguments?.get("movie") as MovieItemModel
         binding.item = movieItem
+        Picasso.get()
+            .load(PrivateData.ApiConstants.IMAGES_URL + "w780" + movieItem.posterId)
+            .centerCrop()
+            .into(binding.fragmentDetailsPoster)
     }
 }

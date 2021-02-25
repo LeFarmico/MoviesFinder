@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.decorators
+package com.lefarmico.moviesfinder.animations
 
 import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
@@ -24,6 +24,7 @@ class FabMenuAnimator(
             this.duration = duration
             interpolator = DecelerateInterpolator()
         }
+        isShown = false
     }
     fun onShowMenu() {
         valueAnimator?.addUpdateListener {
@@ -56,7 +57,7 @@ class FabMenuAnimator(
     }
 
     fun onMenuClick() {
-        if (isShown!!) {
+        if (!isShown!!) {
             onShowMenu()
         } else {
             onHideMenu()

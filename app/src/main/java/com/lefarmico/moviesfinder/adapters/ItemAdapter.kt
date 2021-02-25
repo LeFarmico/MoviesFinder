@@ -7,8 +7,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.lefarmico.moviesfinder.models.Item
+import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.ItemBinding
+import com.lefarmico.moviesfinder.models.Item
+import com.lefarmico.moviesfinder.private.PrivateData
+import com.squareup.picasso.Picasso
 
 class ItemAdapter(
     private val listener: (Item) -> Unit
@@ -22,8 +25,14 @@ class ItemAdapter(
         val title: TextView = itemBinding.movieTitle
 
         fun bind(item: Item) {
-            poster.setImageResource(item.posterId)
             title.text = item.title
+            Picasso
+                .get()
+                .load(PrivateData.ApiConstants.IMAGES_URL + "w342" + item.posterId)
+                .fit()
+                .error(R.drawable.ic_launcher_foreground)
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .into(poster)
         }
     }
 

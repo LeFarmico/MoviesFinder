@@ -10,9 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lefarmico.moviesfinder.activities.MainActivity
 import com.lefarmico.moviesfinder.adapters.ItemAdapter
-import com.lefarmico.moviesfinder.models.MovieItemModel
 import com.lefarmico.moviesfinder.databinding.FragmentFavoritesBinding
 import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
+import com.lefarmico.moviesfinder.models.MovieItemModel
 
 class FavoritesFragment : Fragment() {
 

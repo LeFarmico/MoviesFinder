@@ -2,12 +2,13 @@ package com.lefarmico.moviesfinder.presenters
 
 import android.util.Log
 import androidx.recyclerview.widget.ConcatAdapter
+import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.adapters.HeaderAdapter
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
+import com.lefarmico.moviesfinder.data.entity.Interactor
 import com.lefarmico.moviesfinder.fragments.MovieFragment
 import com.lefarmico.moviesfinder.models.CategoryModel
 import com.lefarmico.moviesfinder.models.Item
-import com.lefarmico.moviesfinder.providers.MovieItemsProvider
 import javax.inject.Inject
 
 class MoviePresenter @Inject constructor() : MainMenuPresenter {
@@ -15,7 +16,7 @@ class MoviePresenter @Inject constructor() : MainMenuPresenter {
     // TODO : Создать коллбэки типа onItemWasClicked
     private lateinit var concatAdapter: ConcatAdapter
     private lateinit var view: MovieFragment
-    private lateinit var provider: MovieItemsProvider
+    private var interactor: Interactor = App.instance.interactor
 
     init {
         Log.d("Presenter", this.hashCode().toString())
@@ -27,10 +28,25 @@ class MoviePresenter @Inject constructor() : MainMenuPresenter {
 
     // provider создается не во view
     fun loadData() {
-        provider = view.itemsProvider
-        provider.loadTestCategories()
+        interactor.getPopularMovieFromApi(1, this)
+        interactor.getLatestMovieFromApi(1, this)
     }
 
+    override fun loadCategory(categoryModel: CategoryModel) {
+        if (!this::concatAdapter.isInitialized) {
+            concatAdapter = ConcatAdapter()
+        }
+        val headerAdapter = HeaderAdapter().apply {
+            addItem(view.requireContext().getString(categoryModel.titleResource))
+        }
+        concatAdapter.addAdapter(headerAdapter)
+        val itemsAdapter = ItemsPlaceholderAdapter().apply {
+            setNestedItemsData(categoryModel.items)
+        }
+        concatAdapter.addAdapter(itemsAdapter)
+
+        view.showCatalog(concatAdapter)
+    }
     override fun categoriesLoaded(categoryModels: List<CategoryModel>) {
         // тут ли создавать адаптеры?
         if (!this::concatAdapter.isInitialized) {

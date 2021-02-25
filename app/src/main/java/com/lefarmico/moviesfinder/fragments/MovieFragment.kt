@@ -22,7 +22,6 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.FragmentItemsBinding
 import com.lefarmico.moviesfinder.models.Item
 import com.lefarmico.moviesfinder.presenters.MoviePresenter
-import com.lefarmico.moviesfinder.providers.MovieItemsProvider
 import com.lefarmico.moviesfinder.view.MoviesView
 import javax.inject.Inject
 
@@ -33,7 +32,6 @@ class MovieFragment @Inject constructor() : Fragment(), MoviesView {
     private val binding get() = _binding!!
 
     @Inject lateinit var moviePresenter: MoviePresenter
-    @Inject lateinit var itemsProvider: MovieItemsProvider
 
     private val TAG = this.javaClass.canonicalName
 

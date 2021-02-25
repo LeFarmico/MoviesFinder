@@ -8,9 +8,9 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.activities.MainActivity
-import com.lefarmico.moviesfinder.models.ItemsDataModel
 import com.lefarmico.moviesfinder.databinding.ItemPlaceholderRecyclerBinding
 import com.lefarmico.moviesfinder.fragments.DetailsFragment
+import com.lefarmico.moviesfinder.models.ItemsDataModel
 
 class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.ViewHolder>() {
 
@@ -51,7 +51,6 @@ class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.V
                     Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
                     val intent = Intent(context, DetailsFragment::class.java)
                     intent.putExtra("movie", it)
-//                    (context as MainActivity).launchDetailsFragment(it)
                     (context as MainActivity).launchItemDetails(it)
                 }
             )

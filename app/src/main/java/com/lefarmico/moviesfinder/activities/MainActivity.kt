@@ -9,13 +9,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.animations.FabMenuAnimator
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
-import com.lefarmico.moviesfinder.decorators.FabMenuAnimator
 import com.lefarmico.moviesfinder.fragments.FavoritesFragment
 import com.lefarmico.moviesfinder.fragments.MovieFragment
 import com.lefarmico.moviesfinder.fragments.SeriesFragment
 import com.lefarmico.moviesfinder.models.Item
+import com.lefarmico.moviesfinder.private.PrivateData
 import com.lefarmico.moviesfinder.view.MainView
+import com.squareup.picasso.Picasso
 
 class MainActivity : AppCompatActivity(), MainView {
 
@@ -31,13 +33,13 @@ class MainActivity : AppCompatActivity(), MainView {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        fragmentLauncher(MovieFragment(), "MovieFragment")
+        launchFragment(MovieFragment(), "MovieFragment")
         launchBottomSheet()
         fabClick()
+        launchNavigationComponent()
 
         binding.bottomNavigationBarView
             .setOnNavigationItemSelectedListener(setMenuChangeListener())
-        // TODO : Обработать поворот экрана
     }
 
     private fun launchBottomSheet() {
@@ -47,26 +49,16 @@ class MainActivity : AppCompatActivity(), MainView {
         }
     }
 
-    override val fragments: Map<String, Fragment> = mutableMapOf()
-
     private fun fabClick() {
         FabMenuAnimator(
             binding.fabMenu.fabMovies,
             binding.fabMenu.fabSeries,
-            binding.fabMenu.fabShows,
+            binding.fabMenu.fabFavorites,
         ).apply {
             setAnimator(200)
             binding.fab.setOnClickListener {
                 onMenuClick()
             }
-        }
-    }
-
-    private fun fragmentLauncher(startFragment: Fragment, startFragmentTag: String) {
-        if (supportFragmentManager.primaryNavigationFragment == null) {
-            launchStartFragment(startFragment, startFragmentTag)
-        } else {
-            launchCurrentFragment()
         }
     }
 
@@ -77,12 +69,6 @@ class MainActivity : AppCompatActivity(), MainView {
             .addToBackStack(null)
             .setPrimaryNavigationFragment(fragment)
             .commit()
-    }
-
-    private fun launchCurrentFragment() {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.nav_host_fragment, supportFragmentManager.primaryNavigationFragment!!)
     }
 
     private fun setMenuChangeListener(): BottomNavigationView.OnNavigationItemSelectedListener {
@@ -122,15 +108,31 @@ class MainActivity : AppCompatActivity(), MainView {
             .setPrimaryNavigationFragment(fragment)
             .commit()
     }
+
     override fun launchFragment(fragment: Fragment, tag: String) {
-        TODO("Not yet implemented")
+        if (supportFragmentManager.primaryNavigationFragment == null) {
+            launchStartFragment(fragment, tag)
+        } else {
+            supportFragmentManager
+                .beginTransaction()
+                .addToBackStack(null)
+                .replace(R.id.nav_host_fragment, supportFragmentManager.primaryNavigationFragment!!)
+                .commit()
+        }
     }
 
     override fun launchItemDetails(item: Item) {
         binding.bottomSheet.apply {
             rateView.setPushedButton(3)
-            posterImageView.setImageResource(item.posterId)
             movieTitle.text = item.title
+            movieRate.text = getString(R.string.rating) + item.rating
+            movieDescription.text = item.description
+            Picasso
+                .get()
+                .load(PrivateData.ApiConstants.IMAGES_URL + "w342" + item.posterId)
+                .error(R.drawable.ic_launcher_foreground)
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .into(posterImageView)
         }
         BottomSheetBehavior.from(binding.bottomSheet.root).apply {
             skipCollapsed = true
@@ -159,10 +161,35 @@ class MainActivity : AppCompatActivity(), MainView {
     }
 
     override fun launchNavigationComponent() {
-        TODO("Not yet implemented")
+        binding.fabMenu.fabMovies.setOnClickListener {
+            val tag = "MovieFragment"
+            val fragment = isFragmentExist(tag)
+            changeFragment(fragment ?: MovieFragment(), tag)
+        }
+        binding.fabMenu.fabSeries.setOnClickListener {
+            val tag = "SeriesFragment"
+            val fragment = isFragmentExist(tag)
+            changeFragment(fragment ?: SeriesFragment(), tag)
+        }
+        binding.fabMenu.fabFavorites.setOnClickListener {
+            val tag = "FavoritesFragment"
+            val fragment = isFragmentExist(tag)
+            changeFragment(fragment ?: FavoritesFragment(), tag)
+        }
     }
 
     override fun showError() {
+        binding.apply {
+            errorTextView.visibility = View.VISIBLE
+            navHostFragment.visibility = View.INVISIBLE
+        }
+    }
+
+    override fun showLoading() {
+        TODO("Not yet implemented")
+    }
+
+    override fun endLoading() {
         TODO("Not yet implemented")
     }
 }

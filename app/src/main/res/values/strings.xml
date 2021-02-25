@@ -16,6 +16,10 @@
     <string name="comedy_category">Comedy</string>
     <string name="actors">Actors:</string>
     <string name="directors">Directors:</string>
-    <string name="rating">Rating:</string>
+    <string name="rating">Rating: </string>
     <string name="rate_this_movie">RATE THIS MOVIE</string>
+    <string name="error_text">Something went wrong, please try again</string>
+    <string name="popular">Popular</string>
+    <string name="latest">Latest</string>
+    <string name="upcoming">Upcoming</string>
 </resources>
