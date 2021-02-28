@@ -1,6 +1,7 @@
 package com.lefarmico.moviesfinder.adapters
 
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -48,9 +49,6 @@ class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.V
             setRecycledViewPool(viewPool)
             holder.bind(
                 ItemAdapter {
-                    Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
-                    val intent = Intent(context, DetailsFragment::class.java)
-                    intent.putExtra("movie", it)
                     (context as MainActivity).launchItemDetails(it)
                 }
             )

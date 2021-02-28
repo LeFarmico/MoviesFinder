@@ -9,7 +9,8 @@ object Converter {
         list?.forEach {
             movieList.add(
                 MovieItemModel(
-                    posterId = it.posterPath,
+                    id = it.id,
+                    posterPath = it.posterPath,
                     title = it.title,
                     genreIds = it.genreIds,
                     rating = it.voteAverage,

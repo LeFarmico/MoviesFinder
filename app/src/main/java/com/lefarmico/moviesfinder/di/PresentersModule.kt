@@ -1,7 +1,9 @@
 
 package com.lefarmico.moviesfinder.di
 
-import com.lefarmico.moviesfinder.presenters.MoviePresenter
+import com.lefarmico.moviesfinder.presenters.MainActivityPresenter
+import com.lefarmico.moviesfinder.presenters.MainActivityPresenterImpl
+import com.lefarmico.moviesfinder.presenters.MovieFragmentPresenter
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -10,7 +12,12 @@ import javax.inject.Singleton
 class PresentersModule {
 
     @Provides @Singleton
-    fun createItemsPresenter(): MoviePresenter {
-        return MoviePresenter()
+    fun createItemsPresenter(): MovieFragmentPresenter {
+        return MovieFragmentPresenter()
+    }
+
+    @Provides @Singleton
+    fun createMainActivityPresenter(): MainActivityPresenter {
+        return MainActivityPresenterImpl()
     }
 }

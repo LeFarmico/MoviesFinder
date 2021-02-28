@@ -5,13 +5,13 @@ import androidx.recyclerview.widget.ConcatAdapter
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.adapters.HeaderAdapter
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
-import com.lefarmico.moviesfinder.data.entity.Interactor
+import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.fragments.MovieFragment
 import com.lefarmico.moviesfinder.models.CategoryModel
 import com.lefarmico.moviesfinder.models.Item
 import javax.inject.Inject
 
-class MoviePresenter @Inject constructor() : MainMenuPresenter {
+class MovieFragmentPresenter @Inject constructor() : FragmentMenuPresenter {
 
     // TODO : Создать коллбэки типа onItemWasClicked
     private lateinit var concatAdapter: ConcatAdapter
@@ -29,7 +29,9 @@ class MoviePresenter @Inject constructor() : MainMenuPresenter {
     // provider создается не во view
     fun loadData() {
         interactor.getPopularMovieFromApi(1, this)
-        interactor.getLatestMovieFromApi(1, this)
+        interactor.getUpcomingMovieFromApi(1, this)
+        interactor.getNowPlayingMovieFromApi(1, this)
+        interactor.getTopRatedMovieFromApi(1, this)
     }
 
     override fun loadCategory(categoryModel: CategoryModel) {

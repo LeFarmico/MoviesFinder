@@ -28,7 +28,7 @@ class ItemAdapter(
             title.text = item.title
             Picasso
                 .get()
-                .load(PrivateData.ApiConstants.IMAGES_URL + "w342" + item.posterId)
+                .load(PrivateData.ApiConstants.IMAGES_URL + "w342" + item.posterPath)
                 .fit()
                 .error(R.drawable.ic_launcher_foreground)
                 .placeholder(R.drawable.ic_launcher_foreground)

@@ -68,7 +68,7 @@ class DetailsFragment : Fragment() {
         movieItem = arguments?.get("movie") as MovieItemModel
         binding.item = movieItem
         Picasso.get()
-            .load(PrivateData.ApiConstants.IMAGES_URL + "w780" + movieItem.posterId)
+            .load(PrivateData.ApiConstants.IMAGES_URL + "w780" + movieItem.posterPath)
             .centerCrop()
             .into(binding.fragmentDetailsPoster)
     }

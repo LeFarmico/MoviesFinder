@@ -15,13 +15,18 @@ import com.lefarmico.moviesfinder.fragments.FavoritesFragment
 import com.lefarmico.moviesfinder.fragments.MovieFragment
 import com.lefarmico.moviesfinder.fragments.SeriesFragment
 import com.lefarmico.moviesfinder.models.Item
+import com.lefarmico.moviesfinder.presenters.MainActivityPresenter
 import com.lefarmico.moviesfinder.private.PrivateData
 import com.lefarmico.moviesfinder.view.MainView
 import com.squareup.picasso.Picasso
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainView {
+class MainActivity @Inject constructor() : AppCompatActivity(), MainView {
 
     private lateinit var binding: ActivityMainBinding
+    @Inject lateinit var presenter: MainActivityPresenter
+
+    override val fragmentManager = supportFragmentManager
 
     val TAG = this.javaClass.canonicalName
 
@@ -33,23 +38,19 @@ class MainActivity : AppCompatActivity(), MainView {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        launchFragment(MovieFragment(), "MovieFragment")
+        presenter.attachView(this)
+
+        if (savedInstanceState == null)
+            presenter.launchFragment(MovieFragment(), "MovieFragment")
+
         launchBottomSheet()
-        fabClick()
-        launchNavigationComponent()
+        launchFabMenu()
 
         binding.bottomNavigationBarView
             .setOnNavigationItemSelectedListener(setMenuChangeListener())
     }
 
-    private fun launchBottomSheet() {
-        BottomSheetBehavior.from(binding.bottomSheet.root).apply {
-            skipCollapsed = true
-            state = BottomSheetBehavior.STATE_HIDDEN
-        }
-    }
-
-    private fun fabClick() {
+    override fun launchFabMenu() {
         FabMenuAnimator(
             binding.fabMenu.fabMovies,
             binding.fabMenu.fabSeries,
@@ -62,34 +63,25 @@ class MainActivity : AppCompatActivity(), MainView {
         }
     }
 
-    private fun launchStartFragment(fragment: Fragment, tag: String) {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.nav_host_fragment, fragment, tag)
-            .addToBackStack(null)
-            .setPrimaryNavigationFragment(fragment)
-            .commit()
-    }
-
     private fun setMenuChangeListener(): BottomNavigationView.OnNavigationItemSelectedListener {
         return BottomNavigationView.OnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.movies_menu -> {
                     val tag = "MovieFragment"
                     val fragment = isFragmentExist(tag)
-                    changeFragment(fragment ?: MovieFragment(), tag)
+                    launchFragment(fragment ?: MovieFragment(), tag)
                     true
                 }
                 R.id.series_menu -> {
                     val tag = "SeriesFragment"
                     val fragment = isFragmentExist(tag)
-                    changeFragment(fragment ?: SeriesFragment(), tag)
+                    launchFragment(fragment ?: SeriesFragment(), tag)
                     true
                 }
                 R.id.favorites_menu -> {
                     val tag = "FavoritesFragment"
                     val fragment = isFragmentExist(tag)
-                    changeFragment(fragment ?: FavoritesFragment(), tag)
+                    launchFragment(fragment ?: FavoritesFragment(), tag)
                     true
                 }
                 else -> false
@@ -99,44 +91,10 @@ class MainActivity : AppCompatActivity(), MainView {
 
     private fun isFragmentExist(tag: String): Fragment? = supportFragmentManager.findFragmentByTag(tag)
 
-    private fun changeFragment(fragment: Fragment, tag: String) {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.nav_host_fragment, fragment, tag)
-            .addToBackStack(null)
-            .setReorderingAllowed(true)
-            .setPrimaryNavigationFragment(fragment)
-            .commit()
-    }
-
-    override fun launchFragment(fragment: Fragment, tag: String) {
-        if (supportFragmentManager.primaryNavigationFragment == null) {
-            launchStartFragment(fragment, tag)
-        } else {
-            supportFragmentManager
-                .beginTransaction()
-                .addToBackStack(null)
-                .replace(R.id.nav_host_fragment, supportFragmentManager.primaryNavigationFragment!!)
-                .commit()
-        }
-    }
-
-    override fun launchItemDetails(item: Item) {
-        binding.bottomSheet.apply {
-            rateView.setPushedButton(3)
-            movieTitle.text = item.title
-            movieRate.text = getString(R.string.rating) + item.rating
-            movieDescription.text = item.description
-            Picasso
-                .get()
-                .load(PrivateData.ApiConstants.IMAGES_URL + "w342" + item.posterId)
-                .error(R.drawable.ic_launcher_foreground)
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .into(posterImageView)
-        }
+    private fun launchBottomSheet() {
         BottomSheetBehavior.from(binding.bottomSheet.root).apply {
             skipCollapsed = true
-            state = BottomSheetBehavior.STATE_HALF_EXPANDED
+            state = BottomSheetBehavior.STATE_HIDDEN
 
             addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
 
@@ -157,25 +115,32 @@ class MainActivity : AppCompatActivity(), MainView {
                 }
             })
         }
-        binding.bottomNavigationBarView.visibility = View.INVISIBLE
     }
 
-    override fun launchNavigationComponent() {
-        binding.fabMenu.fabMovies.setOnClickListener {
-            val tag = "MovieFragment"
-            val fragment = isFragmentExist(tag)
-            changeFragment(fragment ?: MovieFragment(), tag)
+    override fun launchFragment(fragment: Fragment, tag: String) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.nav_host_fragment, fragment, tag)
+            .addToBackStack(null)
+            .setReorderingAllowed(true)
+            .setPrimaryNavigationFragment(fragment)
+            .commit()
+    }
+
+    override fun launchItemDetails(item: Item) {
+        binding.bottomSheet.apply {
+            rateView.setPushedButton(3)
+            movieTitle.text = item.title
+            movieRate.text = getString(R.string.rating) + item.rating
+            movieDescription.text = item.description
+            Picasso.get()
+                .load(PrivateData.ApiConstants.IMAGES_URL + "w342" + item.posterPath)
+                .error(R.drawable.ic_launcher_foreground)
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .into(posterImageView)
         }
-        binding.fabMenu.fabSeries.setOnClickListener {
-            val tag = "SeriesFragment"
-            val fragment = isFragmentExist(tag)
-            changeFragment(fragment ?: SeriesFragment(), tag)
-        }
-        binding.fabMenu.fabFavorites.setOnClickListener {
-            val tag = "FavoritesFragment"
-            val fragment = isFragmentExist(tag)
-            changeFragment(fragment ?: FavoritesFragment(), tag)
-        }
+        BottomSheetBehavior.from(binding.bottomSheet.root).state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        binding.bottomNavigationBarView.visibility = View.INVISIBLE
     }
 
     override fun showError() {
