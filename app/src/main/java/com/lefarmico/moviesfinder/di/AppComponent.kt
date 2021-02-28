@@ -6,7 +6,7 @@ import com.lefarmico.moviesfinder.fragments.MovieFragment
 import dagger.Component
 import javax.inject.Singleton
 
-@Component(modules = [PresentersModule::class, DatabaseModule::class])
+@Component(modules = [PresentersModule::class])
 
 @Singleton
 interface AppComponent {
@@ -14,7 +14,6 @@ interface AppComponent {
     // Activities
     fun inject(activity: MainActivity)
     // Fragments
-    @Singleton
     fun inject(fragment: MovieFragment)
 }
 

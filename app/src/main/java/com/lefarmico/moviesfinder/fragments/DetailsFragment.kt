@@ -6,11 +6,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.data.Item
-import com.lefarmico.moviesfinder.data.MovieItem
 import com.lefarmico.moviesfinder.databinding.FragmentDetailsBinding
+import com.lefarmico.moviesfinder.models.Item
+import com.lefarmico.moviesfinder.models.MovieItemModel
+import com.lefarmico.moviesfinder.private.PrivateData
+import com.squareup.picasso.Picasso
 
 class DetailsFragment : Fragment() {
     private lateinit var movieItem: Item
@@ -22,7 +26,12 @@ class DetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDetailsBinding.inflate(inflater, container, false)
+        _binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_details,
+            container,
+            false
+        )
         return binding.root
     }
 
@@ -33,9 +42,11 @@ class DetailsFragment : Fragment() {
 
         binding.fragmentFavoritesFab.setOnClickListener {
             if (!movieItem.isFavorite) {
+                Toast.makeText(requireContext(), "add to favorite", Toast.LENGTH_SHORT).show()
                 binding.fragmentFavoritesFab.setImageResource(R.drawable.ic_baseline_favorite_24)
                 movieItem.isFavorite = true
             } else {
+                Toast.makeText(requireContext(), "remove from favorite", Toast.LENGTH_SHORT).show()
                 binding.fragmentFavoritesFab.setImageResource(R.drawable.ic_baseline_favorite_border_24)
                 movieItem.isFavorite = false
             }
@@ -54,13 +65,11 @@ class DetailsFragment : Fragment() {
         }
     }
     private fun setMovieDetails() {
-        movieItem = arguments?.get("movie") as MovieItem
-
-        binding.fragmentDetailsPoster.setImageResource(movieItem.posterId)
-        binding.fragmentDetailsToolbar.title = movieItem.title
-        binding.fragmentFavoritesFab.setImageResource(
-            if (movieItem.isFavorite) R.drawable.ic_baseline_favorite_24
-            else R.drawable.ic_baseline_favorite_border_24
-        )
+        movieItem = arguments?.get("movie") as MovieItemModel
+        binding.item = movieItem
+        Picasso.get()
+            .load(PrivateData.ApiConstants.IMAGES_URL + "w780" + movieItem.posterPath)
+            .centerCrop()
+            .into(binding.fragmentDetailsPoster)
     }
 }

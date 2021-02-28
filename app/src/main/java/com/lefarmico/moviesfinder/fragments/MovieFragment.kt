@@ -11,6 +11,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ConcatAdapter
@@ -19,18 +20,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.FragmentItemsBinding
-import com.lefarmico.moviesfinder.models.ItemsDatabaseModel
-import com.lefarmico.moviesfinder.presenters.ItemsPresenter
+import com.lefarmico.moviesfinder.models.Item
+import com.lefarmico.moviesfinder.presenters.MovieFragmentPresenter
+import com.lefarmico.moviesfinder.view.MoviesView
 import javax.inject.Inject
 
-class MovieFragment : Fragment() {
+class MovieFragment @Inject constructor() : Fragment(), MoviesView {
 
     lateinit var recyclerView: RecyclerView
     private var _binding: FragmentItemsBinding? = null
     private val binding get() = _binding!!
 
-    @Inject lateinit var databaseModel: ItemsDatabaseModel
-    @Inject lateinit var itemsPresenter: ItemsPresenter
+    @Inject lateinit var moviePresenter: MovieFragmentPresenter
 
     private val TAG = this.javaClass.canonicalName
 
@@ -71,18 +72,16 @@ class MovieFragment : Fragment() {
         startAppAnimation()
         initToolsBar()
 
-        itemsPresenter.setView(this)
-        itemsPresenter.setModel(databaseModel)
-
         recyclerView = binding.mergeMovieScreenContent.findViewById(R.id.recycler_parent)
+
+        moviePresenter.attachView(this)
+        moviePresenter.loadData()
 
         recyclerView.apply {
             isNestedScrollingEnabled = false
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = ConcatAdapter()
             setRecycledViewPool(RecyclerView.RecycledViewPool())
         }
-        itemsPresenter.loadData()
     }
 
     private fun initToolsBar() {
@@ -108,5 +107,32 @@ class MovieFragment : Fragment() {
             addTransition(searchSlide)
         }
         TransitionManager.go(scene, customTransition)
+    }
+
+    override fun showCatalog(adapter: ConcatAdapter) {
+        recyclerView.apply {
+            this.adapter = adapter
+        }
+    }
+
+    override fun showError() {
+        recyclerView = binding.mergeMovieScreenContent.findViewById(R.id.recycler_parent)
+
+        recyclerView.apply {
+            isNestedScrollingEnabled = false
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = ConcatAdapter()
+            setRecycledViewPool(RecyclerView.RecycledViewPool())
+        }
+    }
+
+    override fun showEmptyCatalog() {
+        Toast.makeText(requireContext(), "Something had wrong", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onItemClicked(item: Item) {
+    }
+
+    override fun onStartLoading() {
     }
 }

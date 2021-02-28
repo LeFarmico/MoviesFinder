@@ -8,7 +8,7 @@
         android:id="@+id/poster"
         style="@style/MoviePosterStyle"
         android:scaleType="centerCrop"
-        android:src="@drawable/texet"
+        android:src="@drawable/ic_launcher_foreground"
         android:contentDescription="@string/movie_title"
         />
     <TextView

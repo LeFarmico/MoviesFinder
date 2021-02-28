@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lefarmico.moviesfinder">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".App"
         android:allowBackup="false"
@@ -12,7 +14,9 @@
         android:theme="@style/DarkYellowTheme">
         <activity android:name=".activities.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action
+                    android:name="android.intent.action.MAIN"
+                    android:launchMode="singleTop"/>
                 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

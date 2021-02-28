@@ -1,6 +1,7 @@
 package com.lefarmico.moviesfinder.adapters
 
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,13 +9,13 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.activities.MainActivity
-import com.lefarmico.moviesfinder.data.ItemsData
 import com.lefarmico.moviesfinder.databinding.ItemPlaceholderRecyclerBinding
 import com.lefarmico.moviesfinder.fragments.DetailsFragment
+import com.lefarmico.moviesfinder.models.ItemsDataModel
 
 class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.ViewHolder>() {
 
-    private lateinit var itemsData: ItemsData
+    private lateinit var itemsDataModel: ItemsDataModel
 
     class ViewHolder(
         placeholderBinding: ItemPlaceholderRecyclerBinding
@@ -42,24 +43,23 @@ class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.V
             holder.recyclerView.context, RecyclerView.HORIZONTAL, false
         )
 
+        // Корректно ли это?
         holder.recyclerView.apply {
             layoutManager = itemsLayoutManager
             setRecycledViewPool(viewPool)
             holder.bind(
                 ItemAdapter {
-                    Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
-                    val intent = Intent(context, DetailsFragment::class.java)
-                    intent.putExtra("movie", it)
-                    (context as MainActivity).launchDetailsFragment(it)
+                    (context as MainActivity).launchItemDetails(it)
                 }
             )
-            (adapter as ItemAdapter).setItems(itemsData.items)
+            (adapter as ItemAdapter).setItems(itemsDataModel.items)
         }
     }
 
     override fun getItemCount(): Int = 1
 
-    fun setNestedItemsData(itemsData: ItemsData) {
-        this.itemsData = itemsData
+    fun setNestedItemsData(itemsDataModel: ItemsDataModel) {
+        this.itemsDataModel = itemsDataModel
+        notifyDataSetChanged()
     }
 }

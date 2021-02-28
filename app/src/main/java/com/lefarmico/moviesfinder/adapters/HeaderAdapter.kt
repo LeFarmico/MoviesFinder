@@ -37,9 +37,9 @@ class HeaderAdapter : RecyclerView.Adapter<HeaderAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = 1
 
-    fun addItem(titleHeader: String) {
-        items.add(titleHeader)
-        notifyItemChanged(items.size - 1)
+    fun addItem(title: String) {
+        items.add(title)
+        notifyDataSetChanged()
     }
 
     fun removeItem(position: Int) {

@@ -8,4 +8,23 @@
     <string name="add_to_favorites">Add to Favorites</string>
     <string name="navigation_menu">Navigation menu</string>
     <string name="movie_title">Movie title</string>
+    <string name="action_category">Actions</string>
+    <string name="top_category">Top of Views</string>
+    <string name="most_category">Most to watch</string>
+    <string name="hits_category">Hits</string>
+    <string name="drama_category">Drama</string>
+    <string name="comedy_category">Comedy</string>
+    <string name="actors">ACTORS</string>
+    <string name="directors">Directors:</string>
+    <string name="rating">Rating: </string>
+    <string name="rate_this_movie">RATE THIS MOVIE</string>
+    <string name="error_text">Something went wrong, please try again</string>
+    <string name="popular">Popular</string>
+    <string name="latest">Latest</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="genres">Action / Adventure / Comedy / Drama</string>
+    <string name="duration">0h 00min</string>
+    <string name="providers">Avallable on</string>
 </resources>

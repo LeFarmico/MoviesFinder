@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RateView">
+        <attr name="button_size" format="dimension"/>
+        <attr name="button_space" format="dimension"/>
+        <attr name="default_color" format="color"/>
+        <attr name="pushed_color" format="color"/>
+        <attr name="buttons_count" format="integer"/>
+        <attr name="is_buttons_horizontal" format="boolean"/>
+        <attr name="number_size" format="dimension"/>
+    </declare-styleable>
+</resources>
