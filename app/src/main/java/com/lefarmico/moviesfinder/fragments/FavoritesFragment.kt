@@ -12,7 +12,7 @@ import com.lefarmico.moviesfinder.activities.MainActivity
 import com.lefarmico.moviesfinder.adapters.ItemAdapter
 import com.lefarmico.moviesfinder.databinding.FragmentFavoritesBinding
 import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
-import com.lefarmico.moviesfinder.models.MovieItemModel
+import com.lefarmico.moviesfinder.models.ItemHeaderModel
 
 class FavoritesFragment : Fragment() {
 
@@ -34,13 +34,13 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated")
-        val favoritesList: List<MovieItemModel> = emptyList()
+        val favoritesList: List<ItemHeaderModel> = emptyList()
 
         binding.favoritesRecycler.apply {
             adapter = ItemAdapter {
                 val intent = Intent(requireContext(), DetailsFragment::class.java)
                 intent.putExtra("movie", it)
-                (requireActivity() as MainActivity).launchItemDetails(it)
+//                (requireActivity() as MainActivity).launchItemDetails(it)
                 val decorator = TopSpacingItemDecoration(8)
                 addItemDecoration(decorator)
                 layoutManager = LinearLayoutManager(requireContext())

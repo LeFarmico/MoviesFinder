@@ -9,26 +9,26 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.ItemBinding
-import com.lefarmico.moviesfinder.models.Item
+import com.lefarmico.moviesfinder.models.ItemHeader
 import com.lefarmico.moviesfinder.private.PrivateData
 import com.squareup.picasso.Picasso
 
 class ItemAdapter(
-    private val listener: (Item) -> Unit
+    private val listener: (ItemHeader) -> Unit
 ) : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
     // TODO : Inject to model
-    private val items = mutableListOf<Item>()
+    private val items = mutableListOf<ItemHeader>()
 
     class ViewHolder(itemBinding: ItemBinding) : RecyclerView.ViewHolder(itemBinding.root) {
         private val poster: ImageView = itemBinding.poster
         val title: TextView = itemBinding.movieTitle
 
-        fun bind(item: Item) {
-            title.text = item.title
+        fun bind(itemHeader: ItemHeader) {
+            title.text = itemHeader.title
             Picasso
                 .get()
-                .load(PrivateData.ApiConstants.IMAGES_URL + "w342" + item.posterPath)
+                .load(PrivateData.ApiConstants.IMAGES_URL + "w342" + itemHeader.posterPath)
                 .fit()
                 .error(R.drawable.ic_launcher_foreground)
                 .placeholder(R.drawable.ic_launcher_foreground)
@@ -53,7 +53,7 @@ class ItemAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    fun setItems(itemsList: List<Item>) {
+    fun setItems(itemsList: List<ItemHeader>) {
         items.addAll(itemsList)
         notifyDataSetChanged()
     }

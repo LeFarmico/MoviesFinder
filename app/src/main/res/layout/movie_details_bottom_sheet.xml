@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/movie_details_bottom_sheet"
+<androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/movie_details_bottom_sheet"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,7 +9,8 @@
     app:behavior_hideable="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/bottom_sheet_background"
-    android:focusable="true">
+    android:focusable="true"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/poster_card_view"
@@ -60,11 +60,15 @@
             style="@style/BottomSheetItemDescription"
             android:maxLines="2"
             android:text="@string/duration"/>
-        <TextView
-            android:id="@+id/directors"
-            style="@style/BottomSheetItemDescription"
-            android:maxLines="2"
-            android:text="@string/genres"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/genre_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:itemCount="6"
+            app:spanCount="3"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+
+            />
         <TextView
             android:id="@+id/providers"
             style="@style/BottomSheetItemDescription"
@@ -128,7 +132,7 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
-        android:id="@+id/genre_text_view"
+        android:id="@+id/actors_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -140,7 +144,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/genre_text_view"
+        app:layout_constraintTop_toBottomOf="@id/actors_text_view"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

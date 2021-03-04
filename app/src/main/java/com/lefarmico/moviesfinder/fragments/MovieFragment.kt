@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.FragmentItemsBinding
-import com.lefarmico.moviesfinder.models.Item
+import com.lefarmico.moviesfinder.models.ItemHeader
 import com.lefarmico.moviesfinder.presenters.MovieFragmentPresenter
 import com.lefarmico.moviesfinder.view.MoviesView
 import javax.inject.Inject
@@ -130,7 +130,7 @@ class MovieFragment @Inject constructor() : Fragment(), MoviesView {
         Toast.makeText(requireContext(), "Something had wrong", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onItemClicked(item: Item) {
+    override fun onItemClicked(itemHeader: ItemHeader) {
     }
 
     override fun onStartLoading() {

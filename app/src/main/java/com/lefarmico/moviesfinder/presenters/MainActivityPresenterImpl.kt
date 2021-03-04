@@ -2,21 +2,26 @@ package com.lefarmico.moviesfinder.presenters
 
 import androidx.fragment.app.Fragment
 import com.lefarmico.moviesfinder.App
-import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.activities.MainActivity
 import com.lefarmico.moviesfinder.data.Interactor
-import com.lefarmico.moviesfinder.models.Item
-import com.lefarmico.moviesfinder.view.MainView
+import com.lefarmico.moviesfinder.fragments.FavoritesFragment
+import com.lefarmico.moviesfinder.fragments.MovieFragment
+import com.lefarmico.moviesfinder.fragments.SeriesFragment
+import com.lefarmico.moviesfinder.models.ItemHeader
+import com.lefarmico.moviesfinder.models.MovieItem
+import com.lefarmico.moviesfinder.view.MainActivityView
 import javax.inject.Inject
 
 class MainActivityPresenterImpl @Inject constructor() : MainActivityPresenter {
 
-    private lateinit var view: MainView
+    private lateinit var view: MainActivityView
     private var interactor: Interactor = App.instance.interactor
 
-//    val movieFragment = MovieFragment()
-//    val seriesFragment = SeriesFragment()
-//    val favoritesFragment = FavoritesFragment()
+    override val fragmentsMap: MutableMap<String, Fragment> = mutableMapOf(
+        Pair("MovieFragment", MovieFragment()),
+        Pair("SeriesFragment", SeriesFragment()),
+        Pair("FavoritesFragment", FavoritesFragment()),
+    )
 
     override fun attachView(view: MainActivity) {
         this.view = view
@@ -26,29 +31,25 @@ class MainActivityPresenterImpl @Inject constructor() : MainActivityPresenter {
         view.launchFragment(fragment, tag)
     }
 
-    private fun isFragmentExist(tag: String): Fragment? = view.fragmentManager.findFragmentByTag(tag)
-
-    private fun launchPrimaryFragment() {
-        view.fragmentManager
-            .beginTransaction()
-            .addToBackStack(null)
-            .replace(R.id.nav_host_fragment, view.fragmentManager.primaryNavigationFragment!!)
-            .commit()
+    override fun launchFragments() {
+        fragmentsMap.forEach { (tag, fragment) ->
+            view.launchFragment(tag = tag, fragment = fragment)
+        }
     }
 
-    override fun onMovieClick(item: Item) {
-        view.launchItemDetails(item)
+    override fun onItemClick(itemHeader: ItemHeader) {
+        interactor.getMovieDetailsCreditsProvidersFromApi(itemHeader, itemHeader.id, this)
+    }
+
+    override fun showItemDetails(movieItem: MovieItem) {
+        view.launchItemDetails(movieItem)
     }
 
     override fun onFabClick() {
         view.launchFabMenu()
     }
 
-    override fun onBottomNavigationMenuClick() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onError() {
+    override fun showError(textResource: Int) {
         TODO("Not yet implemented")
     }
 
@@ -56,7 +57,7 @@ class MainActivityPresenterImpl @Inject constructor() : MainActivityPresenter {
         TODO("Not yet implemented")
     }
 
-    override fun onMenuClick(fragment: Fragment, tag: String) {
-        view.launchFragment(fragment, tag)
+    override fun showFragment(fragment: Fragment) {
+        view.showFragment(fragment)
     }
 }

@@ -1,16 +1,20 @@
 package com.lefarmico.moviesfinder.presenters
 
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.lefarmico.moviesfinder.activities.MainActivity
-import com.lefarmico.moviesfinder.models.Item
+import com.lefarmico.moviesfinder.models.ItemHeader
+import com.lefarmico.moviesfinder.models.MovieItem
 
 interface MainActivityPresenter {
+    val fragmentsMap: MutableMap<String, Fragment>
     fun attachView(view: MainActivity)
     fun launchFragment(fragment: Fragment, tag: String)
-    fun onMovieClick(item: Item)
+    fun launchFragments()
+    fun onItemClick(itemHeader: ItemHeader)
+    fun showItemDetails(movieItem: MovieItem)
     fun onFabClick()
-    fun onBottomNavigationMenuClick()
-    fun onError()
+    fun showError(@StringRes textResource: Int)
     fun onLoaded()
-    fun onMenuClick(fragment: Fragment, tag: String)
+    fun showFragment(fragment: Fragment)
 }
