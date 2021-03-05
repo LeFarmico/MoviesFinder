@@ -12,7 +12,7 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapters.GenreAdapter
 import com.lefarmico.moviesfinder.animations.FabMenuAnimator
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
-import com.lefarmico.moviesfinder.models.ItemHeader
+import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
 import com.lefarmico.moviesfinder.models.MovieItem
 import com.lefarmico.moviesfinder.presenters.MainActivityPresenter
 import com.lefarmico.moviesfinder.private.PrivateData
@@ -44,6 +44,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
             presenter.showFragment(presenter.fragmentsMap["MovieFragment"]!!)
         }
 
+        binding.bottomSheet.genreRecycler.addItemDecoration(TopSpacingItemDecoration(5))
         launchBottomSheet()
         launchFabMenu()
 

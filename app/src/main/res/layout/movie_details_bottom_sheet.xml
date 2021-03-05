@@ -65,9 +65,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:itemCount="6"
-            app:spanCount="3"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-
+            app:spanCount="2"
+            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+            android:orientation="horizontal"
             />
         <TextView
             android:id="@+id/providers"

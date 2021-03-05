@@ -71,14 +71,14 @@ class MovieFragmentPresenter @Inject constructor() : FragmentMenuPresenter {
     }
 
     override fun showError(@StringRes textResource: Int) {
-        TODO("Not yet implemented")
+//        TODO("Not yet implemented")
     }
 
     override fun categoryClicked(category: CategoryModel) {
-        TODO("Not yet implemented")
+//        TODO("Not yet implemented")
     }
 
     override fun onItemClicked(itemHeader: ItemHeader) {
-        TODO("Not yet implemented")
+//        TODO("Not yet implemented")
     }
 }

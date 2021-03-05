@@ -91,7 +91,12 @@ object Converter {
     }
     private fun convertDirectors(castList: List<Crew>): List<CastModel> {
         val cast = mutableListOf<CastModel>()
-        for (i in 0 until 10) {
+        val count = if (cast.size >= 10) {
+            10
+        } else {
+            cast.size
+        }
+        for (i in 0 until count) {
             cast.add(
                 CastModel(
                     name = castList[i].name,
@@ -103,10 +108,11 @@ object Converter {
         }
         return cast
     }
+//    TODO - добавить обработку country
     private fun convertProviders(providers: TmdbProvidersResult, country: String): List<ProviderModel> {
-        var providersList = mutableListOf<ProviderModel>()
+        val providersList = mutableListOf<ProviderModel>()
         if (providers.results.US != null) {
-            providers.results.US.buy.forEach {
+            providers.results.US.buy?.forEach {
                 providersList.add(
                     ProviderModel(
                         providerType = ProviderType.BUY,
@@ -117,18 +123,18 @@ object Converter {
                     )
                 )
             }
-//            providers.results.US.flatrate.forEach {
-//                providersList.add(
-//                    ProviderModel(
-//                        providerType = ProviderType.FLATRATE,
-//                        name = it.provider_name,
-//                        id = it.provider_id,
-//                        logoPath = it.logo_path,
-//                        displayPriority = it.display_priority
-//                    )
-//                )
-//            }
-            providers.results.US.rent.forEach {
+            providers.results.US.flatrate?.forEach {
+                providersList.add(
+                    ProviderModel(
+                        providerType = ProviderType.FLATRATE,
+                        name = it.provider_name,
+                        id = it.provider_id,
+                        logoPath = it.logo_path,
+                        displayPriority = it.display_priority
+                    )
+                )
+            }
+            providers.results.US.rent?.forEach {
                 providersList.add(
                     ProviderModel(
                         providerType = ProviderType.RENT,
