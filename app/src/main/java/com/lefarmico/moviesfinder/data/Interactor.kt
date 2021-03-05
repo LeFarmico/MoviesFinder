@@ -2,15 +2,16 @@ package com.lefarmico.moviesfinder.data
 
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.TmdbApi
+import com.lefarmico.moviesfinder.data.entity.TmdbMovieDetailsActorsDirectorsProviders
 import com.lefarmico.moviesfinder.data.entity.TmdbMovieDetailsResults
 import com.lefarmico.moviesfinder.data.entity.TmdbMovieListResultsResults
 import com.lefarmico.moviesfinder.models.CategoryModel
+import com.lefarmico.moviesfinder.models.ItemHeader
 import com.lefarmico.moviesfinder.models.ItemsDataModel
-import com.lefarmico.moviesfinder.models.MovieItemModel
+import com.lefarmico.moviesfinder.presenters.MainActivityPresenter
 import com.lefarmico.moviesfinder.presenters.MovieFragmentPresenter
 import com.lefarmico.moviesfinder.private.PrivateData
 import com.lefarmico.moviesfinder.utils.Converter
-import com.lefarmico.moviesfinder.view.MainView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -86,25 +87,29 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
             })
     }
 
-    fun getMovieDetailsFromApi(movieId: Int, mainView: MainView) {
-        retrofitService.getMovieDetails(PrivateData.ApiConstants.API_KEY, "ru-RU", movieId)
+    fun getMovieDetailsFromApi(itemHeader: ItemHeader, movieId: Int, presenter: MainActivityPresenter) {
+        retrofitService.getMovieDetails(movieId, PrivateData.ApiConstants.API_KEY, "ru-RU")
             .enqueue(object : Callback<TmdbMovieDetailsResults> {
                 override fun onResponse(call: Call<TmdbMovieDetailsResults>, response: Response<TmdbMovieDetailsResults>) {
-                    mainView.launchItemDetails(
-                        MovieItemModel(
-                            id = response.body()?.id!!,
-                            posterPath = response.body()?.poster_path!!,
-                            title = response.body()?.title!!,
-                            genreIds = listOf(),
-                            rating = response.body()?.vote_average!!,
-                            description = response.body()?.poster_path!!,
-                            isFavorite = false,
-                            genres = listOf()
-                        )
+                    presenter.showItemDetails(
+                        Converter.convertApiMovieDetailsToDTOItem(itemHeader, response.body()!!)
                     )
                 }
                 override fun onFailure(call: Call<TmdbMovieDetailsResults>, t: Throwable) {
-                    mainView.showError()
+                    presenter.showError(R.string.error_text)
+                }
+            })
+    }
+    fun getMovieDetailsCreditsProvidersFromApi(itemHeader: ItemHeader, movieId: Int, presenter: MainActivityPresenter) {
+        retrofitService.getMovieDetailsWithCreditsAndProviders(movieId, PrivateData.ApiConstants.API_KEY, "ru-RU", "watch/providers,credits")
+            .enqueue(object : Callback<TmdbMovieDetailsActorsDirectorsProviders> {
+                override fun onResponse(call: Call<TmdbMovieDetailsActorsDirectorsProviders>, response: Response<TmdbMovieDetailsActorsDirectorsProviders>) {
+                    presenter.showItemDetails(
+                        Converter.convertApiMovieDetailsCreditsProvidersToDTOItem(itemHeader, response.body()!!)
+                    )
+                }
+                override fun onFailure(call: Call<TmdbMovieDetailsActorsDirectorsProviders>, t: Throwable) {
+                    presenter.showError(R.string.error_text)
                 }
             })
     }

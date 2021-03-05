@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/movie_details_bottom_sheet"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/movie_details_bottom_sheet"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,8 +10,7 @@
     app:behavior_hideable="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/bottom_sheet_background"
-    android:focusable="true"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:focusable="true">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/poster_card_view"
@@ -60,15 +60,11 @@
             style="@style/BottomSheetItemDescription"
             android:maxLines="2"
             android:text="@string/duration"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/genre_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:itemCount="6"
-            app:spanCount="2"
-            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-            android:orientation="horizontal"
-            />
+        <TextView
+            android:id="@+id/genre_text_view"
+            style="@style/BottomSheetItemDescription"
+            android:maxLines="2"
+            android:text="@string/genres"/>
         <TextView
             android:id="@+id/providers"
             style="@style/BottomSheetItemDescription"

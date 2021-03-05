@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.lefarmico.moviesfinder.models.Item" />
+            type="com.lefarmico.moviesfinder.models.ItemHeader" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

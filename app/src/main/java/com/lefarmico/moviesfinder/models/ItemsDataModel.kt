@@ -1,3 +1,3 @@
 package com.lefarmico.moviesfinder.models
 
-data class ItemsDataModel(val items: List<Item>)
+data class ItemsDataModel(val itemHeaders: List<ItemHeader>)

@@ -1,6 +1,7 @@
 package com.lefarmico.moviesfinder.presenters
 
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.recyclerview.widget.ConcatAdapter
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.adapters.HeaderAdapter
@@ -8,7 +9,7 @@ import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.fragments.MovieFragment
 import com.lefarmico.moviesfinder.models.CategoryModel
-import com.lefarmico.moviesfinder.models.Item
+import com.lefarmico.moviesfinder.models.ItemHeader
 import javax.inject.Inject
 
 class MovieFragmentPresenter @Inject constructor() : FragmentMenuPresenter {
@@ -69,15 +70,15 @@ class MovieFragmentPresenter @Inject constructor() : FragmentMenuPresenter {
         view.showCatalog(concatAdapter)
     }
 
-    override fun showError(textResource: Int) {
-        TODO("Not yet implemented")
+    override fun showError(@StringRes textResource: Int) {
+//        TODO("Not yet implemented")
     }
 
     override fun categoryClicked(category: CategoryModel) {
-        TODO("Not yet implemented")
+//        TODO("Not yet implemented")
     }
 
-    override fun onItemClicked(item: Item) {
-        TODO("Not yet implemented")
+    override fun onItemClicked(itemHeader: ItemHeader) {
+//        TODO("Not yet implemented")
     }
 }

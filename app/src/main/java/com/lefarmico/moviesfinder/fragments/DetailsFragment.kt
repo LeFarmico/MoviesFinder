@@ -11,13 +11,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.FragmentDetailsBinding
-import com.lefarmico.moviesfinder.models.Item
-import com.lefarmico.moviesfinder.models.MovieItemModel
+import com.lefarmico.moviesfinder.models.ItemHeader
+import com.lefarmico.moviesfinder.models.ItemHeaderModel
 import com.lefarmico.moviesfinder.private.PrivateData
 import com.squareup.picasso.Picasso
 
 class DetailsFragment : Fragment() {
-    private lateinit var movieItem: Item
+    private lateinit var ItemHeader: ItemHeader
     private var _binding: FragmentDetailsBinding? = null
 
     private val binding get() = _binding!!
@@ -41,14 +41,14 @@ class DetailsFragment : Fragment() {
         setMovieDetails()
 
         binding.fragmentFavoritesFab.setOnClickListener {
-            if (!movieItem.isFavorite) {
+            if (!ItemHeader.isFavorite) {
                 Toast.makeText(requireContext(), "add to favorite", Toast.LENGTH_SHORT).show()
                 binding.fragmentFavoritesFab.setImageResource(R.drawable.ic_baseline_favorite_24)
-                movieItem.isFavorite = true
+                ItemHeader.isFavorite = true
             } else {
                 Toast.makeText(requireContext(), "remove from favorite", Toast.LENGTH_SHORT).show()
                 binding.fragmentFavoritesFab.setImageResource(R.drawable.ic_baseline_favorite_border_24)
-                movieItem.isFavorite = false
+                ItemHeader.isFavorite = false
             }
         }
 
@@ -57,7 +57,7 @@ class DetailsFragment : Fragment() {
             intent.action = Intent.ACTION_SEND
             intent.putExtra(
                 Intent.EXTRA_TEXT,
-                "Check out this movie: ${movieItem.title}"
+                "Check out this movie: ${ItemHeader.title}"
             )
             // УКазываем MIME тип, чтобы система знала, какое приложения предложить
             intent.type = "text/plain"
@@ -65,10 +65,10 @@ class DetailsFragment : Fragment() {
         }
     }
     private fun setMovieDetails() {
-        movieItem = arguments?.get("movie") as MovieItemModel
-        binding.item = movieItem
+        ItemHeader = arguments?.get("movie") as ItemHeaderModel
+        binding.item = ItemHeader
         Picasso.get()
-            .load(PrivateData.ApiConstants.IMAGES_URL + "w780" + movieItem.posterPath)
+            .load(PrivateData.ApiConstants.IMAGES_URL + "w780" + ItemHeader.posterPath)
             .centerCrop()
             .into(binding.fragmentDetailsPoster)
     }

@@ -36,8 +36,16 @@ interface TmdbApi {
 
     @GET("3/movie/{movie_id}")
     fun getMovieDetails(
+        @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") lang: String,
-        @Path("movie_id") movieId: Int
     ): Call<TmdbMovieDetailsResults>
+
+    @GET("3/movie/{movie_id}")
+    fun getMovieDetailsWithCreditsAndProviders(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") lang: String,
+        @Query("append_to_response") append: String
+    ): Call<TmdbMovieDetailsActorsDirectorsProviders>
 }
