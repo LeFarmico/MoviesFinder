@@ -10,12 +10,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapters.GenreAdapter
+import com.lefarmico.moviesfinder.adapters.ProviderAdapter
 import com.lefarmico.moviesfinder.animations.FabMenuAnimator
+import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
 import com.lefarmico.moviesfinder.models.MovieItem
 import com.lefarmico.moviesfinder.presenters.MainActivityPresenter
-import com.lefarmico.moviesfinder.private.PrivateData
+import com.lefarmico.moviesfinder.private.ApiConstants
 import com.lefarmico.moviesfinder.view.MainActivityView
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
@@ -24,6 +26,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
 
     private lateinit var binding: ActivityMainBinding
     @Inject lateinit var presenter: MainActivityPresenter
+    @Inject override lateinit var interactor: Interactor
 
     lateinit var activeFragment: Fragment
 
@@ -134,12 +137,17 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
             rateView.setPushedButton(3)
             movieTitle.text = movieItem.title
             movieRate.text = getString(R.string.rating) + movieItem.rating
+            providersRecyclerView.adapter = ProviderAdapter().apply {
+                setItems(
+                    movieItem.watchProviders
+                )
+            }
             genreRecycler.adapter = GenreAdapter().apply {
                 setItems(movieItem.genres)
             }
             movieDescription.text = movieItem.description
             Picasso.get()
-                .load(PrivateData.ApiConstants.IMAGES_URL + "w342" + movieItem.posterPath)
+                .load(ApiConstants.IMAGES_URL + "w342" + movieItem.posterPath)
                 .error(R.drawable.ic_launcher_foreground)
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(posterImageView)

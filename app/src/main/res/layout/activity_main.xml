@@ -41,7 +41,7 @@
         android:alpha="0"/>
     <include
         android:id="@+id/bottom_sheet"
-        layout="@layout/movie_details_bottom_sheet"/>
+        layout="@layout/bottom_sheet_movie_details"/>
     <include
         android:id="@+id/fab_menu"
         layout="@layout/fab_menu"/>

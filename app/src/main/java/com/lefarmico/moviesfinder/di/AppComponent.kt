@@ -6,7 +6,14 @@ import com.lefarmico.moviesfinder.fragments.MovieFragment
 import dagger.Component
 import javax.inject.Singleton
 
-@Component(modules = [PresentersModule::class])
+@Component(
+    modules = [
+        PresentersModule::class,
+        DataBaseModel::class,
+        DomainModule::class,
+        RemoteModule::class
+    ]
+)
 
 @Singleton
 interface AppComponent {

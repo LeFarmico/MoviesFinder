@@ -1,7 +1,6 @@
 package com.lefarmico.moviesfinder.presenters
 
 import androidx.fragment.app.Fragment
-import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.activities.MainActivity
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.fragments.FavoritesFragment
@@ -15,7 +14,7 @@ import javax.inject.Inject
 class MainActivityPresenterImpl @Inject constructor() : MainActivityPresenter {
 
     private lateinit var view: MainActivityView
-    private var interactor: Interactor = App.instance.interactor
+    lateinit var interactor: Interactor
 
     override val fragmentsMap: MutableMap<String, Fragment> = mutableMapOf(
         Pair("MovieFragment", MovieFragment()),
@@ -25,6 +24,7 @@ class MainActivityPresenterImpl @Inject constructor() : MainActivityPresenter {
 
     override fun attachView(view: MainActivity) {
         this.view = view
+        this.interactor = view.interactor
     }
 
     override fun launchFragment(fragment: Fragment, tag: String) {
@@ -38,7 +38,7 @@ class MainActivityPresenterImpl @Inject constructor() : MainActivityPresenter {
     }
 
     override fun onItemClick(itemHeader: ItemHeader) {
-        interactor.getMovieDetailsCreditsProvidersFromApi(itemHeader, itemHeader.id, this)
+        interactor.getMovieDetailsFromApi(itemHeader, itemHeader.id, this)
     }
 
     override fun showItemDetails(movieItem: MovieItem) {

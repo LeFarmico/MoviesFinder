@@ -14,7 +14,7 @@
         android:id="@+id/movieFragment"
         android:name="com.lefarmico.moviesfinder.fragments.MovieFragment"
         android:label="fragment_items"
-        tools:layout="@layout/fragment_items" />
+        tools:layout="@layout/fragment_movie" />
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.lefarmico.moviesfinder.fragments.FavoritesFragment"

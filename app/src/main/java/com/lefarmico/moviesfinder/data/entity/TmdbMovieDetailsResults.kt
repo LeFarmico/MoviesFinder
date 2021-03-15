@@ -1,6 +1,10 @@
 package com.lefarmico.moviesfinder.data.entity
 
 import com.google.gson.annotations.SerializedName
+import com.lefarmico.moviesfinder.data.entity.details.TmdbGenre
+import com.lefarmico.moviesfinder.data.entity.details.TmdbProductionCompany
+import com.lefarmico.moviesfinder.data.entity.details.TmdbProductionCountry
+import com.lefarmico.moviesfinder.data.entity.details.TmdbSpokenLanguage
 
 data class TmdbMovieDetailsResults(
     @SerializedName("adult")

@@ -8,14 +8,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.activities.MainActivity
+import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.databinding.ItemPlaceholderRecyclerBinding
+import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
+import com.lefarmico.moviesfinder.models.ItemHeader
 import com.lefarmico.moviesfinder.models.ItemsDataModel
+import com.lefarmico.moviesfinder.providers.CategoryProvider
+import com.lefarmico.moviesfinder.utils.PaginationOnScrollListener
 
-class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.ViewHolder>() {
+class ItemsPlaceholderAdapter(
+    val interactor: Interactor
+) : RecyclerView.Adapter<ItemsPlaceholderAdapter.ViewHolder>() {
 
     private lateinit var itemsDataModel: ItemsDataModel
 
     private val scrollStates: MutableMap<Long, Parcelable?> = mutableMapOf()
+    lateinit var categoryType: CategoryProvider.Category
+    var page = 1
 
     class ViewHolder(
         placeholderBinding: ItemPlaceholderRecyclerBinding
@@ -45,10 +54,11 @@ class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.V
 
         val key = getItemId(holder.layoutPosition)
         val state = scrollStates[key]
-        // Корректно ли это?
+
         holder.recyclerView.apply {
             layoutManager = itemsLayoutManager
             setRecycledViewPool(viewPool)
+            addItemDecoration(TopSpacingItemDecoration(1))
             if (state != null) {
                 layoutManager?.onRestoreInstanceState(state)
             } else {
@@ -60,6 +70,11 @@ class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.V
                 }
             )
             (adapter as ItemAdapter).setItems(itemsDataModel.itemHeaders)
+            addOnScrollListener(
+                PaginationOnScrollListener(this.layoutManager!!) {
+                    interactor.updateMoviesFromApi(categoryType, ++page, this@ItemsPlaceholderAdapter)
+                }
+            )
         }
     }
 
@@ -67,6 +82,12 @@ class ItemsPlaceholderAdapter() : RecyclerView.Adapter<ItemsPlaceholderAdapter.V
 
     fun setNestedItemsData(itemsDataModel: ItemsDataModel) {
         this.itemsDataModel = itemsDataModel
+        notifyDataSetChanged()
+    }
+
+    fun addNestedItemsData(itemsDataModel: List<ItemHeader>) {
+        val curItems = this.itemsDataModel.itemHeaders
+        this.itemsDataModel.itemHeaders = curItems + itemsDataModel
         notifyDataSetChanged()
     }
 

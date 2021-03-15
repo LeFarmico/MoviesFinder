@@ -21,7 +21,7 @@
     </style>
 
     <style name="MoviePosterStyle" >
-        <item name="android:layout_width"> 120dp</item>
+        <item name="android:layout_width">120dp</item>
         <item name="android:layout_height">180dp</item>
         <item name="android:stateListAnimator">@animator/poster_elevation</item>
         <item name="android:background">@drawable/poster_shape</item>
@@ -33,10 +33,30 @@
         <item name="itemTextColor">@drawable/bottom_navigation_selector_light</item>
     </style>
 
-    <style name="BottomSheetItemDescription">
-        <item name="android:layout_width"> match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">5dp</item>
+    <style name="TextStyle">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="TextStyle.Warning">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="TextStyle.Description">
+        <item name="android:maxLines">5</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:text">@tools:sample/lorem/random</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+
+    <style name="TextStyle.PrimaryHeading">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextStyle.SecondaryHeading">
+        <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
     </style>
 

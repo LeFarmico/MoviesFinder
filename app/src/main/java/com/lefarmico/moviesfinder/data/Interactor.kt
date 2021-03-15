@@ -1,115 +1,68 @@
 package com.lefarmico.moviesfinder.data
 
+import android.util.Log
 import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.data.entity.TmdbApi
 import com.lefarmico.moviesfinder.data.entity.TmdbMovieDetailsActorsDirectorsProviders
-import com.lefarmico.moviesfinder.data.entity.TmdbMovieDetailsResults
-import com.lefarmico.moviesfinder.data.entity.TmdbMovieListResultsResults
+import com.lefarmico.moviesfinder.data.entity.TmdbMovieListResults
 import com.lefarmico.moviesfinder.models.CategoryModel
 import com.lefarmico.moviesfinder.models.ItemHeader
 import com.lefarmico.moviesfinder.models.ItemsDataModel
 import com.lefarmico.moviesfinder.presenters.MainActivityPresenter
 import com.lefarmico.moviesfinder.presenters.MovieFragmentPresenter
-import com.lefarmico.moviesfinder.private.PrivateData
+import com.lefarmico.moviesfinder.private.ApiConstants
+import com.lefarmico.moviesfinder.providers.CategoryProvider
+import com.lefarmico.moviesfinder.providers.PreferenceProvider
 import com.lefarmico.moviesfinder.utils.Converter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class Interactor(private val repo: MainRepository, private val retrofitService: TmdbApi) {
+class Interactor(private val repo: MainRepository, private val retrofitService: TmdbApi, private val preferenceProvider: PreferenceProvider) {
 
-    fun getPopularMovieFromApi(page: Int, presenter: MovieFragmentPresenter) {
-        retrofitService.getPopularMovies(PrivateData.ApiConstants.API_KEY, "ru-RU", page)
-            .enqueue(object : Callback<TmdbMovieListResultsResults> {
-                override fun onResponse(call: Call<TmdbMovieListResultsResults>, response: Response<TmdbMovieListResultsResults>) {
+    fun getMoviesFromApi(category: CategoryProvider.Category, page: Int, presenter: MovieFragmentPresenter) {
+        retrofitService.getMovies(category.categoryTitle, ApiConstants.API_KEY, "ru-RU", page)
+            .enqueue(object : Callback<TmdbMovieListResults> {
+                override fun onResponse(call: Call<TmdbMovieListResults>, response: Response<TmdbMovieListResults>) {
+                    Log.d("Interactor", "load category")
                     presenter.loadCategory(
                         CategoryModel(
-                            R.string.popular, 1,
+                            category.getResource(), category,
                             ItemsDataModel(Converter.convertApiListToDTOList(response.body()?.tmdbMovie))
                         )
                     )
                 }
 
-                override fun onFailure(call: Call<TmdbMovieListResultsResults>, t: Throwable) {
-                    presenter.showError(R.string.error_text)
-                }
-            })
-    }
-
-    fun getUpcomingMovieFromApi(page: Int, presenter: MovieFragmentPresenter) {
-        retrofitService.getUpcomingMovies(PrivateData.ApiConstants.API_KEY, "ru-RU", page)
-            .enqueue(object : Callback<TmdbMovieListResultsResults> {
-                override fun onResponse(call: Call<TmdbMovieListResultsResults>, response: Response<TmdbMovieListResultsResults>) {
-                    presenter.loadCategory(
-                        CategoryModel(
-                            R.string.upcoming, 2,
-                            ItemsDataModel(Converter.convertApiListToDTOList(response.body()?.tmdbMovie))
-                        )
-                    )
-                }
-                override fun onFailure(call: Call<TmdbMovieListResultsResults>, t: Throwable) {
-                    presenter.showError(R.string.error_text)
-                }
-            })
-    }
-
-    fun getTopRatedMovieFromApi(page: Int, presenter: MovieFragmentPresenter) {
-        retrofitService.getTopRatedMovies(PrivateData.ApiConstants.API_KEY, "ru-RU", page)
-            .enqueue(object : Callback<TmdbMovieListResultsResults> {
-                override fun onResponse(call: Call<TmdbMovieListResultsResults>, response: Response<TmdbMovieListResultsResults>) {
-                    presenter.loadCategory(
-                        CategoryModel(
-                            R.string.top_rated, 2,
-                            ItemsDataModel(Converter.convertApiListToDTOList(response.body()?.tmdbMovie))
-                        )
-                    )
-                }
-                override fun onFailure(call: Call<TmdbMovieListResultsResults>, t: Throwable) {
-                    presenter.showError(R.string.error_text)
-                }
-            })
-    }
-
-    fun getNowPlayingMovieFromApi(page: Int, presenter: MovieFragmentPresenter) {
-        retrofitService.getNowPlayingMovies(PrivateData.ApiConstants.API_KEY, "ru-RU", page)
-            .enqueue(object : Callback<TmdbMovieListResultsResults> {
-                override fun onResponse(call: Call<TmdbMovieListResultsResults>, response: Response<TmdbMovieListResultsResults>) {
-                    presenter.loadCategory(
-                        CategoryModel(
-                            R.string.now_playing, 2,
-                            ItemsDataModel(Converter.convertApiListToDTOList(response.body()?.tmdbMovie))
-                        )
-                    )
-                }
-                override fun onFailure(call: Call<TmdbMovieListResultsResults>, t: Throwable) {
+                override fun onFailure(call: Call<TmdbMovieListResults>, t: Throwable) {
                     presenter.showError(R.string.error_text)
                 }
             })
     }
 
     fun getMovieDetailsFromApi(itemHeader: ItemHeader, movieId: Int, presenter: MainActivityPresenter) {
-        retrofitService.getMovieDetails(movieId, PrivateData.ApiConstants.API_KEY, "ru-RU")
-            .enqueue(object : Callback<TmdbMovieDetailsResults> {
-                override fun onResponse(call: Call<TmdbMovieDetailsResults>, response: Response<TmdbMovieDetailsResults>) {
-                    presenter.showItemDetails(
-                        Converter.convertApiMovieDetailsToDTOItem(itemHeader, response.body()!!)
-                    )
-                }
-                override fun onFailure(call: Call<TmdbMovieDetailsResults>, t: Throwable) {
-                    presenter.showError(R.string.error_text)
-                }
-            })
-    }
-    fun getMovieDetailsCreditsProvidersFromApi(itemHeader: ItemHeader, movieId: Int, presenter: MainActivityPresenter) {
-        retrofitService.getMovieDetailsWithCreditsAndProviders(movieId, PrivateData.ApiConstants.API_KEY, "ru-RU", "watch/providers,credits")
+        retrofitService.getMovieDetailsWithCreditsAndProviders(movieId, ApiConstants.API_KEY, "ru-RU", "watch/providers,credits")
             .enqueue(object : Callback<TmdbMovieDetailsActorsDirectorsProviders> {
                 override fun onResponse(call: Call<TmdbMovieDetailsActorsDirectorsProviders>, response: Response<TmdbMovieDetailsActorsDirectorsProviders>) {
                     presenter.showItemDetails(
-                        Converter.convertApiMovieDetailsCreditsProvidersToDTOItem(itemHeader, response.body()!!)
+                        Converter.convertApiMovieDetailsCreditsProvidersToDTOItem(itemHeader, preferenceProvider.getCurrentCountry(), response.body()!!)
                     )
                 }
                 override fun onFailure(call: Call<TmdbMovieDetailsActorsDirectorsProviders>, t: Throwable) {
                     presenter.showError(R.string.error_text)
+                }
+            })
+    }
+    fun updateMoviesFromApi(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
+        retrofitService.getMovies(category.categoryTitle, ApiConstants.API_KEY, "ru-RU", page)
+            .enqueue(object : Callback<TmdbMovieListResults> {
+                override fun onResponse(call: Call<TmdbMovieListResults>, response: Response<TmdbMovieListResults>) {
+                    Log.d("Interactor", "load category")
+                    adapter.addNestedItemsData(Converter.convertApiListToDTOList(response.body()?.tmdbMovie))
+                }
+
+                override fun onFailure(call: Call<TmdbMovieListResults>, t: Throwable) {
+                    // show error
                 }
             })
     }
