@@ -91,4 +91,8 @@ dependencies {
 
     //CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    //
+    def neumorphism_version = "0.3.0"
+    implementation "com.github.fornewid:neumorphism:$neumorphism_version"
 }

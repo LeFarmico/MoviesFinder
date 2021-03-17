@@ -70,7 +70,7 @@ class MovieFragment @Inject constructor() : Fragment(), MoviesView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated")
-        startAppAnimation()
+        startFragmentAnimation()
         initToolsBar()
 
         recyclerView = binding.mergeMovieScreenContent.findViewById(R.id.recycler_parent)
@@ -101,7 +101,7 @@ class MovieFragment @Inject constructor() : Fragment(), MoviesView {
                 }
             })
     }
-    private fun startAppAnimation() {
+    private fun startFragmentAnimation() {
         val scene = Scene.getSceneForLayout(
             binding.mergeMovieScreenContent,
             R.layout.merge_fragment_movie,

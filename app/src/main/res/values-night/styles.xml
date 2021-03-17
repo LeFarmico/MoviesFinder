@@ -1,28 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="PassiveButton">
-        <item name="android:background">@drawable/bottom_button_ripple</item>
-        <item name="android:textColor">@color/color_of_active_element</item>
-    </style>
-
-    <style name="ActiveButton">
-        <item name="android:textColor">@color/color_of_passive_element</item>
-        <item name="android:background">@color/color_of_active_element</item>
-    </style>
+<!--    <style name="PrimaryColorElement">-->
+<!--        <item name="android:textColor">@color/color_of_passive_element</item>-->
+<!--        <item name="android:background">@color/primary_color</item>-->
+<!--    </style>-->
 
     <style name="BackgroundColor" parent="DarkYellowTheme">
-        <item name="android:background">@color/button_outline</item>
-    </style>
-
-    <style name="ToolBarStyle" parent="DarkYellowTheme">
-        <item name="android:background">@color/button_outline</item>
-        <item name="titleTextColor">@color/color_of_passive_element</item>
-    </style>
-
-    <style name="BottomNavigatorStyle">
         <item name="android:background">@color/menu_background</item>
-        <item name="itemIconTint">@drawable/bottom_navigation_selector</item>
-        <item name="itemTextColor">@drawable/bottom_navigation_selector</item>
+    </style>
+
+    <style name="Neuromorphism">
+        <item name="neumorph_shadowColorLight">@color/menu_light_shadow</item>
+        <item name="neumorph_shadowColorDark">@color/menu_dark_shadow</item>
     </style>
 </resources>

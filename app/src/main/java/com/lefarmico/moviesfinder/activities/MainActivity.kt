@@ -9,17 +9,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.adapters.GenreAdapter
-import com.lefarmico.moviesfinder.adapters.ProviderAdapter
 import com.lefarmico.moviesfinder.animations.FabMenuAnimator
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
-import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
 import com.lefarmico.moviesfinder.models.MovieItem
 import com.lefarmico.moviesfinder.presenters.MainActivityPresenter
-import com.lefarmico.moviesfinder.private.ApiConstants
 import com.lefarmico.moviesfinder.view.MainActivityView
-import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
 class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView {
@@ -47,7 +42,6 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
             presenter.showFragment(presenter.fragmentsMap["MovieFragment"]!!)
         }
 
-        binding.bottomSheet.genreRecycler.addItemDecoration(TopSpacingItemDecoration(5))
         launchBottomSheet()
         launchFabMenu()
 
@@ -56,7 +50,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
     }
 
     private fun launchBottomSheet() {
-        BottomSheetBehavior.from(binding.bottomSheet.root).apply {
+        BottomSheetBehavior.from(binding.bottomSheet).apply {
             skipCollapsed = true
             state = BottomSheetBehavior.STATE_HIDDEN
 
@@ -134,25 +128,15 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
 
     override fun launchItemDetails(movieItem: MovieItem) {
         binding.bottomSheet.apply {
-            rateView.setPushedButton(3)
-            movieTitle.text = movieItem.title
-            movieRate.text = getString(R.string.rating) + movieItem.rating
-            providersRecyclerView.adapter = ProviderAdapter().apply {
-                setItems(
-                    movieItem.watchProviders
-                )
-            }
-            genreRecycler.adapter = GenreAdapter().apply {
-                setItems(movieItem.genres)
-            }
-            movieDescription.text = movieItem.description
-            Picasso.get()
-                .load(ApiConstants.IMAGES_URL + "w342" + movieItem.posterPath)
-                .error(R.drawable.ic_launcher_foreground)
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .into(posterImageView)
+            setRate(5)
+            setProviders(movieItem.watchProviders)
+            setGenres(movieItem.genres)
+            setTitle(movieItem.title)
+            setRating(movieItem.rating)
+            setDescription(movieItem.description)
+            setPoster(movieItem.posterPath)
         }
-        BottomSheetBehavior.from(binding.bottomSheet.root).state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        BottomSheetBehavior.from(binding.bottomSheet).state = BottomSheetBehavior.STATE_HALF_EXPANDED
         binding.bottomNavigationBarView.visibility = View.INVISIBLE
     }
 

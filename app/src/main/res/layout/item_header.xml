@@ -3,10 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/header_title"
     android:textSize="20sp"
+    android:layout_marginTop="10dp"
+    android:fontFamily="@font/roboto_black"
+    android:layout_marginStart="5dp"
+    style="@style/TextStyle.PrimaryHeading"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textAlignment="textStart"
-    android:text="@string/movie_container_name"
-    style="@style/ActiveButton">
+    android:text="@string/movie_container_name">
 
 </TextView>

@@ -2,7 +2,6 @@ package com.lefarmico.moviesfinder.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.databinding.ItemGenreBinding
@@ -13,7 +12,6 @@ class GenreAdapter : RecyclerView.Adapter<GenreAdapter.ViewHolder>() {
 
     class ViewHolder(itemGenreBinding: ItemGenreBinding) : RecyclerView.ViewHolder(itemGenreBinding.root) {
         private val genreText: TextView = itemGenreBinding.genreTextView
-        private val genreImage: ImageView = itemGenreBinding.genreImageView
 
         fun bind(genreItem: String) {
             genreText.text = genreItem

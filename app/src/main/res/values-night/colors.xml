@@ -8,15 +8,20 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 
-    <!-- button bars colors -->
-    <color name="color_of_active_element">#F0E82D</color>
-    <color name="color_of_passive_element">#3B4C5E</color>
-    <color name="button_outline">#0F232C</color>
-    <color name="background_color_dark">#0B1C24</color>
-    <color name="button_outline_2">#52A4BF</color>
-    <color name="light_primary_color">#E0FFFF</color>
+    <!-- push elements colors -->
+    <color name="active_color">#F0E82D</color>
+    <color name="passive_color">#F0F0F3</color>
 
     <!-- menu colors -->
-    <color name="menu_background">#0F232C</color>
-    <color name="bottom_sheet_background">#0F232C</color>
+    <color name="menu_background">#171722</color>
+    <color name="menu_light_shadow">#222232</color>
+    <color name="menu_dark_shadow">#111119</color>
+    <color name="bottom_sheet_background">#34343f</color>
+    <color name="bottom_bar_color">#222232</color>
+
+    <!-- main colors-->
+    <color name="main_color">#171722</color>
+    <color name="main_color_dark">#0D0D13</color>
+
+    <color name="main_contrast_color">#F1F0F5</color>
 </resources>
