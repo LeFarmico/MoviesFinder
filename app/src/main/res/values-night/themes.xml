@@ -6,6 +6,10 @@
         <item name="colorPrimaryVariant">@color/menu_background</item>
         <item name="colorOnPrimary">@color/active_color</item>
 
+        <!-- Fab color. -->
+        <item name="colorSecondary">@color/active_color</item>
+        <item name="colorAccent">@color/active_color</item>
+
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
         <item name="android:colorBackground">@color/menu_background</item>

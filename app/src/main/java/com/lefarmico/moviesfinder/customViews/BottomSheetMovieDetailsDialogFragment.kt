@@ -1,15 +1,14 @@
 package com.lefarmico.moviesfinder.customViews
 
-import android.content.Context
-import android.util.AttributeSet
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.Nullable
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapters.GenreAdapter
 import com.lefarmico.moviesfinder.adapters.ProviderAdapter
@@ -17,27 +16,35 @@ import com.lefarmico.moviesfinder.adapters.RateMovieAdapter
 import com.lefarmico.moviesfinder.animations.MaxLineAnimator
 import com.lefarmico.moviesfinder.databinding.BottomSheetMovieDetailsBinding
 import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
+import com.lefarmico.moviesfinder.models.MovieItem
 import com.lefarmico.moviesfinder.models.ProviderModel
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.squareup.picasso.Picasso
 
-class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: AttributeSet) : ConstraintLayout(context, attributeSet) {
+class BottomSheetMovieDetailsDialogFragment(val movieItem: MovieItem) : BottomSheetDialogFragment() {
 
-    private var binding: BottomSheetMovieDetailsBinding
+    private var _binding: BottomSheetMovieDetailsBinding? = null
+    private val binding get() = _binding!!
 
-    private val poster: ImageView
-    private val movieTitle: TextView
-    private val movieRate: TextView
-    private val length: TextView
-    private val descriptions: TextView
+    private lateinit var poster: ImageView
+    private lateinit var movieTitle: TextView
+    private lateinit var movieRate: TextView
+    private lateinit var length: TextView
+    private lateinit var descriptions: TextView
 
-    private val genres: RecyclerView
-    private val providers: RecyclerView
-    private val yourRate: RecyclerView
-    private val actors: RecyclerView
+    private lateinit var genres: RecyclerView
+    private lateinit var providers: RecyclerView
+    private lateinit var yourRate: RecyclerView
+    private lateinit var actors: RecyclerView
 
-    init {
-        binding = BottomSheetMovieDetailsBinding.inflate(LayoutInflater.from(context), this, true)
+    fun instance(): BottomSheetMovieDetailsDialogFragment = BottomSheetMovieDetailsDialogFragment(movieItem)
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = BottomSheetMovieDetailsBinding.inflate(inflater, container, false)
 
         poster = binding.posterImageView
         movieTitle = binding.movieTitle
@@ -51,6 +58,20 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
         providers = binding.providersRecyclerView
         yourRate = binding.rateView
         actors = binding.actorsRecyclerView
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setRate(5)
+        setProviders(movieItem.watchProviders)
+        setGenres(movieItem.genres)
+        setTitle(movieItem.title)
+        setRating(movieItem.rating)
+        setDescription(movieItem.description)
+        setPoster(movieItem.posterPath)
     }
 
     fun setRate(rate: Int) {
@@ -80,7 +101,7 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     }
 
     fun setRating(rating: Double) {
-        movieRate.text = context.getString(R.string.rating) + rating
+        movieRate.text = requireContext().getString(R.string.rating) + rating
     }
 
     fun setDescription(description: String) {

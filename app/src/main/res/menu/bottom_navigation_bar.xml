@@ -5,16 +5,16 @@
     <item
         android:id="@+id/movies_menu"
         android:icon="@drawable/ic_baseline_movie_24"
-        android:title="Movies"
+        android:title="@string/movies"
         app:showAsAction="withText"/>
     <item
         android:id="@+id/series_menu"
         android:icon="@drawable/ic_baseline_camera_24"
-        android:title="Series"
+        android:title="@string/shows"
         app:showAsAction="withText"/>
     <item
         android:id="@+id/favorites_menu"
         android:icon="@drawable/ic_baseline_favorite_24"
-        android:title="Favorites"
+        android:title="@string/favorites"
         app:showAsAction="withText"/>
 </menu>

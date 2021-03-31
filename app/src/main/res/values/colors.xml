@@ -9,15 +9,15 @@
     <color name="white">#FFFFFF</color>
 
     <!-- push elements colors -->
-    <color name="active_color">#F0E82D</color>
-    <color name="passive_color">#34343F</color>
+    <color name="active_color">#3B60F9</color>
+    <color name="passive_color">#DEDEDE</color>
 
     <!-- menu colors -->
     <color name="menu_background">#171722</color>
     <color name="menu_light_shadow">#FBFAFF</color>
     <color name="menu_dark_shadow">#DEDEDE</color>
     <color name="bottom_sheet_background">@color/white</color>
-    <color name="bottom_bar_color">#DEDEDE</color>
+    <color name="bottom_bar_color">@color/main_color</color>
 
     <!-- main colors-->
     <color name="main_color">#F1F0F5</color>

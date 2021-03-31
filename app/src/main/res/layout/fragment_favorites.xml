@@ -7,7 +7,7 @@
     android:visibility="invisible"
     tools:visibility="visible"
     android:orientation="vertical"
-    android:background="@color/passive_color"
+    android:background="@color/main_color"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="fragments.FavoritesFragment">
 

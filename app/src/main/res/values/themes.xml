@@ -6,9 +6,14 @@
         <item name="colorPrimaryVariant">@color/menu_background</item>
         <item name="colorOnPrimary">@color/active_color</item>
 
+        <item name="colorSecondary">@color/active_color</item>
+        <item name="colorAccent">@color/active_color</item>
+
+
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
         <item name="android:colorBackground">@color/main_color</item>
+
         <!-- Customize your theme here. -->
 
         <!-- Shadows. -->

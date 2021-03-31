@@ -10,6 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.animations.FabMenuAnimator
+import com.lefarmico.moviesfinder.customViews.BottomSheetMovieDetailsDialogFragment
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.models.MovieItem
@@ -138,6 +139,8 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
         }
         BottomSheetBehavior.from(binding.bottomSheet).state = BottomSheetBehavior.STATE_HALF_EXPANDED
         binding.bottomNavigationBarView.visibility = View.INVISIBLE
+//        val bh = BottomSheetMovieDetailsDialogFragment(movieItem)
+//        bh.show(supportFragmentManager, "bottom_sheet")
     }
 
     override fun launchFabMenu() {

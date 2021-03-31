@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     android:gravity="center"
     android:alpha="0.8"
-    android:background="@drawable/genre_item_view">
+    android:background="@drawable/genre_item_shape">
 
         <TextView
             android:id="@+id/genre_text_view"
@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:fontFamily="@font/montserrat_medium"
-            android:textColor="@color/passive_color"
+            android:textColor="@color/main_contrast_color"
             android:gravity="center"
             android:layout_margin="4dp"
             android:textAllCaps="true"

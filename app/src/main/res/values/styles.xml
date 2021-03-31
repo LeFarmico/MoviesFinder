@@ -13,7 +13,6 @@
     <style name="MoviePosterStyle" >
         <item name="android:layout_width">120dp</item>
         <item name="android:layout_height">180dp</item>
-        <item name="android:stateListAnimator">@animator/poster_elevation</item>
         <item name="android:background">@drawable/poster_shape</item>
     </style>
 
@@ -61,5 +60,12 @@
     <style name="Neuromorphism">
         <item name="neumorph_shadowColorLight">@color/menu_light_shadow</item>
         <item name="neumorph_shadowColorDark">@color/menu_dark_shadow</item>
+    </style>
+
+    <style name="Neuromorphism.MovieItem">
+        <item name="neumorph_shadowColorLight">@color/menu_light_shadow</item>
+        <item name="neumorph_shadowColorDark">@color/menu_dark_shadow</item>
+        <item name="neumorph_cornerFamily">rounded</item>
+        <item name="neumorph_cornerSize">12dp</item>
     </style>
 </resources>

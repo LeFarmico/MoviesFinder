@@ -31,7 +31,7 @@
         app:elevation="10dp"
         app:layout_anchor="@id/bottom_sheet"
         android:contentDescription="@string/navigation_menu"
-        android:backgroundTint="@color/active_color"
+        app:tint="@color/white"
         android:src="@drawable/ic_baseline_keyboard_arrow_up_24"/>
     <FrameLayout
         android:id="@+id/black_background_frame_layout"
