@@ -26,10 +26,14 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
             .enqueue(object : Callback<TmdbMovieListResults> {
                 override fun onResponse(call: Call<TmdbMovieListResults>, response: Response<TmdbMovieListResults>) {
                     Log.d("Interactor", "load category")
+                    val list = Converter.convertApiListToDTOList(response.body()?.tmdbMovie)
+                    list.forEach {
+                        repo.putToDb(item = it)
+                    }
                     presenter.loadCategory(
                         CategoryModel(
                             category.getResource(), category,
-                            ItemsDataModel(Converter.convertApiListToDTOList(response.body()?.tmdbMovie))
+                            ItemsDataModel(list)
                         )
                     )
                 }
