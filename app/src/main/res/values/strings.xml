@@ -27,4 +27,8 @@
     <string name="genres">Action / Adventure / Comedy / Drama</string>
     <string name="duration">0h 00min</string>
     <string name="providers">Avallable on</string>
+    <string name="genre_image">Genre Image</string>
+    <string name="movies">Movies</string>
+    <string name="shows">Shows</string>
+    <string name="favorites">Favorites</string>
 </resources>

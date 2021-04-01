@@ -2,7 +2,7 @@ package com.lefarmico.moviesfinder.data.entity
 
 import com.google.gson.annotations.SerializedName
 
-data class TmdbMovieListResultsResults(
+data class TmdbMovieListResults(
     @SerializedName("page")
     val page: Int,
     @SerializedName("results")

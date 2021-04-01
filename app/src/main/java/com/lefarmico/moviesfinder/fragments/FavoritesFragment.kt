@@ -1,6 +1,5 @@
 package com.lefarmico.moviesfinder.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.lefarmico.moviesfinder.activities.MainActivity
 import com.lefarmico.moviesfinder.adapters.ItemAdapter
 import com.lefarmico.moviesfinder.databinding.FragmentFavoritesBinding
 import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
@@ -38,8 +36,8 @@ class FavoritesFragment : Fragment() {
 
         binding.favoritesRecycler.apply {
             adapter = ItemAdapter {
-                val intent = Intent(requireContext(), DetailsFragment::class.java)
-                intent.putExtra("movie", it)
+//                val intent = Intent(requireContext(), DetailsFragment::class.java)
+//                intent.putExtra("movie", it)
 //                (requireActivity() as MainActivity).launchItemDetails(it)
                 val decorator = TopSpacingItemDecoration(8)
                 addItemDecoration(decorator)

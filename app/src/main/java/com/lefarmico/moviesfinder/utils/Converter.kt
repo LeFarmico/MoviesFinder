@@ -1,8 +1,11 @@
 package com.lefarmico.moviesfinder.utils
 
-import com.lefarmico.moviesfinder.data.entity.*
+import com.lefarmico.moviesfinder.data.entity.TmdbMovie
+import com.lefarmico.moviesfinder.data.entity.TmdbMovieDetailsActorsDirectorsProviders
+import com.lefarmico.moviesfinder.data.entity.TmdbProvidersResult
 import com.lefarmico.moviesfinder.data.entity.credits.Cast
 import com.lefarmico.moviesfinder.data.entity.credits.Crew
+import com.lefarmico.moviesfinder.data.entity.details.TmdbGenre
 import com.lefarmico.moviesfinder.models.*
 
 object Converter {
@@ -24,29 +27,10 @@ object Converter {
         }
         return movieList
     }
-    fun convertApiMovieDetailsToDTOItem(
-        itemHeader: ItemHeader,
-        tmdbItem: TmdbMovieDetailsResults
-    ): MovieModel {
-        return MovieModel(
-            id = tmdbItem.id,
-            posterPath = tmdbItem.poster_path,
-            title = tmdbItem.title,
-            rating = itemHeader.rating,
-            description = itemHeader.description,
-            isFavorite = false,
-            genres = convertGenres(tmdbItem.genres),
-            yourRate = 0,
-            actors = listOf(),
-            directors = listOf(),
-            watchProviders = listOf(),
-            length = 0,
-            photosPath = listOf(),
-            releaseDate = itemHeader.releaseDate
-        )
-    }
+
     fun convertApiMovieDetailsCreditsProvidersToDTOItem(
         itemHeader: ItemHeader,
+        country: String,
         tmdbItem: TmdbMovieDetailsActorsDirectorsProviders
     ): MovieModel {
         return MovieModel(
@@ -60,7 +44,7 @@ object Converter {
             yourRate = 0,
             actors = convertCast(tmdbItem.credits.cast),
             directors = convertDirectors(tmdbItem.credits.crew),
-            watchProviders = convertProviders(tmdbItem.providers, "BR"),
+            watchProviders = convertProviders(tmdbItem.providers, country),
             length = tmdbItem.runtime,
             photosPath = listOf(),
             releaseDate = itemHeader.releaseDate
@@ -108,11 +92,11 @@ object Converter {
         }
         return cast
     }
-//    TODO - добавить обработку country
+
     private fun convertProviders(providers: TmdbProvidersResult, country: String): List<ProviderModel> {
         val providersList = mutableListOf<ProviderModel>()
-        if (providers.results.US != null) {
-            providers.results.US.buy?.forEach {
+        providers.results.getCountryProviderByName(country)?.apply {
+            buy?.forEach {
                 providersList.add(
                     ProviderModel(
                         providerType = ProviderType.BUY,
@@ -123,7 +107,7 @@ object Converter {
                     )
                 )
             }
-            providers.results.US.flatrate?.forEach {
+            flatrate?.forEach {
                 providersList.add(
                     ProviderModel(
                         providerType = ProviderType.FLATRATE,
@@ -134,7 +118,7 @@ object Converter {
                     )
                 )
             }
-            providers.results.US.rent?.forEach {
+            rent?.forEach {
                 providersList.add(
                     ProviderModel(
                         providerType = ProviderType.RENT,

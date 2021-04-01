@@ -43,8 +43,60 @@ data class ProvidersResults(
     val SE: Provider?,
     val SG: Provider?,
     val TH: Provider?,
-    val TR: Provider,
+    val TR: Provider?,
     val US: Provider?,
     val VE: Provider?,
     val ZA: Provider?
-)
+) {
+    fun getCountryProviderByName(name: String): Provider? {
+        return when (name) {
+            "AR" -> AR
+            "AT" -> AT
+            "AU" -> AU
+            "BE" -> BE
+            "BR" -> BR
+            "CA" -> CA
+            "CH" -> CH
+            "CL" -> CL
+            "CO" -> CO
+            "CZ" -> CZ
+            "DE" -> DE
+            "DK" -> DK
+            "EC" -> EC
+            "EE" -> EE
+            "ES" -> ES
+            "FI" -> FI
+            "FR" -> FR
+            "GB" -> GB
+            "GR" -> GR
+            "HU" -> HU
+            "ID" -> ID
+            "IE" -> IE
+            "IN" -> IN
+            "IT" -> IT
+            "JP" -> JP
+            "KR" -> KR
+            "LT" -> LT
+            "LV" -> LV
+            "MX" -> MX
+            "MY" -> MY
+            "NL" -> NL
+            "NO" -> NO
+            "NZ" -> NZ
+            "PE" -> PE
+            "PH" -> PH
+            "PL" -> PL
+            "PT" -> PT
+            "RO" -> RO
+            "RU" -> RU
+            "SE" -> SE
+            "SG" -> SG
+            "TH" -> TH
+            "TR" -> TR
+            "US" -> US
+            "VE" -> VE
+            "ZA" -> ZA
+            else -> US
+        }
+    }
+}

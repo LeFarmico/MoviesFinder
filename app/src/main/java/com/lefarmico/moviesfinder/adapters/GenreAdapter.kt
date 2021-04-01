@@ -2,18 +2,16 @@ package com.lefarmico.moviesfinder.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.lefarmico.moviesfinder.databinding.GenreItemBinding
+import com.lefarmico.moviesfinder.databinding.ItemGenreBinding
 
 class GenreAdapter : RecyclerView.Adapter<GenreAdapter.ViewHolder>() {
 
     private lateinit var genreData: List<String>
 
-    class ViewHolder(genreItemBinding: GenreItemBinding) : RecyclerView.ViewHolder(genreItemBinding.root) {
-        private val genreText: TextView = genreItemBinding.genreTextView
-        private val genreImage: ImageView = genreItemBinding.genreImageView
+    class ViewHolder(itemGenreBinding: ItemGenreBinding) : RecyclerView.ViewHolder(itemGenreBinding.root) {
+        private val genreText: TextView = itemGenreBinding.genreTextView
 
         fun bind(genreItem: String) {
             genreText.text = genreItem
@@ -21,7 +19,7 @@ class GenreAdapter : RecyclerView.Adapter<GenreAdapter.ViewHolder>() {
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(
-            GenreItemBinding.inflate(
+            ItemGenreBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )

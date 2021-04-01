@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.databinding.FragmentItemsBinding
-import com.lefarmico.moviesfinder.models.ItemHeader
+import com.lefarmico.moviesfinder.data.Interactor
+import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
 import com.lefarmico.moviesfinder.presenters.MovieFragmentPresenter
 import com.lefarmico.moviesfinder.view.MoviesView
 import javax.inject.Inject
@@ -28,10 +28,11 @@ import javax.inject.Inject
 class MovieFragment @Inject constructor() : Fragment(), MoviesView {
 
     lateinit var recyclerView: RecyclerView
-    private var _binding: FragmentItemsBinding? = null
+    private var _binding: FragmentMovieBinding? = null
     private val binding get() = _binding!!
 
     @Inject lateinit var moviePresenter: MovieFragmentPresenter
+    @Inject lateinit var interactor: Interactor
 
     private val TAG = this.javaClass.canonicalName
 
@@ -62,19 +63,21 @@ class MovieFragment @Inject constructor() : Fragment(), MoviesView {
         savedInstanceState: Bundle?
     ): View {
         Log.d(TAG, "onCreateView")
-        _binding = FragmentItemsBinding.inflate(inflater, container, false)
+        _binding = FragmentMovieBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated")
-        startAppAnimation()
+        startFragmentAnimation()
         initToolsBar()
 
         recyclerView = binding.mergeMovieScreenContent.findViewById(R.id.recycler_parent)
 
         moviePresenter.attachView(this)
+
+//        if (savedInstanceState == null)
         moviePresenter.loadData()
 
         recyclerView.apply {
@@ -88,19 +91,25 @@ class MovieFragment @Inject constructor() : Fragment(), MoviesView {
         binding.root.findViewById<SearchView>(R.id.search_view_bar).setOnClickListener {
             (it as SearchView).isIconified = false
         }
-        binding.root.findViewById<SearchView>(R.id.search_view_bar).setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return true
-            }
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return true
-            }
-        })
+        binding.root.findViewById<SearchView>(R.id.search_view_bar)
+            .setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return true
+                }
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    return true
+                }
+            })
     }
-    private fun startAppAnimation() {
-        val scene = Scene.getSceneForLayout(binding.mergeMovieScreenContent, R.layout.merge_movie_screen_content, requireContext())
+    private fun startFragmentAnimation() {
+        val scene = Scene.getSceneForLayout(
+            binding.mergeMovieScreenContent,
+            R.layout.merge_fragment_movie,
+            requireContext()
+        )
         val searchSlide = Slide(Gravity.TOP).addTarget(R.id.search_view_bar)
         val recyclerSlide = Slide(Gravity.BOTTOM).addTarget(R.id.recycler_parent)
+
         val customTransition = TransitionSet().apply {
             duration = 500
             addTransition(recyclerSlide)
@@ -128,9 +137,6 @@ class MovieFragment @Inject constructor() : Fragment(), MoviesView {
 
     override fun showEmptyCatalog() {
         Toast.makeText(requireContext(), "Something had wrong", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onItemClicked(itemHeader: ItemHeader) {
     }
 
     override fun onStartLoading() {

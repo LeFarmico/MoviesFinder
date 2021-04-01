@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="Movies Finder"
-            app:titleTextColor="@color/color_of_passive_element"
+            app:titleTextColor="@color/main_color_dark"
             app:menu="@menu/top_app_bar"
             app:navigationIcon="@drawable/ic_round_menu_24"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"

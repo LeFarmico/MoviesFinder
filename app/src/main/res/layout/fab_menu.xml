@@ -16,7 +16,7 @@
         android:clickable="true"
         android:focusable="true"
         android:alpha="0"
-        android:backgroundTint="@color/button_outline_2"
+        android:backgroundTint="@color/main_color_dark"
         app:fabSize="mini"
         android:contentDescription="@string/default_text_button" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -30,7 +30,7 @@
         android:clickable="true"
         android:focusable="true"
         android:alpha="0"
-        android:backgroundTint="@color/button_outline_2"
+        android:backgroundTint="@color/main_color_dark"
         app:fabSize="mini"
         android:contentDescription="@string/default_text_button"/>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -44,7 +44,7 @@
         android:clickable="true"
         android:focusable="true"
         android:alpha="0"
-        android:backgroundTint="@color/button_outline_2"
+        android:backgroundTint="@color/main_color_dark"
         app:fabSize="mini"
         android:contentDescription="@string/default_text_button"/>
 

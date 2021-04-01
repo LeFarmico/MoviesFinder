@@ -5,14 +5,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ToggleButton
 import androidx.recyclerview.widget.RecyclerView
-import com.lefarmico.moviesfinder.databinding.RateCircleButtonBinding
+import com.lefarmico.moviesfinder.databinding.RateCircleToggleButtonBinding
 
 class RateMovieAdapter : RecyclerView.Adapter<RateMovieAdapter.ViewHolder>() {
 
     private val rateButtons: BooleanArray = BooleanArray(10)
 
     class ViewHolder(
-        itemsCircleButtonBinding: RateCircleButtonBinding
+        itemsCircleButtonBinding: RateCircleToggleButtonBinding
     ) : RecyclerView.ViewHolder(itemsCircleButtonBinding.root) {
         private val button = itemsCircleButtonBinding.root
         fun bind(number: Int, rated: Boolean) {
@@ -25,7 +25,7 @@ class RateMovieAdapter : RecyclerView.Adapter<RateMovieAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(
-            RateCircleButtonBinding.inflate(
+            RateCircleToggleButtonBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
@@ -39,7 +39,7 @@ class RateMovieAdapter : RecyclerView.Adapter<RateMovieAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = rateButtons.size
 
-    private fun setRate(rate: Int) {
+    fun setRate(rate: Int) {
         for (i in rateButtons.indices) {
             rateButtons[i] = false
         }
