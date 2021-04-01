@@ -10,7 +10,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.animations.FabMenuAnimator
-import com.lefarmico.moviesfinder.customViews.BottomSheetMovieDetailsDialogFragment
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.models.MovieItem

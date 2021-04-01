@@ -26,7 +26,7 @@ class MainRepository(dbHelper: DatabaseHelper) {
         sqlDb.insert(DatabaseHelper.TABLE_NAME, null, cv)
     }
 
-    fun getFromDB(): List<MovieItem> {
+    fun getFromDB(): List<ItemHeader> {
         cursor = sqlDb.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_NAME}", null)
 
         val result = mutableListOf<MovieItem>()
