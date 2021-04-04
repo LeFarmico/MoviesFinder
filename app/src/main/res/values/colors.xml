@@ -23,5 +23,8 @@
     <color name="main_color">#F1F0F5</color>
     <color name="main_color_dark">#BFBFBF</color>
 
+    <color name="gradient_start">#ffcc0000</color>
+    <color name="gradient_end">#ffff8800</color>
+
     <color name="main_contrast_color">#171722</color>
 </resources>
