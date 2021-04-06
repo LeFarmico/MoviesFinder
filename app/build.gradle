@@ -92,7 +92,12 @@ dependencies {
     //CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
-    //
+    //Neumorphism
     def neumorphism_version = "0.3.0"
     implementation "com.github.fornewid:neumorphism:$neumorphism_version"
+
+    //Room
+    def room_version = "2.2.6"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 }

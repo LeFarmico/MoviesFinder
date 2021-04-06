@@ -1,15 +1,15 @@
 package com.lefarmico.moviesfinder.utils
 
-import com.lefarmico.moviesfinder.data.entity.TmdbMovie
-import com.lefarmico.moviesfinder.data.entity.TmdbMovieDetailsActorsDirectorsProviders
-import com.lefarmico.moviesfinder.data.entity.TmdbProvidersResult
-import com.lefarmico.moviesfinder.data.entity.credits.Cast
-import com.lefarmico.moviesfinder.data.entity.credits.Crew
-import com.lefarmico.moviesfinder.data.entity.details.TmdbGenre
+import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsWithCreditsAndProvidersResult
+import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieResult
+import com.lefarmico.moviesfinder.data.entity.preferences.TmdbProvidersResult
+import com.lefarmico.moviesfinder.data.entity.preferences.credits.Cast
+import com.lefarmico.moviesfinder.data.entity.preferences.credits.Crew
+import com.lefarmico.moviesfinder.data.entity.preferences.details.TmdbGenre
 import com.lefarmico.moviesfinder.models.*
 
 object Converter {
-    fun convertApiListToDTOList(list: List<TmdbMovie>?): List<ItemHeaderModel> {
+    fun convertApiListToDTOList(list: List<TmdbMovieResult>?): List<ItemHeaderModel> {
         val movieList = mutableListOf<ItemHeaderModel>()
         list?.forEach {
             movieList.add(
@@ -31,7 +31,7 @@ object Converter {
     fun convertApiMovieDetailsCreditsProvidersToDTOItem(
         itemHeader: ItemHeader,
         country: String,
-        tmdbItem: TmdbMovieDetailsActorsDirectorsProviders
+        tmdbItem: TmdbMovieDetailsWithCreditsAndProvidersResult
     ): MovieModel {
         return MovieModel(
             id = tmdbItem.id,
