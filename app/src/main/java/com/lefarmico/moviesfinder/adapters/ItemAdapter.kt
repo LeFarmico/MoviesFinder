@@ -17,7 +17,7 @@ class ItemAdapter(
     private val listener: (ItemHeader) -> Unit
 ) : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
-    private val items = mutableListOf<ItemHeader>()
+    private var items = mutableListOf<ItemHeader>()
 
     class ViewHolder(itemBinding: ItemBinding) : RecyclerView.ViewHolder(itemBinding.root) {
         private val poster: ImageView = itemBinding.poster
@@ -54,6 +54,13 @@ class ItemAdapter(
 
     fun setItems(itemsList: List<ItemHeader>) {
         items.addAll(itemsList)
+        notifyDataSetChanged()
+    }
+
+    fun updateItems(itemsList: List<ItemHeader>) {
+        val updateList = mutableListOf<ItemHeader>()
+        updateList.addAll(itemsList)
+        items = updateList
         notifyDataSetChanged()
     }
 

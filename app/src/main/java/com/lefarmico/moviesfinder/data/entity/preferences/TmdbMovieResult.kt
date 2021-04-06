@@ -1,8 +1,8 @@
-package com.lefarmico.moviesfinder.data.entity
+package com.lefarmico.moviesfinder.data.entity.preferences
 
 import com.google.gson.annotations.SerializedName
 
-data class TmdbMovie(
+data class TmdbMovieResult(
     @SerializedName("adult")
     val adult: Boolean,
     @SerializedName("backdrop_path")

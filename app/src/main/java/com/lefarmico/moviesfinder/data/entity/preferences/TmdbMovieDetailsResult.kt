@@ -1,12 +1,12 @@
-package com.lefarmico.moviesfinder.data.entity
+package com.lefarmico.moviesfinder.data.entity.preferences
 
 import com.google.gson.annotations.SerializedName
-import com.lefarmico.moviesfinder.data.entity.details.TmdbGenre
-import com.lefarmico.moviesfinder.data.entity.details.TmdbProductionCompany
-import com.lefarmico.moviesfinder.data.entity.details.TmdbProductionCountry
-import com.lefarmico.moviesfinder.data.entity.details.TmdbSpokenLanguage
+import com.lefarmico.moviesfinder.data.entity.preferences.details.TmdbGenre
+import com.lefarmico.moviesfinder.data.entity.preferences.details.TmdbProductionCompany
+import com.lefarmico.moviesfinder.data.entity.preferences.details.TmdbProductionCountry
+import com.lefarmico.moviesfinder.data.entity.preferences.details.TmdbSpokenLanguage
 
-data class TmdbMovieDetailsActorsDirectorsProviders(
+data class TmdbMovieDetailsResult(
     @SerializedName("adult")
     val adult: Boolean,
     @SerializedName("backdrop_path")
@@ -56,9 +56,5 @@ data class TmdbMovieDetailsActorsDirectorsProviders(
     @SerializedName("vote_average")
     val vote_average: Double,
     @SerializedName("vote_count")
-    val vote_count: Int,
-    @SerializedName("watch/providers")
-    val providers: TmdbProvidersResult,
-    @SerializedName("credits")
-    val credits: TmdbCreditsResult
+    val vote_count: Int
 )

@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.data.entity.credits
+package com.lefarmico.moviesfinder.data.entity.preferences.credits
 
 data class Cast(
     val adult: Boolean,

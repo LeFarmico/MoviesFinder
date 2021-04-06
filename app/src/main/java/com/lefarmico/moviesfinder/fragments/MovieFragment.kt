@@ -2,12 +2,11 @@
 package com.lefarmico.moviesfinder.fragments
 
 import android.os.Bundle
+import android.transition.Fade
 import android.transition.Scene
-import android.transition.Slide
 import android.transition.TransitionManager
 import android.transition.TransitionSet
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -107,13 +106,13 @@ class MovieFragment @Inject constructor() : Fragment(), MoviesView {
             R.layout.merge_fragment_movie,
             requireContext()
         )
-        val searchSlide = Slide(Gravity.TOP).addTarget(R.id.search_view_bar)
-        val recyclerSlide = Slide(Gravity.BOTTOM).addTarget(R.id.recycler_parent)
+        val searchFade = Fade(Fade.MODE_IN).addTarget(R.id.search_view_bar)
+        val recyclerFade = Fade(Fade.MODE_IN).addTarget(R.id.recycler_parent)
 
         val customTransition = TransitionSet().apply {
-            duration = 500
-            addTransition(recyclerSlide)
-            addTransition(searchSlide)
+            duration = 1000
+            addTransition(searchFade)
+            addTransition(recyclerFade)
         }
         TransitionManager.go(scene, customTransition)
     }

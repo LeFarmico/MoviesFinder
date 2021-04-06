@@ -5,19 +5,30 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.adapters.ItemAdapter
+import com.lefarmico.moviesfinder.data.MainRepository
 import com.lefarmico.moviesfinder.databinding.FragmentFavoritesBinding
-import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
 import com.lefarmico.moviesfinder.models.ItemHeaderModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavoritesFragment : Fragment() {
+class FavoritesFragment @Inject constructor() : Fragment() {
 
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding!!
 
+    @Inject lateinit var mainRepository: MainRepository
     private val TAG = this.javaClass.canonicalName
+
+    var cachedItems = listOf<ItemHeaderModel>()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        App.appComponent.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,17 +43,24 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated")
-        val favoritesList: List<ItemHeaderModel> = emptyList()
+
+        val adapter = ItemAdapter {
+            Toast.makeText(requireContext(), it.title, Toast.LENGTH_SHORT).show()
+        }
+        binding.showSevedMovies.setOnClickListener {
+            showSavedMovies(adapter)
+        }
 
         binding.favoritesRecycler.apply {
-            adapter = ItemAdapter {
-//                val intent = Intent(requireContext(), DetailsFragment::class.java)
-//                intent.putExtra("movie", it)
-//                (requireActivity() as MainActivity).launchItemDetails(it)
-                val decorator = TopSpacingItemDecoration(8)
-                addItemDecoration(decorator)
-                layoutManager = LinearLayoutManager(requireContext())
-            }
+            this.adapter = adapter
         }
+
+        GlobalScope.launch {
+            cachedItems = mainRepository.getAllFromDB()
+        }
+    }
+
+    private fun showSavedMovies(adapter: ItemAdapter) {
+        adapter.updateItems(cachedItems)
     }
 }
