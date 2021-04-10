@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.lefarmico.moviesfinder.data.entity.appEntity.ItemHeaderImpl
+import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
 
 @Dao
 interface ItemHeaderDao {

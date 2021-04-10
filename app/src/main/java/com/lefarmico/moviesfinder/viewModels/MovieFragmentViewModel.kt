@@ -5,8 +5,11 @@ import androidx.lifecycle.ViewModel
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.data.MainRepository
-import com.lefarmico.moviesfinder.data.entity.appEntity.Category
+import com.lefarmico.moviesfinder.data.appEntity.Category
 import com.lefarmico.moviesfinder.providers.CategoryProvider
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MovieFragmentViewModel : ViewModel() {
@@ -27,7 +30,6 @@ class MovieFragmentViewModel : ViewModel() {
             CategoryProvider.POPULAR_CATEGORY, 1,
             object : ApiCallback {
                 override fun onSuccess() {
-                    postCategoryModel(repository.returnMovieCategories())
                     hideProgressBar()
                 }
 
@@ -40,7 +42,6 @@ class MovieFragmentViewModel : ViewModel() {
             CategoryProvider.UPCOMING_CATEGORY, 1,
             object : ApiCallback {
                 override fun onSuccess() {
-                    postCategoryModel(repository.returnMovieCategories())
                     hideProgressBar()
                 }
 
@@ -53,7 +54,6 @@ class MovieFragmentViewModel : ViewModel() {
             CategoryProvider.TOP_RATED_CATEGORY, 1,
             object : ApiCallback {
                 override fun onSuccess() {
-                    postCategoryModel(repository.returnMovieCategories())
                     hideProgressBar()
                 }
 
@@ -66,7 +66,6 @@ class MovieFragmentViewModel : ViewModel() {
             CategoryProvider.NOW_PLAYING_CATEGORY, 1,
             object : ApiCallback {
                 override fun onSuccess() {
-                    postCategoryModel(repository.returnMovieCategories())
                     hideProgressBar()
                 }
 
@@ -75,6 +74,10 @@ class MovieFragmentViewModel : ViewModel() {
                 }
             }
         )
+        GlobalScope.launch {
+            delay(1000L)
+            postCategoryModel(repository.returnMovieCategories())
+        }
     }
     fun postCategoryModel(categories: MutableList<Category>) {
         categoryModelData.postValue(categories)

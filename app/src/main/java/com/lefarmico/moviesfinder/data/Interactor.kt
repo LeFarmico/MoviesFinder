@@ -3,9 +3,9 @@ package com.lefarmico.moviesfinder.data
 import android.util.Log
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
+import com.lefarmico.moviesfinder.data.appEntity.Category
+import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
 import com.lefarmico.moviesfinder.data.entity.TmdbApi
-import com.lefarmico.moviesfinder.data.entity.appEntity.Category
-import com.lefarmico.moviesfinder.data.entity.appEntity.ItemHeader
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsWithCreditsAndProvidersResult
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieListResult
 import com.lefarmico.moviesfinder.private.ApiConstants

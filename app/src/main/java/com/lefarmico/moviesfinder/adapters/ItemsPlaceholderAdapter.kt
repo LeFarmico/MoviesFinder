@@ -9,9 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.activities.MainActivity
 import com.lefarmico.moviesfinder.data.Interactor
-import com.lefarmico.moviesfinder.data.entity.appEntity.ItemHeader
+import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
 import com.lefarmico.moviesfinder.databinding.ItemPlaceholderRecyclerBinding
-import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.utils.PaginationOnScrollListener
 
@@ -57,7 +56,7 @@ class ItemsPlaceholderAdapter(
         holder.recyclerView.apply {
             layoutManager = itemsLayoutManager
             setRecycledViewPool(viewPool)
-            addItemDecoration(TopSpacingItemDecoration(1))
+//            addItemDecoration(TopSpacingItemDecoration(1))
             if (state != null) {
                 layoutManager?.onRestoreInstanceState(state)
             } else {

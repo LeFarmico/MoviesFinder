@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.data.entity.appEntity.ItemHeader
+import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
 import com.lefarmico.moviesfinder.databinding.ItemBinding
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.squareup.picasso.Picasso
