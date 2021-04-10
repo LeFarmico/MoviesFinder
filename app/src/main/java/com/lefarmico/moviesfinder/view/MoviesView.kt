@@ -1,10 +1,10 @@
 
 package com.lefarmico.moviesfinder.view
 
-import androidx.recyclerview.widget.ConcatAdapter
+import com.lefarmico.moviesfinder.data.appEntity.Category
 
 interface MoviesView {
-    fun showCatalog(adapter: ConcatAdapter)
+    fun showCatalog(categories: List<Category>)
     fun showError()
     fun showEmptyCatalog()
     fun onStartLoading()

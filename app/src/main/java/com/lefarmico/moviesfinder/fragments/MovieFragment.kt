@@ -22,12 +22,14 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapters.HeaderAdapter
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.data.Interactor
+import com.lefarmico.moviesfinder.data.appEntity.Category
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
 import com.lefarmico.moviesfinder.view.MoviesView
 import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
+import java.util.*
 import javax.inject.Inject
 
-class MovieFragment @Inject constructor() : Fragment(), MoviesView {
+class MovieFragment : Fragment(), MoviesView {
 
     lateinit var recyclerView: RecyclerView
     private var _binding: FragmentMovieBinding? = null
@@ -75,21 +77,7 @@ class MovieFragment @Inject constructor() : Fragment(), MoviesView {
         Log.d(TAG, "onViewCreated")
 
         movieFragmentViewModel.categoryModelData.observe(viewLifecycleOwner) { categories ->
-            if (!this::concatAdapter.isInitialized) {
-                concatAdapter = ConcatAdapter()
-                for (i in categories.indices) {
-                    val headerAdapter = HeaderAdapter().apply {
-                        addItem(context?.getString(categories[i].titleResource)!!)
-                    }
-                    concatAdapter.addAdapter(headerAdapter)
-                    val itemsAdapter = ItemsPlaceholderAdapter(interactor).apply {
-                        setNestedItemsData(categories[i].itemsList)
-                        categoryType = categories[i].categoryType
-                    }
-                    concatAdapter.addAdapter(itemsAdapter)
-                }
-            }
-            showCatalog(concatAdapter)
+            showCatalog(categories)
         }
         startFragmentAnimation()
         initToolsBar()
@@ -134,9 +122,23 @@ class MovieFragment @Inject constructor() : Fragment(), MoviesView {
         TransitionManager.go(scene, customTransition)
     }
 
-    override fun showCatalog(adapter: ConcatAdapter) {
+    override fun showCatalog(categories: List<Category>) {
+        if (!this::concatAdapter.isInitialized) {
+            concatAdapter = ConcatAdapter()
+            for (i in categories.indices) {
+                val headerAdapter = HeaderAdapter().apply {
+                    addItem(context?.getString(categories[i].titleResource)!!)
+                }
+                concatAdapter.addAdapter(headerAdapter)
+                val itemsAdapter = ItemsPlaceholderAdapter(interactor).apply {
+                    setNestedItemsData(categories[i].itemsList)
+                    categoryType = categories[i].categoryType
+                }
+                concatAdapter.addAdapter(itemsAdapter)
+            }
+        }
         recyclerView.apply {
-            this.adapter = adapter
+            this.adapter = concatAdapter
         }
     }
 

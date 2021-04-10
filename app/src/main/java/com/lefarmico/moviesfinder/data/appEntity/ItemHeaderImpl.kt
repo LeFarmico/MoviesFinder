@@ -1,5 +1,5 @@
 
-package com.lefarmico.moviesfinder.data.entity.appEntity
+package com.lefarmico.moviesfinder.data.appEntity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

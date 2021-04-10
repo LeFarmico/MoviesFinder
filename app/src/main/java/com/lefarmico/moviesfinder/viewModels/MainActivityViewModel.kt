@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.data.Interactor
-import com.lefarmico.moviesfinder.data.entity.appEntity.ItemHeader
-import com.lefarmico.moviesfinder.data.entity.appEntity.MovieItem
+import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
+import com.lefarmico.moviesfinder.data.appEntity.MovieItem
 import javax.inject.Inject
 
 class MainActivityViewModel() : ViewModel() {

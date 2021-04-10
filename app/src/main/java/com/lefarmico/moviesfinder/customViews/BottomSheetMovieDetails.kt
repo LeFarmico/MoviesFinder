@@ -15,7 +15,7 @@ import com.lefarmico.moviesfinder.adapters.GenreAdapter
 import com.lefarmico.moviesfinder.adapters.ProviderAdapter
 import com.lefarmico.moviesfinder.adapters.RateMovieAdapter
 import com.lefarmico.moviesfinder.animations.MaxLineAnimator
-import com.lefarmico.moviesfinder.data.entity.appEntity.Provider
+import com.lefarmico.moviesfinder.data.appEntity.Provider
 import com.lefarmico.moviesfinder.databinding.BottomSheetMovieDetailsBinding
 import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
 import com.lefarmico.moviesfinder.private.ApiConstants

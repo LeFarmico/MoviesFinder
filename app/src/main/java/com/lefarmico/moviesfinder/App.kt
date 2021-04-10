@@ -22,7 +22,6 @@ class App : Application() {
         appComponent = DaggerAppComponent.builder()
             .dataBaseModel(DataBaseModel())
             .domainModule(DomainModule(this))
-            .presentersModule(PresentersModule())
             .remoteModule(RemoteModule())
             .build()
     }

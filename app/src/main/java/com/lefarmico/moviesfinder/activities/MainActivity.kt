@@ -8,11 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.animations.FabMenuAnimator
 import com.lefarmico.moviesfinder.data.Interactor
-import com.lefarmico.moviesfinder.data.entity.appEntity.MovieItem
+import com.lefarmico.moviesfinder.data.appEntity.MovieItem
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.fragments.FavoritesFragment
 import com.lefarmico.moviesfinder.fragments.MovieFragment
@@ -33,7 +31,6 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
     private val TAG = this.javaClass.canonicalName
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        App.appComponent.inject(this)
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate")
 
@@ -57,7 +54,6 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
         }
 
         launchBottomSheet()
-//        launchFabMenu()
 
         binding.bottomNavigationBarView
             .setOnNavigationItemSelectedListener(setMenuChangeListener())
@@ -129,19 +125,6 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
         }
         BottomSheetBehavior.from(binding.bottomSheet).state = BottomSheetBehavior.STATE_HALF_EXPANDED
         binding.bottomNavigationBarView.visibility = View.INVISIBLE
-    }
-
-    fun launchFabMenu() {
-        FabMenuAnimator(
-            binding.fabMenu.fabMovies,
-            binding.fabMenu.fabSeries,
-            binding.fabMenu.fabFavorites,
-        ).apply {
-            setAnimator(200)
-            binding.fab.setOnClickListener {
-                onMenuClick()
-            }
-        }
     }
 
     override fun showError() {

@@ -1,8 +1,9 @@
 package com.lefarmico.moviesfinder.data
 
+import android.util.Log
+import com.lefarmico.moviesfinder.data.appEntity.Category
+import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
 import com.lefarmico.moviesfinder.data.dao.ItemHeaderDao
-import com.lefarmico.moviesfinder.data.entity.appEntity.Category
-import com.lefarmico.moviesfinder.data.entity.appEntity.ItemHeaderImpl
 import java.util.concurrent.Executors
 
 class MainRepository(private val itemHeaderDao: ItemHeaderDao) {
@@ -12,6 +13,7 @@ class MainRepository(private val itemHeaderDao: ItemHeaderDao) {
 
     fun putCategory(category: Category) {
         listMovieCategories.add(category)
+        Log.d("Repos", "${listMovieCategories.size}")
     }
     fun clearCategories() {
         listMovieCategories.clear()
