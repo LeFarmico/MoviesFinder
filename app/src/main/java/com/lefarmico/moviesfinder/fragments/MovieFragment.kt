@@ -13,15 +13,18 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.adapters.HeaderAdapter
+import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
-import com.lefarmico.moviesfinder.presenters.MovieFragmentPresenter
 import com.lefarmico.moviesfinder.view.MoviesView
+import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
 import javax.inject.Inject
 
 class MovieFragment @Inject constructor() : Fragment(), MoviesView {
@@ -30,9 +33,10 @@ class MovieFragment @Inject constructor() : Fragment(), MoviesView {
     private var _binding: FragmentMovieBinding? = null
     private val binding get() = _binding!!
 
-    @Inject lateinit var moviePresenter: MovieFragmentPresenter
     @Inject lateinit var interactor: Interactor
+    lateinit var concatAdapter: ConcatAdapter
 
+    private val movieFragmentViewModel: MovieFragmentViewModel by viewModels()
     private val TAG = this.javaClass.canonicalName
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,15 +73,28 @@ class MovieFragment @Inject constructor() : Fragment(), MoviesView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated")
+
+        movieFragmentViewModel.categoryModelData.observe(viewLifecycleOwner) { categories ->
+            if (!this::concatAdapter.isInitialized) {
+                concatAdapter = ConcatAdapter()
+                for (i in categories.indices) {
+                    val headerAdapter = HeaderAdapter().apply {
+                        addItem(context?.getString(categories[i].titleResource)!!)
+                    }
+                    concatAdapter.addAdapter(headerAdapter)
+                    val itemsAdapter = ItemsPlaceholderAdapter(interactor).apply {
+                        setNestedItemsData(categories[i].itemsList)
+                        categoryType = categories[i].categoryType
+                    }
+                    concatAdapter.addAdapter(itemsAdapter)
+                }
+            }
+            showCatalog(concatAdapter)
+        }
         startFragmentAnimation()
         initToolsBar()
 
         recyclerView = binding.mergeMovieScreenContent.findViewById(R.id.recycler_parent)
-
-        moviePresenter.attachView(this)
-
-//        if (savedInstanceState == null)
-        moviePresenter.loadData()
 
         recyclerView.apply {
             isNestedScrollingEnabled = false

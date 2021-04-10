@@ -1,6 +1,6 @@
 package com.lefarmico.moviesfinder.data.entity.preferences.credits
 
-data class Crew(
+data class TmdbCrew(
     val adult: Boolean,
     val credit_id: String,
     val department: String,

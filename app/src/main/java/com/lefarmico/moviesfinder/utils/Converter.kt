@@ -1,19 +1,19 @@
 package com.lefarmico.moviesfinder.utils
 
+import com.lefarmico.moviesfinder.data.entity.appEntity.*
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsWithCreditsAndProvidersResult
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieResult
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbProvidersResult
-import com.lefarmico.moviesfinder.data.entity.preferences.credits.Cast
-import com.lefarmico.moviesfinder.data.entity.preferences.credits.Crew
+import com.lefarmico.moviesfinder.data.entity.preferences.credits.TmdbCast
+import com.lefarmico.moviesfinder.data.entity.preferences.credits.TmdbCrew
 import com.lefarmico.moviesfinder.data.entity.preferences.details.TmdbGenre
-import com.lefarmico.moviesfinder.models.*
 
 object Converter {
-    fun convertApiListToDTOList(list: List<TmdbMovieResult>?): List<ItemHeaderModel> {
-        val movieList = mutableListOf<ItemHeaderModel>()
+    fun convertApiListToDTOList(list: List<TmdbMovieResult>?): List<ItemHeaderImpl> {
+        val movieList = mutableListOf<ItemHeaderImpl>()
         list?.forEach {
             movieList.add(
-                ItemHeaderModel(
+                ItemHeaderImpl(
                     id = it.id,
                     posterPath = it.posterPath,
                     title = it.title,
@@ -32,8 +32,8 @@ object Converter {
         itemHeader: ItemHeader,
         country: String,
         tmdbItem: TmdbMovieDetailsWithCreditsAndProvidersResult
-    ): MovieModel {
-        return MovieModel(
+    ): Movie {
+        return Movie(
             id = tmdbItem.id,
             posterPath = tmdbItem.poster_path,
             title = tmdbItem.title,
@@ -42,8 +42,8 @@ object Converter {
             isFavorite = false,
             genres = convertGenres(tmdbItem.genres),
             yourRate = 0,
-            actors = convertCast(tmdbItem.credits.cast),
-            directors = convertDirectors(tmdbItem.credits.crew),
+            actors = convertCast(tmdbItem.credits.tmdbCast),
+            directors = convertDirectors(tmdbItem.credits.tmdbCrew),
             watchProviders = convertProviders(tmdbItem.providers, country),
             length = tmdbItem.runtime,
             photosPath = listOf(),
@@ -57,12 +57,13 @@ object Converter {
         }
         return genres
     }
-    private fun convertCast(castList: List<Cast>): List<CastModel> {
-        val cast = mutableListOf<CastModel>()
-        castList.forEach {
+    private fun convertCast(tmdbCastList: List<TmdbCast>?): List<Cast> {
+        val cast = mutableListOf<Cast>()
+        if (tmdbCastList == null) return cast
+        tmdbCastList.forEach {
             if (it.order < 10) {
                 cast.add(
-                    CastModel(
+                    Cast(
                         name = it.name,
                         profilePath = it.profile_path,
                         character = it.character,
@@ -73,8 +74,8 @@ object Converter {
         }
         return cast
     }
-    private fun convertDirectors(castList: List<Crew>): List<CastModel> {
-        val cast = mutableListOf<CastModel>()
+    private fun convertDirectors(castList: List<TmdbCrew>): List<Cast> {
+        val cast = mutableListOf<Cast>()
         val count = if (cast.size >= 10) {
             10
         } else {
@@ -82,7 +83,7 @@ object Converter {
         }
         for (i in 0 until count) {
             cast.add(
-                CastModel(
+                Cast(
                     name = castList[i].name,
                     profilePath = castList[i].profile_path,
                     character = castList[i].department,
@@ -93,13 +94,13 @@ object Converter {
         return cast
     }
 
-    private fun convertProviders(providers: TmdbProvidersResult, country: String): List<ProviderModel> {
-        val providersList = mutableListOf<ProviderModel>()
+    private fun convertProviders(providers: TmdbProvidersResult, country: String): List<Provider> {
+        val providersList = mutableListOf<Provider>()
         providers.results.getCountryProviderByName(country)?.apply {
-            buy?.forEach {
+            tmdbBuy?.forEach {
                 providersList.add(
-                    ProviderModel(
-                        providerType = ProviderType.BUY,
+                    Provider(
+                        providerType = Provider.ProviderType.BUY,
                         name = it.provider_name,
                         id = it.provider_id,
                         logoPath = it.logo_path,
@@ -107,10 +108,10 @@ object Converter {
                     )
                 )
             }
-            flatrate?.forEach {
+            tmdbFlatrate?.forEach {
                 providersList.add(
-                    ProviderModel(
-                        providerType = ProviderType.FLATRATE,
+                    Provider(
+                        providerType = Provider.ProviderType.FLATRATE,
                         name = it.provider_name,
                         id = it.provider_id,
                         logoPath = it.logo_path,
@@ -120,8 +121,8 @@ object Converter {
             }
             rent?.forEach {
                 providersList.add(
-                    ProviderModel(
-                        providerType = ProviderType.RENT,
+                    Provider(
+                        providerType = Provider.ProviderType.RENT,
                         name = it.provider_name,
                         id = it.provider_id,
                         logoPath = it.logo_path,

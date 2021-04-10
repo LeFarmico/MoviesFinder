@@ -1,10 +1,10 @@
 
 package com.lefarmico.moviesfinder.presenters
 
-import com.lefarmico.moviesfinder.models.CategoryModel
+import com.lefarmico.moviesfinder.data.entity.appEntity.Category
 
 interface FragmentMenuPresenter {
-    fun loadCategory(categoryModel: CategoryModel)
-    fun categoriesLoaded(categoryModels: List<CategoryModel>)
+    fun loadCategory(category: Category)
+    fun categoriesLoaded(categories: List<Category>)
     fun showError(textResource: Int)
 }

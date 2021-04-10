@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.data.entity.appEntity.Provider
 import com.lefarmico.moviesfinder.databinding.ItemProviderBinding
-import com.lefarmico.moviesfinder.models.ProviderModel
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.squareup.picasso.Picasso
 
@@ -43,7 +43,7 @@ class ProviderAdapter : RecyclerView.Adapter<ProviderAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = items.size
 
-    fun setItems(providersList: List<ProviderModel>) {
+    fun setItems(providersList: List<Provider>) {
         val imageResources = mutableListOf<String>()
         providersList.forEach {
             imageResources.add(it.logoPath)

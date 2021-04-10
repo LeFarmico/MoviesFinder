@@ -12,12 +12,11 @@ import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.animations.FabMenuAnimator
 import com.lefarmico.moviesfinder.data.Interactor
+import com.lefarmico.moviesfinder.data.entity.appEntity.MovieItem
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.fragments.FavoritesFragment
 import com.lefarmico.moviesfinder.fragments.MovieFragment
 import com.lefarmico.moviesfinder.fragments.SeriesFragment
-import com.lefarmico.moviesfinder.models.MovieItem
-import com.lefarmico.moviesfinder.presenters.MainActivityPresenter
 import com.lefarmico.moviesfinder.view.MainActivityView
 import com.lefarmico.moviesfinder.viewModels.MainActivityViewModel
 import javax.inject.Inject
@@ -25,10 +24,9 @@ import javax.inject.Inject
 class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView {
 
     private lateinit var binding: ActivityMainBinding
-    @Inject lateinit var presenter: MainActivityPresenter
     @Inject override lateinit var interactor: Interactor
 
-    private val mainActivityViewModel: MainActivityViewModel by viewModels()
+    val mainActivityViewModel: MainActivityViewModel by viewModels()
 
     lateinit var fragmentsList: List<Pair<String, Fragment>>
 
@@ -48,8 +46,9 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        presenter.attachView(this)
-
+        mainActivityViewModel.movieDetails.observe(this) {
+            launchItemDetails(it)
+        }
         mainActivityViewModel.fragmentData.observe(this) {
             launchFragment(it.second, it.first)
         }
@@ -132,7 +131,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
         binding.bottomNavigationBarView.visibility = View.INVISIBLE
     }
 
-    override fun launchFabMenu() {
+    fun launchFabMenu() {
         FabMenuAnimator(
             binding.fabMenu.fabMovies,
             binding.fabMenu.fabSeries,

@@ -4,55 +4,57 @@ import android.util.Log
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.data.entity.TmdbApi
+import com.lefarmico.moviesfinder.data.entity.appEntity.Category
+import com.lefarmico.moviesfinder.data.entity.appEntity.ItemHeader
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsWithCreditsAndProvidersResult
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieListResult
-import com.lefarmico.moviesfinder.models.CategoryModel
-import com.lefarmico.moviesfinder.models.ItemHeader
-import com.lefarmico.moviesfinder.models.ItemsDataModel
-import com.lefarmico.moviesfinder.presenters.MainActivityPresenter
-import com.lefarmico.moviesfinder.presenters.MovieFragmentPresenter
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.providers.PreferenceProvider
 import com.lefarmico.moviesfinder.utils.Converter
+import com.lefarmico.moviesfinder.viewModels.MainActivityViewModel
+import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class Interactor(private val repo: MainRepository, private val retrofitService: TmdbApi, private val preferenceProvider: PreferenceProvider) {
 
-    fun getMoviesFromApi(category: CategoryProvider.Category, page: Int, presenter: MovieFragmentPresenter) {
+    fun getMovieCategoryFromApi(category: CategoryProvider.Category, page: Int, callback: MovieFragmentViewModel.ApiCallback) {
         retrofitService.getMovies(category.categoryTitle, ApiConstants.API_KEY, "ru-RU", page)
             .enqueue(object : Callback<TmdbMovieListResult> {
                 override fun onResponse(call: Call<TmdbMovieListResult>, response: Response<TmdbMovieListResult>) {
                     Log.d("Interactor", "load category")
                     val list = Converter.convertApiListToDTOList(response.body()?.tmdbMovie)
-                    repo.putToDb(list)
-
-                    presenter.loadCategory(
-                        CategoryModel(
-                            category.getResource(), category,
-                            ItemsDataModel(list)
+                    repo.putCategory(
+                        Category(
+                            category.getResource(), category, list.toMutableList()
                         )
                     )
+                    callback.onSuccess()
+                    repo.putToDb(list)
                 }
 
                 override fun onFailure(call: Call<TmdbMovieListResult>, t: Throwable) {
-                    presenter.showError(R.string.error_text)
+                    callback.onFailure()
                 }
             })
     }
 
-    fun getMovieDetailsFromApi(itemHeader: ItemHeader, movieId: Int, presenter: MainActivityPresenter) {
+    fun getMovieDetailsFromApi(itemHeader: ItemHeader, movieId: Int, viewModel: MainActivityViewModel) {
         retrofitService.getMovieDetailsWithCreditsAndProviders(movieId, ApiConstants.API_KEY, "ru-RU", "watch/providers,credits")
             .enqueue(object : Callback<TmdbMovieDetailsWithCreditsAndProvidersResult> {
                 override fun onResponse(call: Call<TmdbMovieDetailsWithCreditsAndProvidersResult>, response: Response<TmdbMovieDetailsWithCreditsAndProvidersResult>) {
-                    presenter.showItemDetails(
-                        Converter.convertApiMovieDetailsCreditsProvidersToDTOItem(itemHeader, preferenceProvider.getCurrentCountry(), response.body()!!)
+                    viewModel.showItemDetails(
+                        Converter.convertApiMovieDetailsCreditsProvidersToDTOItem(
+                            itemHeader,
+                            preferenceProvider.getCurrentCountry(),
+                            response.body()!!
+                        )
                     )
                 }
                 override fun onFailure(call: Call<TmdbMovieDetailsWithCreditsAndProvidersResult>, t: Throwable) {
-                    presenter.showError(R.string.error_text)
+                    viewModel.onFailureItemDetails(R.string.error_text)
                 }
             })
     }
@@ -61,7 +63,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
             .enqueue(object : Callback<TmdbMovieListResult> {
                 override fun onResponse(call: Call<TmdbMovieListResult>, response: Response<TmdbMovieListResult>) {
                     Log.d("Interactor", "load category")
-                    adapter.addNestedItemsData(Converter.convertApiListToDTOList(response.body()?.tmdbMovie))
+                    adapter.addNestedItemsData(Converter.convertApiListToDTOList(response.body()?.tmdbMovie).toMutableList())
                 }
 
                 override fun onFailure(call: Call<TmdbMovieListResult>, t: Throwable) {

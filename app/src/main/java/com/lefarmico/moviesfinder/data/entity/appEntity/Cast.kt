@@ -1,6 +1,6 @@
-package com.lefarmico.moviesfinder.models
+package com.lefarmico.moviesfinder.data.entity.appEntity
 
-data class CastModel(
+data class Cast(
     val id: Int,
     val name: String,
     val profilePath: String? = "",
