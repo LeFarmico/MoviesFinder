@@ -1,6 +1,6 @@
-package com.lefarmico.moviesfinder.models
+package com.lefarmico.moviesfinder.data.entity.appEntity
 
-data class EpisodeModel(
+data class Episode(
     val id: Int,
     val airDate: String,
     val episodeNumber: Int,

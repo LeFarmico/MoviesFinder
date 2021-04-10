@@ -1,6 +1,6 @@
 package com.lefarmico.moviesfinder.data.entity.preferences.credits
 
-data class Cast(
+data class TmdbCast(
     val adult: Boolean,
     val cast_id: Int,
     val character: String,

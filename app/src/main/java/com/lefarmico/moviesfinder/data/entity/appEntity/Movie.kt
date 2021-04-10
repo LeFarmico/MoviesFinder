@@ -1,6 +1,6 @@
-package com.lefarmico.moviesfinder.models
+package com.lefarmico.moviesfinder.data.entity.appEntity
 
-data class MovieModel(
+data class Movie(
     override val id: Int,
     override val posterPath: String,
     override val title: String,
@@ -9,9 +9,9 @@ data class MovieModel(
     override val description: String,
     override val yourRate: Int,
     override val genres: List<String>,
-    override val actors: List<CastModel>,
-    override val directors: List<CastModel>,
-    override val watchProviders: List<ProviderModel> = listOf(),
+    override val actors: List<Cast>,
+    override val directors: List<Cast>,
+    override val watchProviders: List<Provider> = listOf(),
     override val length: Int,
     override val photosPath: List<String>,
     override val releaseDate: String

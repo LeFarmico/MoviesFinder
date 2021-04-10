@@ -2,12 +2,9 @@ package com.lefarmico.moviesfinder
 
 import android.app.Application
 import android.util.Log
-import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.di.*
 
 class App : Application() {
-
-    lateinit var interactor: Interactor
 
     companion object {
         lateinit var appComponent: AppComponent

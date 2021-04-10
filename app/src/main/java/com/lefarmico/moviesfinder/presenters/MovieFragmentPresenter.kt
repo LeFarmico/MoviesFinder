@@ -6,9 +6,8 @@ import androidx.recyclerview.widget.ConcatAdapter
 import com.lefarmico.moviesfinder.adapters.HeaderAdapter
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.data.Interactor
+import com.lefarmico.moviesfinder.data.entity.appEntity.Category
 import com.lefarmico.moviesfinder.fragments.MovieFragment
-import com.lefarmico.moviesfinder.models.CategoryModel
-import com.lefarmico.moviesfinder.providers.CategoryProvider
 import javax.inject.Inject
 
 class MovieFragmentPresenter @Inject constructor() : FragmentMenuPresenter {
@@ -28,41 +27,41 @@ class MovieFragmentPresenter @Inject constructor() : FragmentMenuPresenter {
 
     // provider создается не во view
     fun loadData() {
-        interactor.getMoviesFromApi(CategoryProvider.POPULAR_CATEGORY, 1, this)
-        interactor.getMoviesFromApi(CategoryProvider.UPCOMING_CATEGORY, 1, this)
-        interactor.getMoviesFromApi(CategoryProvider.TOP_RATED_CATEGORY, 1, this)
-        interactor.getMoviesFromApi(CategoryProvider.NOW_PLAYING_CATEGORY, 1, this)
+//        interactor.getMovieCategoryFromApi(CategoryProvider.POPULAR_CATEGORY, 1, this)
+//        interactor.getMovieCategoryFromApi(CategoryProvider.UPCOMING_CATEGORY, 1, this)
+//        interactor.getMovieCategoryFromApi(CategoryProvider.TOP_RATED_CATEGORY, 1, this)
+//        interactor.getMovieCategoryFromApi(CategoryProvider.NOW_PLAYING_CATEGORY, 1, this)
     }
 
-    override fun loadCategory(categoryModel: CategoryModel) {
+    override fun loadCategory(category: Category) {
         if (!this::concatAdapter.isInitialized) {
             concatAdapter = ConcatAdapter()
         }
         val headerAdapter = HeaderAdapter().apply {
-            addItem(view.requireContext().getString(categoryModel.titleResource))
+            addItem(view.requireContext().getString(category.titleResource))
         }
         concatAdapter.addAdapter(headerAdapter)
         val itemsAdapter = ItemsPlaceholderAdapter(interactor).apply {
-            setNestedItemsData(categoryModel.items)
-            categoryType = categoryModel.categoryType
+            setNestedItemsData(category.itemsList)
+            categoryType = category.categoryType
         }
         concatAdapter.addAdapter(itemsAdapter)
 
         view.showCatalog(concatAdapter)
     }
-    override fun categoriesLoaded(categoryModels: List<CategoryModel>) {
+    override fun categoriesLoaded(categories: List<Category>) {
         // тут ли создавать адаптеры?
         if (!this::concatAdapter.isInitialized) {
             concatAdapter = ConcatAdapter()
-            for (i in categoryModels.indices) {
+            for (i in categories.indices) {
                 val headerAdapter = HeaderAdapter().apply {
                     addItem(
-                        view.requireContext().getString(categoryModels[i].titleResource)
+                        view.requireContext().getString(categories[i].titleResource)
                     )
                 }
                 concatAdapter.addAdapter(headerAdapter)
                 val itemsAdapter = ItemsPlaceholderAdapter(interactor).apply {
-                    setNestedItemsData(categoryModels[i].items)
+                    setNestedItemsData(categories[i].itemsList)
                 }
                 concatAdapter.addAdapter(itemsAdapter)
             }

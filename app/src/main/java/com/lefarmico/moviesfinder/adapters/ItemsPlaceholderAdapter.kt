@@ -9,10 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.activities.MainActivity
 import com.lefarmico.moviesfinder.data.Interactor
+import com.lefarmico.moviesfinder.data.entity.appEntity.ItemHeader
 import com.lefarmico.moviesfinder.databinding.ItemPlaceholderRecyclerBinding
 import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
-import com.lefarmico.moviesfinder.models.ItemHeader
-import com.lefarmico.moviesfinder.models.ItemsDataModel
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.utils.PaginationOnScrollListener
 
@@ -20,7 +19,7 @@ class ItemsPlaceholderAdapter(
     val interactor: Interactor
 ) : RecyclerView.Adapter<ItemsPlaceholderAdapter.ViewHolder>() {
 
-    private lateinit var itemsDataModel: ItemsDataModel
+    var itemsList: MutableList<ItemHeader> = mutableListOf()
 
     private val scrollStates: MutableMap<Long, Parcelable?> = mutableMapOf()
     lateinit var categoryType: CategoryProvider.Category
@@ -66,10 +65,10 @@ class ItemsPlaceholderAdapter(
             }
             holder.bind(
                 ItemAdapter {
-                    (context as MainActivity).presenter.onItemClick(it)
+                    (context as MainActivity).mainActivityViewModel.onItemClick(it)
                 }
             )
-            (adapter as ItemAdapter).setItems(itemsDataModel.itemHeaders)
+            (adapter as ItemAdapter).setItems(itemsList)
             addOnScrollListener(
                 PaginationOnScrollListener(this.layoutManager!!) {
                     interactor.updateMoviesFromApi(categoryType, ++page, this@ItemsPlaceholderAdapter)
@@ -80,14 +79,14 @@ class ItemsPlaceholderAdapter(
 
     override fun getItemCount(): Int = 1
 
-    fun setNestedItemsData(itemsDataModel: ItemsDataModel) {
-        this.itemsDataModel = itemsDataModel
+    fun setNestedItemsData(itemsList: MutableList<ItemHeader>) {
+        this.itemsList = itemsList
         notifyDataSetChanged()
     }
 
-    fun addNestedItemsData(itemsDataModel: List<ItemHeader>) {
-        val curItems = this.itemsDataModel.itemHeaders
-        this.itemsDataModel.itemHeaders = curItems + itemsDataModel
+    fun addNestedItemsData(itemsList: MutableList<ItemHeader>) {
+        val curItems = this.itemsList
+        this.itemsList = (curItems + itemsList).toMutableList()
         notifyDataSetChanged()
     }
 

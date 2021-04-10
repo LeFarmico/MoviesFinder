@@ -1,10 +1,10 @@
 package com.lefarmico.moviesfinder.data.entity.preferences
 
-import com.lefarmico.moviesfinder.data.entity.preferences.credits.Cast
-import com.lefarmico.moviesfinder.data.entity.preferences.credits.Crew
+import com.lefarmico.moviesfinder.data.entity.preferences.credits.TmdbCast
+import com.lefarmico.moviesfinder.data.entity.preferences.credits.TmdbCrew
 
 data class TmdbCreditsResult(
-    val cast: List<Cast>,
-    val crew: List<Crew>,
+    val tmdbCast: List<TmdbCast>,
+    val tmdbCrew: List<TmdbCrew>,
     val id: Int
 )

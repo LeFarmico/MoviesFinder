@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.adapters.ItemAdapter
 import com.lefarmico.moviesfinder.data.MainRepository
+import com.lefarmico.moviesfinder.data.entity.appEntity.ItemHeaderImpl
 import com.lefarmico.moviesfinder.databinding.FragmentFavoritesBinding
-import com.lefarmico.moviesfinder.models.ItemHeaderModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,7 +24,7 @@ class FavoritesFragment @Inject constructor() : Fragment() {
     @Inject lateinit var mainRepository: MainRepository
     private val TAG = this.javaClass.canonicalName
 
-    var cachedItems = listOf<ItemHeaderModel>()
+    var cachedItems = listOf<ItemHeaderImpl>()
     override fun onCreate(savedInstanceState: Bundle?) {
         App.appComponent.inject(this)
         super.onCreate(savedInstanceState)

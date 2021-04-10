@@ -4,6 +4,8 @@ package com.lefarmico.moviesfinder.di
 import com.lefarmico.moviesfinder.activities.MainActivity
 import com.lefarmico.moviesfinder.fragments.FavoritesFragment
 import com.lefarmico.moviesfinder.fragments.MovieFragment
+import com.lefarmico.moviesfinder.viewModels.MainActivityViewModel
+import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
 import dagger.Component
 import javax.inject.Singleton
 
@@ -24,6 +26,9 @@ interface AppComponent {
     // Fragments
     fun inject(fragment: FavoritesFragment)
     fun inject(fragment: MovieFragment)
+    // ViewModels
+    fun inject(viewModel: MainActivityViewModel)
+    fun inject(viewModel: MovieFragmentViewModel)
 }
 
 /*

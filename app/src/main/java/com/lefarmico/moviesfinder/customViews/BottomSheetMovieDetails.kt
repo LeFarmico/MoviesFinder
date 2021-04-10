@@ -15,9 +15,9 @@ import com.lefarmico.moviesfinder.adapters.GenreAdapter
 import com.lefarmico.moviesfinder.adapters.ProviderAdapter
 import com.lefarmico.moviesfinder.adapters.RateMovieAdapter
 import com.lefarmico.moviesfinder.animations.MaxLineAnimator
+import com.lefarmico.moviesfinder.data.entity.appEntity.Provider
 import com.lefarmico.moviesfinder.databinding.BottomSheetMovieDetailsBinding
 import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
-import com.lefarmico.moviesfinder.models.ProviderModel
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.squareup.picasso.Picasso
 
@@ -60,7 +60,7 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
         (yourRate.adapter as RateMovieAdapter).setRate(rate)
     }
 
-    fun setProviders(providersList: List<ProviderModel>) {
+    fun setProviders(providersList: List<Provider>) {
         setAdapter(providers) {
             providers.adapter = ProviderAdapter()
         }
