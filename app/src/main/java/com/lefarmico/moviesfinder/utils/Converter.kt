@@ -14,7 +14,7 @@ object Converter {
         list?.forEach {
             movieList.add(
                 ItemHeaderImpl(
-                    id = it.id,
+                    itemId = it.id,
                     posterPath = it.posterPath,
                     title = it.title,
                     rating = it.voteAverage,
@@ -34,7 +34,7 @@ object Converter {
         tmdbItem: TmdbMovieDetailsWithCreditsAndProvidersResult
     ): Movie {
         return Movie(
-            id = tmdbItem.id,
+            itemId = tmdbItem.id,
             posterPath = tmdbItem.poster_path,
             title = tmdbItem.title,
             rating = itemHeader.rating,
@@ -67,7 +67,7 @@ object Converter {
                         name = it.name,
                         profilePath = it.profile_path,
                         character = it.character,
-                        id = it.id
+                        personId = it.id
                     )
                 )
             }
@@ -87,7 +87,7 @@ object Converter {
                     name = castList[i].name,
                     profilePath = castList[i].profile_path,
                     character = castList[i].department,
-                    id = castList[i].id
+                    personId = castList[i].id
                 )
             )
         }
@@ -102,7 +102,7 @@ object Converter {
                     Provider(
                         providerType = Provider.ProviderType.BUY,
                         name = it.provider_name,
-                        id = it.provider_id,
+                        providerId = it.provider_id,
                         logoPath = it.logo_path,
                         displayPriority = it.display_priority
                     )
@@ -113,7 +113,7 @@ object Converter {
                     Provider(
                         providerType = Provider.ProviderType.FLATRATE,
                         name = it.provider_name,
-                        id = it.provider_id,
+                        providerId = it.provider_id,
                         logoPath = it.logo_path,
                         displayPriority = it.display_priority
                     )
@@ -124,7 +124,7 @@ object Converter {
                     Provider(
                         providerType = Provider.ProviderType.RENT,
                         name = it.provider_name,
-                        id = it.provider_id,
+                        providerId = it.provider_id,
                         logoPath = it.logo_path,
                         displayPriority = it.display_priority
                     )

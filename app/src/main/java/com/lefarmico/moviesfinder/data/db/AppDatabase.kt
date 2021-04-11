@@ -2,10 +2,19 @@ package com.lefarmico.moviesfinder.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
+import com.lefarmico.moviesfinder.data.appEntity.*
 import com.lefarmico.moviesfinder.data.dao.ItemHeaderDao
 
-@Database(entities = [ItemHeaderImpl::class], version = 1, exportSchema = false)
+@Database(
+    entities = [
+        ItemHeaderImpl::class,
+        Cast::class,
+        Provider::class,
+        GenresDb::class,
+        PhotosDb::class
+    ],
+    version = 1, exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun movieDao(): ItemHeaderDao
+    abstract fun itemHeaderDao(): ItemHeaderDao
 }

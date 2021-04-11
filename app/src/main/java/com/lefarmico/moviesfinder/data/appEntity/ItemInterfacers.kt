@@ -5,6 +5,7 @@ import java.io.Serializable
 
 interface ItemHeader : Serializable {
     val id: Int
+    val itemId: Int
     val posterPath: String
     val title: String
     var isFavorite: Boolean

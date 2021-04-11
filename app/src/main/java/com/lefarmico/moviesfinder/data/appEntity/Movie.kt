@@ -1,7 +1,8 @@
 package com.lefarmico.moviesfinder.data.appEntity
 
 data class Movie(
-    override val id: Int,
+    override val id: Int = 0,
+    override val itemId: Int,
     override val posterPath: String,
     override val title: String,
     override var isFavorite: Boolean,

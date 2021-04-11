@@ -5,6 +5,7 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.data.appEntity.Category
 import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
+import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
 import com.lefarmico.moviesfinder.data.entity.TmdbApi
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsWithCreditsAndProvidersResult
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieListResult
@@ -32,7 +33,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
                         )
                     )
                     callback.onSuccess()
-                    repo.putToDb(list)
+                    repo.putItemHeadersToDb(list)
                 }
 
                 override fun onFailure(call: Call<TmdbMovieListResult>, t: Throwable) {
@@ -45,13 +46,14 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
         retrofitService.getMovieDetailsWithCreditsAndProviders(movieId, ApiConstants.API_KEY, "ru-RU", "watch/providers,credits")
             .enqueue(object : Callback<TmdbMovieDetailsWithCreditsAndProvidersResult> {
                 override fun onResponse(call: Call<TmdbMovieDetailsWithCreditsAndProvidersResult>, response: Response<TmdbMovieDetailsWithCreditsAndProvidersResult>) {
-                    viewModel.showItemDetails(
-                        Converter.convertApiMovieDetailsCreditsProvidersToDTOItem(
-                            itemHeader,
-                            preferenceProvider.getCurrentCountry(),
-                            response.body()!!
-                        )
+                    val movie = Converter.convertApiMovieDetailsCreditsProvidersToDTOItem(
+                        itemHeader,
+                        preferenceProvider.getCurrentCountry(),
+                        response.body()!!
                     )
+                    viewModel.showItemDetails(movie)
+                    repo.putMovieDetailsToDb(movie, itemHeader)
+                    repo.putMovieDetailsIdToItemHeader(movie, itemHeader)
                 }
                 override fun onFailure(call: Call<TmdbMovieDetailsWithCreditsAndProvidersResult>, t: Throwable) {
                     viewModel.onFailureItemDetails(R.string.error_text)

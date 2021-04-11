@@ -1,10 +1,7 @@
 package com.lefarmico.moviesfinder.data.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
+import androidx.room.*
+import com.lefarmico.moviesfinder.data.appEntity.*
 
 @Dao
 interface ItemHeaderDao {
@@ -14,4 +11,19 @@ interface ItemHeaderDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(list: List<ItemHeaderImpl>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCast(cast: Cast)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertGenres(genresDb: GenresDb)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertProvider(provider: Provider)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertPhotos(photosDb: PhotosDb)
+
+    @Update(entity = ItemHeaderImpl::class)
+    fun updateMovieDetails(item: ItemHeaderImpl)
 }

@@ -19,7 +19,7 @@ class DataBaseModel {
             context,
             AppDatabase::class.java,
             "cached_item_header"
-        ).build().movieDao()
+        ).build().itemHeaderDao()
 
     @Provides
     @Singleton

@@ -8,7 +8,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "cached_item_header", indices = [Index(value = ["title"], unique = false)])
 data class ItemHeaderImpl(
-    @PrimaryKey(autoGenerate = false) @ColumnInfo(name = "movie_id") override val id: Int,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") override val id: Int = 0,
+    @ColumnInfo(name = "movie_id") override val itemId: Int,
     @ColumnInfo(name = "poster_path") override val posterPath: String = "",
     @ColumnInfo(name = "title") override val title: String = "",
     @ColumnInfo(name = "rating") override val rating: Double = 0.0,
