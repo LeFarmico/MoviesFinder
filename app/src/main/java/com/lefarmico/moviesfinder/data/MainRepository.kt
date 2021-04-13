@@ -1,98 +1,56 @@
 package com.lefarmico.moviesfinder.data
 
-import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.lefarmico.moviesfinder.data.appEntity.*
-import com.lefarmico.moviesfinder.data.dao.ItemHeaderDao
+import com.lefarmico.moviesfinder.data.dao.ItemDao
+import com.lefarmico.moviesfinder.providers.CategoryProvider
 import java.util.concurrent.Executors
 
-class MainRepository(private val itemHeaderDao: ItemHeaderDao) {
+class MainRepository(private val itemDao: ItemDao) {
 
-    private val listMovieCategories = mutableListOf<Category>()
     var progressBar: Boolean = false
 
-    fun putCategory(category: Category) {
-        listMovieCategories.add(category)
-        Log.d("Repos", "${listMovieCategories.size}")
-    }
-    fun clearCategories() {
-        listMovieCategories.clear()
-    }
-    fun returnMovieCategories() = listMovieCategories
-
-    // ____________________________________________________________________
     fun putItemHeadersToDb(itemList: List<ItemHeaderImpl>) {
         Executors.newSingleThreadExecutor().execute {
-            itemHeaderDao.insertAll(itemList)
+            itemDao.insertAll(itemList)
         }
     }
-    fun putMovieDetailsToDb(movie: Movie, itemHeader: ItemHeader) {
+    fun putMovieToDb(movie: Movie) {
         Executors.newSingleThreadExecutor().execute {
-
-            for (i in movie.actors.indices) {
-                val actor = movie.actors[i]
-                itemHeaderDao.insertCast(
-                    Cast(
-                        personId = actor.personId,
-                        name = actor.name,
-                        profilePath = actor.posterPath,
-                        character = actor.character,
-                        posterPath = actor.posterPath,
-                        movieDetailsId = itemHeader.id
-                    )
-                )
-            }
-            for (i in movie.genres.indices) {
-                val genre = movie.genres[i]
-                itemHeaderDao.insertGenres(
-                    GenresDb(
-                        genreName = genre,
-                        movieDetailsId = itemHeader.id
-                    )
-                )
-            }
-
-            for (i in movie.watchProviders.indices) {
-                val provider = movie.watchProviders[i]
-                itemHeaderDao.insertProvider(
-                    Provider(
-                        providerType = provider.providerType,
-                        name = provider.name,
-                        providerId = provider.providerId,
-                        logoPath = provider.logoPath,
-                        displayPriority = provider.displayPriority,
-                        movieDetailsId = itemHeader.id
-                    )
-                )
-            }
-
-            for (i in movie.photosPath.indices) {
-                val photoPath = movie.photosPath[i]
-                itemHeaderDao.insertPhotos(
-                    PhotosDb(
-                        photoPath = photoPath,
-                        movieDetailsId = itemHeader.id
-                    )
-                )
-            }
+            itemDao.insertMovie(movie)
         }
     }
-    fun putMovieDetailsIdToItemHeader(movie: Movie, itemHeader: ItemHeader) {
+
+    fun putCategoryDd(categoryDb: CategoryDb) {
         Executors.newSingleThreadExecutor().execute {
-            val updatedItemHeaderImpl = ItemHeaderImpl(
-                id = itemHeader.id,
-                itemId = itemHeader.itemId,
-                posterPath = itemHeader.posterPath,
-                title = itemHeader.title,
-                rating = itemHeader.rating,
-                description = itemHeader.description,
-                isFavorite = itemHeader.isFavorite,
-                yourRate = itemHeader.yourRate,
-                releaseDate = itemHeader.releaseDate
+            itemDao.insertCategoryDb(categoryDb)
+        }
+    }
+
+    fun putMovieByCategoryDB(categoryDb: CategoryDb, itemHeaderImpl: ItemHeaderImpl) {
+        Executors.newSingleThreadExecutor().execute {
+            itemDao.insertMovieByCategory(
+                MoviesByCategoryDb(
+                    movieId = itemHeaderImpl.itemId, categoryType = categoryDb.categoryName
+                )
             )
-            itemHeaderDao.updateMovieDetails(updatedItemHeaderImpl)
         }
+    }
+
+    fun getCategoriesFromDB(categoryType: CategoryProvider.Category): MutableLiveData<Category> {
+        val cat: MutableLiveData<Category> = MutableLiveData<Category>()
+        Executors.newSingleThreadExecutor().execute {
+            cat.postValue(
+                Category(
+                    categoryType.getResource(),
+                    categoryType,
+                    itemDao.getCategory(categoryType)
+                )
+            )
+        }
+        return cat
     }
     fun getAllFromDB(): List<ItemHeaderImpl> {
-        return itemHeaderDao.getCachedItemHeaders()
+        return itemDao.getCachedItemHeaders()
     }
 }

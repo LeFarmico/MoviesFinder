@@ -10,8 +10,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
@@ -26,7 +28,6 @@ import com.lefarmico.moviesfinder.data.appEntity.Category
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
 import com.lefarmico.moviesfinder.view.MoviesView
 import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
-import java.util.*
 import javax.inject.Inject
 
 class MovieFragment : Fragment(), MoviesView {
@@ -76,9 +77,17 @@ class MovieFragment : Fragment(), MoviesView {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated")
 
-        movieFragmentViewModel.categoryModelData.observe(viewLifecycleOwner) { categories ->
-            showCatalog(categories)
+        // TODO : Баг с пересозданием объектов
+        for (i in movieFragmentViewModel.categoriesMobileData.indices) {
+            movieFragmentViewModel.categoriesMobileData[i].observe(viewLifecycleOwner) {
+                show(it)
+            }
         }
+
+        movieFragmentViewModel.showProgressBar.observe(viewLifecycleOwner) {
+            binding.mergeMovieScreenContent.findViewById<ProgressBar>(R.id.progress_bar).isVisible = it
+        }
+
         startFragmentAnimation()
         initToolsBar()
 
@@ -131,12 +140,33 @@ class MovieFragment : Fragment(), MoviesView {
                 }
                 concatAdapter.addAdapter(headerAdapter)
                 val itemsAdapter = ItemsPlaceholderAdapter(interactor).apply {
-                    setNestedItemsData(categories[i].itemsList)
+                    categories[i].itemsList.observe(viewLifecycleOwner) {
+                        setNestedItemsData(it.toMutableList())
+                    }
                     categoryType = categories[i].categoryType
                 }
                 concatAdapter.addAdapter(itemsAdapter)
             }
         }
+        recyclerView.apply {
+            this.adapter = concatAdapter
+        }
+    }
+    fun show(category: Category) {
+        if (!this::concatAdapter.isInitialized)
+            concatAdapter = ConcatAdapter()
+
+        val headerAdapter = HeaderAdapter().apply {
+            addItem(context?.getString(category.titleResource)!!)
+        }
+        concatAdapter.addAdapter(headerAdapter)
+        val itemsAdapter = ItemsPlaceholderAdapter(interactor).apply {
+            category.itemsList.observe(viewLifecycleOwner) {
+                setNestedItemsData(it.toMutableList())
+            }
+            categoryType = category.categoryType
+        }
+        concatAdapter.addAdapter(itemsAdapter)
         recyclerView.apply {
             this.adapter = concatAdapter
         }

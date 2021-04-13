@@ -3,7 +3,7 @@ package com.lefarmico.moviesfinder.di
 import android.content.Context
 import androidx.room.Room
 import com.lefarmico.moviesfinder.data.MainRepository
-import com.lefarmico.moviesfinder.data.dao.ItemHeaderDao
+import com.lefarmico.moviesfinder.data.dao.ItemDao
 import com.lefarmico.moviesfinder.data.db.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -19,9 +19,9 @@ class DataBaseModel {
             context,
             AppDatabase::class.java,
             "cached_item_header"
-        ).build().itemHeaderDao()
+        ).build().itemDao()
 
     @Provides
     @Singleton
-    fun provideRepository(itemHeaderDao: ItemHeaderDao): MainRepository = MainRepository(itemHeaderDao)
+    fun provideRepository(itemDao: ItemDao): MainRepository = MainRepository(itemDao)
 }

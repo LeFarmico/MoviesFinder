@@ -7,90 +7,71 @@ import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.data.MainRepository
 import com.lefarmico.moviesfinder.data.appEntity.Category
 import com.lefarmico.moviesfinder.providers.CategoryProvider
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MovieFragmentViewModel : ViewModel() {
 
-    val categoryModelData = MutableLiveData<MutableList<Category>>()
+    val popularCategoryModelData: MutableLiveData<Category>
+    val upcomingCategoryModelData: MutableLiveData<Category>
+    val topRatedCategoryModelData: MutableLiveData<Category>
+    val nowPlayingCategoryModelData: MutableLiveData<Category>
     val showProgressBar = MutableLiveData<Boolean>()
+    val categoriesMobileData: MutableList<MutableLiveData<Category>> = mutableListOf()
 
     @Inject lateinit var interactor: Interactor
     @Inject lateinit var repository: MainRepository
 
     init {
         App.appComponent.inject(this)
-//        categoryModelData.postValue(categoryModelPool)
-        loadData()
+        loadDataToDb()
+        popularCategoryModelData = interactor.getCategoriesFromDB(CategoryProvider.Category.POPULAR_CATEGORY)
+        upcomingCategoryModelData = interactor.getCategoriesFromDB(CategoryProvider.Category.UPCOMING_CATEGORY)
+        topRatedCategoryModelData = interactor.getCategoriesFromDB(CategoryProvider.Category.TOP_RATED_CATEGORY)
+        nowPlayingCategoryModelData = interactor.getCategoriesFromDB(CategoryProvider.Category.NOW_PLAYING_CATEGORY)
+
+        addCategoryToMobileData(
+            popularCategoryModelData,
+            upcomingCategoryModelData,
+            topRatedCategoryModelData,
+            nowPlayingCategoryModelData
+        )
     }
-    private fun loadData() {
-        interactor.getMovieCategoryFromApi(
-            CategoryProvider.POPULAR_CATEGORY, 1,
-            object : ApiCallback {
-                override fun onSuccess() {
-                    hideProgressBar()
-                }
-
-                override fun onFailure() {
-                    showProgressBar()
-                }
-            }
+    private fun loadDataToDb() {
+        loadCategory(
+            CategoryProvider.Category.POPULAR_CATEGORY,
+            CategoryProvider.Category.UPCOMING_CATEGORY,
+            CategoryProvider.Category.TOP_RATED_CATEGORY,
+            CategoryProvider.Category.NOW_PLAYING_CATEGORY
         )
-        interactor.getMovieCategoryFromApi(
-            CategoryProvider.UPCOMING_CATEGORY, 1,
-            object : ApiCallback {
-                override fun onSuccess() {
-                    hideProgressBar()
-                }
-
-                override fun onFailure() {
-                    hideProgressBar()
-                }
-            }
-        )
-        interactor.getMovieCategoryFromApi(
-            CategoryProvider.TOP_RATED_CATEGORY, 1,
-            object : ApiCallback {
-                override fun onSuccess() {
-                    hideProgressBar()
-                }
-
-                override fun onFailure() {
-                    hideProgressBar()
-                }
-            }
-        )
-        interactor.getMovieCategoryFromApi(
-            CategoryProvider.NOW_PLAYING_CATEGORY, 1,
-            object : ApiCallback {
-                override fun onSuccess() {
-                    hideProgressBar()
-                }
-
-                override fun onFailure() {
-                    hideProgressBar()
-                }
-            }
-        )
-        GlobalScope.launch {
-            delay(1000L)
-            postCategoryModel(repository.returnMovieCategories())
-        }
-    }
-    fun postCategoryModel(categories: MutableList<Category>) {
-        categoryModelData.postValue(categories)
-    }
-    fun postCategoryAndReset(category: Category) {
-        repository.clearCategories()
-        repository.putCategory(category)
     }
     fun showProgressBar() {
-        repository.progressBar = true
+        showProgressBar.postValue(true)
     }
     fun hideProgressBar() {
-        repository.progressBar = false
+        showProgressBar.postValue(false)
+    }
+
+    private fun loadCategory(vararg categoryType: CategoryProvider.Category) {
+        for (i in categoryType.indices) {
+            interactor.getMovieCategoryFromApi(
+                categoryType[i], 1,
+                object : ApiCallback {
+                    override fun onSuccess() {
+//                        categoriesMobileData.add(interactor.getCategoriesFromDB(categoryType[i]))
+                        hideProgressBar()
+                    }
+
+                    override fun onFailure() {
+
+                    }
+                }
+            )
+        }
+    }
+    private fun addCategoryToMobileData(vararg categoryMobileData: MutableLiveData<Category>) {
+        for (i in categoryMobileData.indices) {
+            categoriesMobileData.add(categoryMobileData[i])
+        }
     }
 
     interface ApiCallback {
