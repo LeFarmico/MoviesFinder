@@ -34,6 +34,6 @@ class MainActivityViewModel() : ViewModel() {
     }
 
     fun onItemClick(itemHeader: ItemHeader) {
-        interactor.getMovieDetailsFromApi(itemHeader, itemHeader.id, this)
+        interactor.getMovieDetailsFromApi(itemHeader, itemHeader.itemId, this)
     }
 }

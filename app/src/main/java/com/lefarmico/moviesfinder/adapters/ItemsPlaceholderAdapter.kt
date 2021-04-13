@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.activities.MainActivity
 import com.lefarmico.moviesfinder.data.Interactor
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
+import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
 import com.lefarmico.moviesfinder.databinding.ItemPlaceholderRecyclerBinding
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.utils.PaginationOnScrollListener
@@ -18,7 +18,7 @@ class ItemsPlaceholderAdapter(
     val interactor: Interactor
 ) : RecyclerView.Adapter<ItemsPlaceholderAdapter.ViewHolder>() {
 
-    var itemsList: MutableList<ItemHeader> = mutableListOf()
+    var itemsList: MutableList<ItemHeaderImpl> = mutableListOf()
 
     private val scrollStates: MutableMap<Long, Parcelable?> = mutableMapOf()
     lateinit var categoryType: CategoryProvider.Category
@@ -78,12 +78,12 @@ class ItemsPlaceholderAdapter(
 
     override fun getItemCount(): Int = 1
 
-    fun setNestedItemsData(itemsList: MutableList<ItemHeader>) {
+    fun setNestedItemsData(itemsList: MutableList<ItemHeaderImpl>) {
         this.itemsList = itemsList
         notifyDataSetChanged()
     }
 
-    fun addNestedItemsData(itemsList: MutableList<ItemHeader>) {
+    fun addNestedItemsData(itemsList: MutableList<ItemHeaderImpl>) {
         val curItems = this.itemsList
         this.itemsList = (curItems + itemsList).toMutableList()
         notifyDataSetChanged()

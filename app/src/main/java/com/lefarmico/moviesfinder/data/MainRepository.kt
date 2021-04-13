@@ -1,31 +1,56 @@
 package com.lefarmico.moviesfinder.data
 
-import android.util.Log
-import com.lefarmico.moviesfinder.data.appEntity.Category
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
-import com.lefarmico.moviesfinder.data.dao.ItemHeaderDao
+import androidx.lifecycle.MutableLiveData
+import com.lefarmico.moviesfinder.data.appEntity.*
+import com.lefarmico.moviesfinder.data.dao.ItemDao
+import com.lefarmico.moviesfinder.providers.CategoryProvider
 import java.util.concurrent.Executors
 
-class MainRepository(private val itemHeaderDao: ItemHeaderDao) {
+class MainRepository(private val itemDao: ItemDao) {
 
-    private val listMovieCategories = mutableListOf<Category>()
     var progressBar: Boolean = false
 
-    fun putCategory(category: Category) {
-        listMovieCategories.add(category)
-        Log.d("Repos", "${listMovieCategories.size}")
-    }
-    fun clearCategories() {
-        listMovieCategories.clear()
-    }
-    fun returnMovieCategories() = listMovieCategories
-
-    fun putToDb(itemList: List<ItemHeaderImpl>) {
+    fun putItemHeadersToDb(itemList: List<ItemHeaderImpl>) {
         Executors.newSingleThreadExecutor().execute {
-            itemHeaderDao.insertAll(itemList)
+            itemDao.insertAll(itemList)
         }
     }
+    fun putMovieToDb(movie: Movie) {
+        Executors.newSingleThreadExecutor().execute {
+            itemDao.insertMovie(movie)
+        }
+    }
+
+    fun putCategoryDd(categoryDb: CategoryDb) {
+        Executors.newSingleThreadExecutor().execute {
+            itemDao.insertCategoryDb(categoryDb)
+        }
+    }
+
+    fun putMovieByCategoryDB(categoryDb: CategoryDb, itemHeaderImpl: ItemHeaderImpl) {
+        Executors.newSingleThreadExecutor().execute {
+            itemDao.insertMovieByCategory(
+                MoviesByCategoryDb(
+                    movieId = itemHeaderImpl.itemId, categoryType = categoryDb.categoryName
+                )
+            )
+        }
+    }
+
+    fun getCategoriesFromDB(categoryType: CategoryProvider.Category): MutableLiveData<Category> {
+        val cat: MutableLiveData<Category> = MutableLiveData<Category>()
+        Executors.newSingleThreadExecutor().execute {
+            cat.postValue(
+                Category(
+                    categoryType.getResource(),
+                    categoryType,
+                    itemDao.getCategory(categoryType)
+                )
+            )
+        }
+        return cat
+    }
     fun getAllFromDB(): List<ItemHeaderImpl> {
-        return itemHeaderDao.getCachedItemHeaders()
+        return itemDao.getCachedItemHeaders()
     }
 }

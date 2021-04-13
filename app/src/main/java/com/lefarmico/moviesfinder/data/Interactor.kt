@@ -1,9 +1,11 @@
 package com.lefarmico.moviesfinder.data
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.data.appEntity.Category
+import com.lefarmico.moviesfinder.data.appEntity.CategoryDb
 import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
 import com.lefarmico.moviesfinder.data.entity.TmdbApi
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsWithCreditsAndProvidersResult
@@ -20,19 +22,20 @@ import retrofit2.Response
 
 class Interactor(private val repo: MainRepository, private val retrofitService: TmdbApi, private val preferenceProvider: PreferenceProvider) {
 
-    fun getMovieCategoryFromApi(category: CategoryProvider.Category, page: Int, callback: MovieFragmentViewModel.ApiCallback) {
-        retrofitService.getMovies(category.categoryTitle, ApiConstants.API_KEY, "ru-RU", page)
+    fun getMovieCategoryFromApi(categoryType: CategoryProvider.Category, page: Int, callback: MovieFragmentViewModel.ApiCallback) {
+        retrofitService.getMovies(categoryType.categoryTitle, ApiConstants.API_KEY, "ru-RU", page)
             .enqueue(object : Callback<TmdbMovieListResult> {
                 override fun onResponse(call: Call<TmdbMovieListResult>, response: Response<TmdbMovieListResult>) {
                     Log.d("Interactor", "load category")
                     val list = Converter.convertApiListToDTOList(response.body()?.tmdbMovie)
-                    repo.putCategory(
-                        Category(
-                            category.getResource(), category, list.toMutableList()
-                        )
-                    )
+                    val category = CategoryDb(categoryType, categoryType.getResource())
+
+                    repo.putCategoryDd(category)
+                    repo.putItemHeadersToDb(list)
+                    for (i in list.indices) {
+                        repo.putMovieByCategoryDB(category, list[i])
+                    }
                     callback.onSuccess()
-                    repo.putToDb(list)
                 }
 
                 override fun onFailure(call: Call<TmdbMovieListResult>, t: Throwable) {
@@ -41,17 +44,21 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
             })
     }
 
+    fun getCategoriesFromDB(categoryType: CategoryProvider.Category): MutableLiveData<Category> {
+        return repo.getCategoriesFromDB(categoryType)
+    }
+
     fun getMovieDetailsFromApi(itemHeader: ItemHeader, movieId: Int, viewModel: MainActivityViewModel) {
         retrofitService.getMovieDetailsWithCreditsAndProviders(movieId, ApiConstants.API_KEY, "ru-RU", "watch/providers,credits")
             .enqueue(object : Callback<TmdbMovieDetailsWithCreditsAndProvidersResult> {
                 override fun onResponse(call: Call<TmdbMovieDetailsWithCreditsAndProvidersResult>, response: Response<TmdbMovieDetailsWithCreditsAndProvidersResult>) {
-                    viewModel.showItemDetails(
-                        Converter.convertApiMovieDetailsCreditsProvidersToDTOItem(
-                            itemHeader,
-                            preferenceProvider.getCurrentCountry(),
-                            response.body()!!
-                        )
+                    val movie = Converter.convertApiMovieDetailsCreditsProvidersToDTOItem(
+                        itemHeader,
+                        preferenceProvider.getCurrentCountry(),
+                        response.body()!!
                     )
+                    viewModel.showItemDetails(movie)
+                    repo.putMovieToDb(movie)
                 }
                 override fun onFailure(call: Call<TmdbMovieDetailsWithCreditsAndProvidersResult>, t: Throwable) {
                     viewModel.onFailureItemDetails(R.string.error_text)
