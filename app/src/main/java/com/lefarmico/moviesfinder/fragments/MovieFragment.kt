@@ -77,10 +77,11 @@ class MovieFragment : Fragment(), MoviesView {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated")
 
-        // TODO : Баг с пересозданием объектов
-        for (i in movieFragmentViewModel.categoriesMobileData.indices) {
-            movieFragmentViewModel.categoriesMobileData[i].observe(viewLifecycleOwner) {
-                show(it)
+        if (!this::concatAdapter.isInitialized) {
+            for (i in movieFragmentViewModel.categoriesMobileData.indices) {
+                movieFragmentViewModel.categoriesMobileData[i].observe(viewLifecycleOwner) {
+                    show(it)
+                }
             }
         }
 
