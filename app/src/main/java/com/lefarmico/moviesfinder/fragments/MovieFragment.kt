@@ -83,6 +83,8 @@ class MovieFragment : Fragment(), MoviesView {
                     show(it)
                 }
             }
+        } else {
+            recyclerView.adapter = concatAdapter
         }
 
         movieFragmentViewModel.showProgressBar.observe(viewLifecycleOwner) {
