@@ -9,7 +9,7 @@
     <color name="white">#FFFFFF</color>
 
     <!-- push elements colors -->
-    <color name="active_color">#3B60F9</color>
+    <color name="active_color">#FFCA28</color>
     <color name="passive_color">#DEDEDE</color>
 
     <!-- menu colors -->
@@ -27,4 +27,7 @@
     <color name="gradient_end">#ffff8800</color>
 
     <color name="main_contrast_color">#171722</color>
+
+    <color name="view_description_color">#BFBFBF</color>
+    <color name="bottom_sheet_button_color">#BFBFBF</color>
 </resources>

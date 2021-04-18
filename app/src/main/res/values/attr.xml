@@ -9,4 +9,9 @@
         <attr name="is_buttons_horizontal" format="boolean"/>
         <attr name="number_size" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="PersonalRatingView">
+        <attr name="view_size" format="dimension"/>
+        <attr name="rating_number" format="integer"/>
+    </declare-styleable>
 </resources>

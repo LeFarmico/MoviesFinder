@@ -8,16 +8,25 @@
     android:clickable="true"
     app:behavior_hideable="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/bottom_sheet_shape"
+    android:background="@drawable/invisible_shape"
     android:focusable="true"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@+id/descriptions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/bottom_sheet_shape"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/poster_card_view"
         android:layout_width="120dp"
         android:layout_height="180dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:clickable="false"
@@ -38,115 +47,231 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:layout_marginTop="120dp"
         app:layout_constraintStart_toEndOf="@id/poster_card_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/poster_card_view"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/poster_card_view"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+        android:layout_marginEnd="20dp">
 
         <TextView
             android:id="@+id/movie_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/movie_title"
+            android:layout_marginTop="10dp"
             style="@style/TextStyle.PrimaryHeading"/>
-        <TextView
-            android:id="@+id/movie_rate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            style="@style/TextStyle.SecondaryHeading"
-            android:text="@string/rating"/>
-        <TextView
-            android:id="@+id/length"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            style="@style/TextStyle.SecondaryHeading"
-            android:maxLines="2"
-            android:text="@string/duration"/>
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/genre_recycler"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             tools:itemCount="2"
             tools:listitem="@layout/item_genre"
-
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="horizontal"/>
+
         <TextView
-            android:id="@+id/providers"
+            android:id="@+id/release_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextStyle"
+            android:text="@string/release_date"/>
+        <TextView
+            android:id="@+id/length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextStyle"
+            android:maxLines="2"
+            android:text="@string/duration"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/descriptions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/additional_details"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="50dp"
+            tools:layout_editor_absoluteX="1dp">
+
+            <com.lefarmico.moviesfinder.customViews.RatingView
+                android:id="@+id/movie_rate"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:scaleX="0.8"
+                android:scaleY="0.8"
+                app:layout_constraintBottom_toTopOf="@+id/users_rate_text_view"
+                app:layout_constraintEnd_toStartOf="@id/vertical_divider_1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/users_rate_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextStyle.Warning"
+                app:layout_constraintTop_toBottomOf="@+id/movie_rate"
+                app:layout_constraintStart_toStartOf="@id/movie_rate"
+                app:layout_constraintEnd_toEndOf="@id/movie_rate"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textColor="@color/view_description_color"
+                android:text="@string/users_rate"/>
+
+            <View
+                android:id="@+id/vertical_divider_1"
+                style="@style/Divider.Vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/your_rate_text_view"
+                app:layout_constraintStart_toEndOf="@id/movie_rate"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.lefarmico.moviesfinder.customViews.PersonalRatingView
+                android:id="@+id/your_rate_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                app:layout_constraintBottom_toTopOf="@+id/my_rate_text_view"
+                app:layout_constraintEnd_toStartOf="@id/vertical_divider_2"
+                app:layout_constraintStart_toEndOf="@id/vertical_divider_1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:rating_number="80"
+                app:view_size="30dp" />
+            <TextView
+                android:id="@+id/my_rate_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextStyle.Warning"
+                app:layout_constraintTop_toBottomOf="@+id/your_rate_text_view"
+                app:layout_constraintStart_toStartOf="@id/your_rate_text_view"
+                app:layout_constraintEnd_toEndOf="@id/your_rate_text_view"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textColor="@color/view_description_color"
+                android:text="@string/my_rate"/>
+
+            <View
+                android:id="@+id/vertical_divider_2"
+                style="@style/Divider.Vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/favorite_toggle_button"
+                app:layout_constraintStart_toEndOf="@id/your_rate_text_view"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ToggleButton
+                android:id="@+id/favorite_toggle_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginHorizontal="20dp"
+                android:background="@drawable/toggle_favorites_shape"
+                android:backgroundTint="@color/active_color"
+                android:textOff=""
+                android:textOn=""
+                app:layout_constraintBottom_toTopOf="@+id/favorite_text_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/vertical_divider_2"
+                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/favorite_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextStyle.Warning"
+                app:layout_constraintTop_toBottomOf="@+id/favorite_toggle_button"
+                app:layout_constraintStart_toStartOf="@id/favorite_toggle_button"
+                app:layout_constraintEnd_toEndOf="@id/favorite_toggle_button"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textColor="@color/view_description_color"
+                android:text="@string/favorite"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Spinner
+            android:id="@+id/provider_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="30dp"
+            android:spinnerMode="dropdown"
+            android:background="@drawable/buttons_shape"
+            android:popupBackground="@drawable/buttons_shape"
+            tools:listitem="@layout/item_provider_spinner_default"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextStyle.SecondaryHeading"
+            android:textAllCaps="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="3dp"
+            android:text="Storyline"/>
+
+
+        <TextView
+            android:id="@+id/movie_description"
+            style="@style/TextStyle.Description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"/>
+
+        <View style="@style/Divider"
+            android:id="@+id/divider_2"
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="10dp"/>
+
+
+        <TextView
+            android:id="@+id/providers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="3dp"
+            android:textAllCaps="true"
             style="@style/TextStyle.SecondaryHeading"
             android:text="@string/providers"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/providers_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="52dp"
             android:orientation="horizontal"
             tools:listitem="@layout/item_provider"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
+        <View style="@style/Divider"
+            android:id="@+id/divider_3"
+            android:layout_margin = "10dp" />
+
+        <TextView
+            android:id="@+id/actors_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/actors"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginHorizontal="10dp"
+            app:layout_constraintTop_toBottomOf="@id/divider_2"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/actors_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/actors_text_view"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"/>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/rate_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/rate_this_movie"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:layout_marginHorizontal="10dp"
-        app:layout_constraintTop_toBottomOf="@id/descriptions"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rate_view"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            tools:listitem="@layout/rate_circle_toggle_button"
-            app:layout_constraintTop_toBottomOf="@id/rate_text_view"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
-    <View style="@style/Divider"
-        android:id="@+id/divider_1"
-        android:layout_margin = "10dp"
-        app:layout_constraintTop_toBottomOf="@id/rate_view"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <TextView
-        android:id="@+id/movie_description"
-        style="@style/TextStyle.Description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        app:layout_constraintTop_toBottomOf="@id/divider_1"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <View style="@style/Divider"
-        android:id="@+id/divider_2"
-        android:layout_margin = "10dp"
-        app:layout_constraintTop_toBottomOf="@id/movie_description"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <TextView
-        android:id="@+id/actors_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/actors"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:layout_marginHorizontal="10dp"
-        app:layout_constraintTop_toBottomOf="@id/divider_2"/>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/actors_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/actors_text_view"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

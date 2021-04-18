@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.annotation.Nullable
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -13,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapters.GenreAdapter
 import com.lefarmico.moviesfinder.adapters.ProviderAdapter
-import com.lefarmico.moviesfinder.adapters.RateMovieAdapter
+import com.lefarmico.moviesfinder.adapters.SpinnerProviderAdapter
 import com.lefarmico.moviesfinder.animations.MaxLineAnimator
 import com.lefarmico.moviesfinder.data.appEntity.Provider
 import com.lefarmico.moviesfinder.databinding.BottomSheetMovieDetailsBinding
@@ -27,13 +28,13 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
 
     private val poster: ImageView
     private val movieTitle: TextView
-    private val movieRate: TextView
+    private val movieRate: RatingView
     private val length: TextView
     private val descriptions: TextView
+    private val providerSpinner: Spinner
 
     private val genres: RecyclerView
     private val providers: RecyclerView
-    private val yourRate: RecyclerView
     private val actors: RecyclerView
 
     init {
@@ -44,20 +45,16 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
         movieRate = binding.movieRate
         length = binding.length
         descriptions = binding.movieDescription
+        providerSpinner = binding.providerSpinner
 
         genres = binding.genreRecycler.apply {
             addItemDecoration(TopSpacingItemDecoration(2))
         }
         providers = binding.providersRecyclerView
-        yourRate = binding.rateView
         actors = binding.actorsRecyclerView
     }
 
     fun setRate(rate: Int) {
-        setAdapter(yourRate) {
-            yourRate.adapter = RateMovieAdapter()
-        }
-        (yourRate.adapter as RateMovieAdapter).setRate(rate)
     }
 
     fun setProviders(providersList: List<Provider>) {
@@ -66,6 +63,11 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
         }
         Log.d("provider", providers.adapter.hashCode().toString())
         (providers.adapter as ProviderAdapter).setItems(providersList)
+    }
+
+    fun setSpinnerProvider(providersList: List<Provider>) {
+        val adapter = SpinnerProviderAdapter(context, providersList)
+        binding.providerSpinner.adapter = adapter
     }
 
     fun setGenres(genresList: List<String>) {
@@ -80,7 +82,7 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     }
 
     fun setRating(rating: Double) {
-        movieRate.text = context.getString(R.string.rating) + rating
+        movieRate.setRatingValue(rating)
     }
 
     fun setDescription(description: String) {

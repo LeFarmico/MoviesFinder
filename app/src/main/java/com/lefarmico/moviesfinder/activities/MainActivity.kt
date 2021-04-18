@@ -122,6 +122,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
             setRating(movieItem.rating)
             setDescription(movieItem.description)
             setPoster(movieItem.posterPath)
+            setSpinnerProvider(movieItem.watchProviders)
         }
         BottomSheetBehavior.from(binding.bottomSheet).state = BottomSheetBehavior.STATE_HALF_EXPANDED
         binding.bottomNavigationBarView.visibility = View.INVISIBLE
@@ -140,5 +141,9 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
 
     override fun endLoading() {
         TODO("Not yet implemented")
+    }
+
+    interface OnFragmentInteractionListener {
+        fun sendMovie(movieItem: MovieItem)
     }
 }

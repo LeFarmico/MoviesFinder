@@ -26,9 +26,13 @@
     <string name="top_rated">Top Rated</string>
     <string name="genres">Action / Adventure / Comedy / Drama</string>
     <string name="duration">0h 00min</string>
-    <string name="providers">Avallable on</string>
+    <string name="providers">Watch online</string>
     <string name="genre_image">Genre Image</string>
     <string name="movies">Movies</string>
     <string name="shows">Shows</string>
     <string name="favorites">Favorites</string>
+    <string name="release_date">Release Date:</string>
+    <string name="users_rate">Users rate</string>
+    <string name="my_rate">My rate</string>
+    <string name="favorite">Favorite</string>
 </resources>

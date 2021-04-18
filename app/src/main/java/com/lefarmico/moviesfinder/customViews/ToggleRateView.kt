@@ -17,7 +17,7 @@ import android.view.animation.AccelerateInterpolator
 import com.lefarmico.moviesfinder.R
 import kotlin.math.min
 
-class RateView @JvmOverloads constructor(
+class ToggleRateView @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null
 ) : View(context, attributeSet) {

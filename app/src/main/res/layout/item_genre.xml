@@ -12,7 +12,7 @@
             android:id="@+id/genre_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="8sp"
             android:fontFamily="@font/montserrat_medium"
             android:textColor="@color/main_contrast_color"
             android:gravity="center"
