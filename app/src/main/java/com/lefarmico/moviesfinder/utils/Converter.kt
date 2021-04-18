@@ -1,7 +1,7 @@
 package com.lefarmico.moviesfinder.utils
 
-import com.lefarmico.moviesfinder.data.appEntity.Provider
 import com.lefarmico.moviesfinder.data.appEntity.*
+import com.lefarmico.moviesfinder.data.appEntity.Provider
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsWithCreditsAndProvidersResult
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieResult
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbProvidersResult
