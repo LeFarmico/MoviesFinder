@@ -9,4 +9,9 @@
     android:background="@drawable/orange_shape"
     tools:context=".fragments.SeriesFragment">
 
+    <com.lefarmico.moviesfinder.customViews.PersonalRatingView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:view_size="50dp"
+        app:rating_number="90"/>
 </FrameLayout>

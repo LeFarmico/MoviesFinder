@@ -80,6 +80,9 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
                 }
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
                     binding.blackBackgroundFrameLayout.alpha = 0 + slideOffset
+                    if (slideOffset >= 0.5) {
+                        binding.bottomSheet.backgroundPoster.alpha = slideOffset - 0.5f
+                    }
                 }
             })
         }
@@ -116,12 +119,14 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
     override fun launchItemDetails(movieItem: MovieItem) {
         binding.bottomSheet.apply {
             setRate(5)
-            setProviders(movieItem.watchProviders)
+            setReleaseDate(movieItem.releaseDate)
             setGenres(movieItem.genres)
             setTitle(movieItem.title)
             setRating(movieItem.rating)
             setDescription(movieItem.description)
             setPoster(movieItem.posterPath)
+            setSpinnerProvider(movieItem.watchProviders)
+            setBackground(movieItem.posterPath)
         }
         BottomSheetBehavior.from(binding.bottomSheet).state = BottomSheetBehavior.STATE_HALF_EXPANDED
         binding.bottomNavigationBarView.visibility = View.INVISIBLE
@@ -140,5 +145,9 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
 
     override fun endLoading() {
         TODO("Not yet implemented")
+    }
+
+    interface OnFragmentInteractionListener {
+        fun sendMovie(movieItem: MovieItem)
     }
 }

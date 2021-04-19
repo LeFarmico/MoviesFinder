@@ -28,6 +28,7 @@ import com.lefarmico.moviesfinder.data.appEntity.Category
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
 import com.lefarmico.moviesfinder.view.MoviesView
 import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
+import java.util.*
 import javax.inject.Inject
 
 class MovieFragment : Fragment(), MoviesView {
@@ -77,7 +78,14 @@ class MovieFragment : Fragment(), MoviesView {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated")
 
-        // TODO : Баг с пересозданием объектов
+        if (this::concatAdapter.isInitialized) {
+            concatAdapter.apply {
+                adapters.forEach {
+                    removeAdapter(it)
+                }
+            }
+        }
+
         for (i in movieFragmentViewModel.categoriesMobileData.indices) {
             movieFragmentViewModel.categoriesMobileData[i].observe(viewLifecycleOwner) {
                 show(it)
@@ -134,6 +142,11 @@ class MovieFragment : Fragment(), MoviesView {
     override fun showCatalog(categories: List<Category>) {
         if (!this::concatAdapter.isInitialized) {
             concatAdapter = ConcatAdapter()
+        }
+        concatAdapter.apply {
+            adapters.forEach {
+                removeAdapter(it)
+            }
             for (i in categories.indices) {
                 val headerAdapter = HeaderAdapter().apply {
                     addItem(context?.getString(categories[i].titleResource)!!)
@@ -152,7 +165,7 @@ class MovieFragment : Fragment(), MoviesView {
             this.adapter = concatAdapter
         }
     }
-    fun show(category: Category) {
+    private fun show(category: Category) {
         if (!this::concatAdapter.isInitialized)
             concatAdapter = ConcatAdapter()
 

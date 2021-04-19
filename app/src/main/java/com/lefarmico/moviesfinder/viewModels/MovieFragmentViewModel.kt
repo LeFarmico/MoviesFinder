@@ -57,12 +57,10 @@ class MovieFragmentViewModel : ViewModel() {
                 categoryType[i], 1,
                 object : ApiCallback {
                     override fun onSuccess() {
-//                        categoriesMobileData.add(interactor.getCategoriesFromDB(categoryType[i]))
                         hideProgressBar()
                     }
 
                     override fun onFailure() {
-
                     }
                 }
             )

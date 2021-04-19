@@ -14,7 +14,7 @@
     <string name="hits_category">Hits</string>
     <string name="drama_category">Drama</string>
     <string name="comedy_category">Comedy</string>
-    <string name="actors">ACTORS</string>
+    <string name="cast">Cast</string>
     <string name="directors">Directors:</string>
     <string name="rating">Rating: </string>
     <string name="rate_this_movie">RATE THIS MOVIE</string>
@@ -26,9 +26,16 @@
     <string name="top_rated">Top Rated</string>
     <string name="genres">Action / Adventure / Comedy / Drama</string>
     <string name="duration">0h 00min</string>
-    <string name="providers">Avallable on</string>
+    <string name="providers">Watch online</string>
     <string name="genre_image">Genre Image</string>
     <string name="movies">Movies</string>
     <string name="shows">Shows</string>
     <string name="favorites">Favorites</string>
+    <string name="release_date">Release Date:</string>
+    <string name="users_rate">Users rate</string>
+    <string name="my_rate">My rate</string>
+    <string name="favorite">Favorite</string>
+    <string name="background_image">Background Image</string>
+    <string name="storyline">Storyline</string>
+    <string name="watch_list">Watch list</string>
 </resources>

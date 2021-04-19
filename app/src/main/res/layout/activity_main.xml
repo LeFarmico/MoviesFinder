@@ -19,20 +19,6 @@
         android:id="@+id/nav_host_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="70dp"
-        app:layout_anchorGravity="end"
-        android:clickable="true"
-        android:focusable="true"
-        app:elevation="10dp"
-        app:layout_anchor="@id/bottom_sheet"
-        android:contentDescription="@string/navigation_menu"
-        app:tint="@color/white"
-        android:src="@drawable/ic_baseline_keyboard_arrow_up_24"/>
     <FrameLayout
         android:id="@+id/black_background_frame_layout"
         android:layout_width="match_parent"
@@ -48,9 +34,6 @@
         app:behavior_hideable="true"
         android:focusable="true"
         app:layout_behavior="@string/bottom_sheet_behavior"/>
-    <include
-        android:id="@+id/fab_menu"
-        layout="@layout/fab_menu"/>
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_bar_view"
         android:layout_width="match_parent"
