@@ -40,6 +40,8 @@ class PersonalRatingView @JvmOverloads constructor(
     private val viewPaint = Paint().apply {
         color = setViewColor(ratingNumber)
         style = Paint.Style.FILL
+        isAntiAlias = true
+        isFilterBitmap = true
     }
     private val textPaint = Paint().apply {
         style = Paint.Style.FILL_AND_STROKE
@@ -73,9 +75,9 @@ class PersonalRatingView @JvmOverloads constructor(
             }
         }
     }
-
+    val rectF = RectF(0.0f, 0.0f, viewSize, viewSize)
     override fun onDraw(canvas: Canvas?) {
-        canvas?.drawRoundRect(RectF(0.0f, 0.0f, viewSize, viewSize), cornerSize, cornerSize, viewPaint)
+        canvas?.drawRoundRect(rectF, cornerSize, cornerSize, viewPaint)
         canvas?.drawText(ratingNumber.toString(), numberPosX, numberPosY, textPaint)
     }
 
