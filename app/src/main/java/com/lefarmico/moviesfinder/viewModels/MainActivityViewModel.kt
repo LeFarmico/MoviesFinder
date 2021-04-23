@@ -33,7 +33,7 @@ class MainActivityViewModel() : ViewModel() {
         return
     }
 
-    fun onItemClick(itemHeader: ItemHeader) {
+    suspend fun onItemClick(itemHeader: ItemHeader) {
         interactor.getMovieDetailsFromApi(itemHeader, itemHeader.itemId, this)
     }
 }

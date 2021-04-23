@@ -1,56 +1,33 @@
 package com.lefarmico.moviesfinder.data
 
-import androidx.lifecycle.MutableLiveData
 import com.lefarmico.moviesfinder.data.appEntity.*
 import com.lefarmico.moviesfinder.data.dao.ItemDao
 import com.lefarmico.moviesfinder.providers.CategoryProvider
-import java.util.concurrent.Executors
 
 class MainRepository(private val itemDao: ItemDao) {
 
-    var progressBar: Boolean = false
+    suspend fun putItemHeadersToDb(itemList: List<ItemHeaderImpl>) = itemDao.insertAll(itemList)
 
-    fun putItemHeadersToDb(itemList: List<ItemHeaderImpl>) {
-        Executors.newSingleThreadExecutor().execute {
-            itemDao.insertAll(itemList)
-        }
-    }
-    fun putMovieToDb(movie: Movie) {
-        Executors.newSingleThreadExecutor().execute {
-            itemDao.insertMovie(movie)
-        }
-    }
+    suspend fun putMovieToDb(movie: Movie) = itemDao.insertMovie(movie)
 
-    fun putCategoryDd(categoryDb: CategoryDb) {
-        Executors.newSingleThreadExecutor().execute {
-            itemDao.insertCategoryDb(categoryDb)
-        }
-    }
+    suspend fun putCategoryDd(categoryDb: CategoryDb) = itemDao.insertCategoryDb(categoryDb)
 
-    fun putMovieByCategoryDB(categoryDb: CategoryDb, itemHeaderImpl: ItemHeaderImpl) {
-        Executors.newSingleThreadExecutor().execute {
+    suspend fun putMoviesByCategoryDB(categoryDb: CategoryDb, itemHeaderImplList: List<ItemHeaderImpl>) {
+        for (i in itemHeaderImplList.indices) {
             itemDao.insertMovieByCategory(
                 MoviesByCategoryDb(
-                    movieId = itemHeaderImpl.itemId, categoryType = categoryDb.categoryName
+                    movieId = itemHeaderImplList[i].itemId, categoryType = categoryDb.categoryName
                 )
             )
         }
     }
 
-    fun getCategoriesFromDB(categoryType: CategoryProvider.Category): MutableLiveData<Category> {
-        val cat: MutableLiveData<Category> = MutableLiveData<Category>()
-        Executors.newSingleThreadExecutor().execute {
-            cat.postValue(
-                Category(
-                    categoryType.getResource(),
-                    categoryType,
-                    itemDao.getCategory(categoryType)
-                )
-            )
-        }
-        return cat
+    fun getCategoryFromDB(categoryType: CategoryProvider.Category): Category {
+        return Category(
+            categoryType.getResource(),
+            categoryType,
+            itemDao.getCategory(categoryType)
+        )
     }
-    fun getAllFromDB(): List<ItemHeaderImpl> {
-        return itemDao.getCachedItemHeaders()
-    }
+    suspend fun getAllFromDB(): List<ItemHeaderImpl> = itemDao.getCachedItemHeaders()
 }

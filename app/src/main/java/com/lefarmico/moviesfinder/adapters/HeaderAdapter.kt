@@ -1,9 +1,6 @@
 
 package com.lefarmico.moviesfinder.adapters
 
-import android.graphics.Color
-import android.graphics.LinearGradient
-import android.graphics.Shader
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -39,13 +36,8 @@ class HeaderAdapter : RecyclerView.Adapter<HeaderAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = 1
 
-    fun addItem(title: String) {
+    fun setHeaderTitle(title: String) {
         items.add(title)
         notifyDataSetChanged()
-    }
-
-    fun removeItem(position: Int) {
-        items.removeAt(position)
-        notifyItemRemoved(items.size)
     }
 }

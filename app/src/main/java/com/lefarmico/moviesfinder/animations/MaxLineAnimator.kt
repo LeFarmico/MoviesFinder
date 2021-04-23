@@ -10,14 +10,14 @@ import androidx.core.animation.doOnEnd
 
 class MaxLineAnimator(val textView: TextView, val duration: Long, val collapseAnimation: Boolean, val collapsedLines: Int, context: Context) {
 
-    lateinit var valueAnimator: ValueAnimator
+    var valueAnimator: ValueAnimator
     val expectedWidthOfTextView = context.resources.displayMetrics.widthPixels
     val originalMaxLines = textView.maxLines
 
     var measuredLineCount = textView.lineCount
     var measuredTargetHeight = textView.measuredHeight
 
-    lateinit var layoutParams: ViewGroup.LayoutParams
+    var layoutParams: ViewGroup.LayoutParams
 
     init {
         if (originalMaxLines < 0 || originalMaxLines == Integer.MAX_VALUE) {

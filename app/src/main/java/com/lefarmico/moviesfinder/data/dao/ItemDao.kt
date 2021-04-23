@@ -1,26 +1,26 @@
 package com.lefarmico.moviesfinder.data.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.lefarmico.moviesfinder.data.appEntity.CategoryDb
 import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
 import com.lefarmico.moviesfinder.data.appEntity.Movie
 import com.lefarmico.moviesfinder.data.appEntity.MoviesByCategoryDb
 import com.lefarmico.moviesfinder.providers.CategoryProvider
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ItemDao {
 
     @Query("SELECT * FROM cached_item_header")
-    fun getCachedItemHeaders(): List<ItemHeaderImpl>
+    suspend fun getCachedItemHeaders(): List<ItemHeaderImpl>
 
     @Query("SELECT * FROM category_db WHERE category_name = :category")
-    fun getCategoryDb(category: CategoryProvider.Category): CategoryDb
+    suspend fun getCategoryDb(category: CategoryProvider.Category): CategoryDb
 
     @Query("SELECT * FROM cached_item_header WHERE movie_id = :movieId")
-    fun getItemHeader(movieId: Int): ItemHeaderImpl
+    suspend fun getItemHeader(movieId: Int): ItemHeaderImpl
 
-    // TODO : Сделать правильный запрос
+    // TODO Спросить про LIveData с Room
     @Query(
         "SELECT " +
             "cached_item_header.id, " +
@@ -36,20 +36,20 @@ interface ItemDao {
             "INNER JOIN movies_by_category ON movies_by_category.movie_id = cached_item_header.movie_id " +
             "WHERE movies_by_category.category_type LIKE :category"
     )
-    fun getCategory(category: CategoryProvider.Category): LiveData<List<ItemHeaderImpl>>
+    fun getCategory(category: CategoryProvider.Category): Flow<List<ItemHeaderImpl>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(list: List<ItemHeaderImpl>)
+    suspend fun insertAll(list: List<ItemHeaderImpl>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMovie(movie: Movie)
+    suspend fun insertMovie(movie: Movie)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMovieByCategory(moviesByCategoryDb: MoviesByCategoryDb)
+    suspend fun insertMovieByCategory(moviesByCategoryDb: MoviesByCategoryDb)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCategoryDb(categoryDb: CategoryDb)
+    suspend fun insertCategoryDb(categoryDb: CategoryDb)
 
     @Update(entity = ItemHeaderImpl::class)
-    fun updateMovieDetails(item: ItemHeaderImpl)
+    suspend fun updateMovieDetails(item: ItemHeaderImpl)
 }

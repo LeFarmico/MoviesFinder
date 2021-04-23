@@ -26,9 +26,11 @@ import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.data.appEntity.Category
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
+import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.view.MoviesView
 import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
-import java.util.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 class MovieFragment : Fragment(), MoviesView {
@@ -36,6 +38,8 @@ class MovieFragment : Fragment(), MoviesView {
     lateinit var recyclerView: RecyclerView
     private var _binding: FragmentMovieBinding? = null
     private val binding get() = _binding!!
+
+    lateinit var scope: CoroutineScope
 
     @Inject lateinit var interactor: Interactor
     lateinit var concatAdapter: ConcatAdapter
@@ -64,6 +68,12 @@ class MovieFragment : Fragment(), MoviesView {
         Log.d(TAG, "onDetach")
     }
 
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop")
+        scope.cancel()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -78,6 +88,8 @@ class MovieFragment : Fragment(), MoviesView {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated")
 
+        scope = CoroutineScope(Dispatchers.IO)
+
         if (this::concatAdapter.isInitialized) {
             concatAdapter.apply {
                 adapters.forEach {
@@ -86,20 +98,27 @@ class MovieFragment : Fragment(), MoviesView {
             }
         }
 
-        for (i in movieFragmentViewModel.categoriesMobileData.indices) {
-            movieFragmentViewModel.categoriesMobileData[i].observe(viewLifecycleOwner) {
-                show(it)
-            }
-        }
-
-        movieFragmentViewModel.showProgressBar.observe(viewLifecycleOwner) {
-            binding.mergeMovieScreenContent.findViewById<ProgressBar>(R.id.progress_bar).isVisible = it
-        }
-
         startFragmentAnimation()
         initToolsBar()
 
         recyclerView = binding.mergeMovieScreenContent.findViewById(R.id.recycler_parent)
+
+        scope.launch {
+            movieFragmentViewModel.loadMoviesForCategory(
+                CategoryProvider.Category.POPULAR_CATEGORY,
+                CategoryProvider.Category.UPCOMING_CATEGORY,
+                CategoryProvider.Category.TOP_RATED_CATEGORY,
+                CategoryProvider.Category.NOW_PLAYING_CATEGORY
+            ).collect {
+                show(it)
+                Log.d(TAG, it.toString())
+            }
+        }
+        scope.launch {
+            for (element in movieFragmentViewModel.isLoadingProgressBarShown) {
+                binding.mergeMovieScreenContent.findViewById<ProgressBar>(R.id.progress_bar).isVisible = element
+            }
+        }
 
         recyclerView.apply {
             isNestedScrollingEnabled = false
@@ -143,45 +162,31 @@ class MovieFragment : Fragment(), MoviesView {
         if (!this::concatAdapter.isInitialized) {
             concatAdapter = ConcatAdapter()
         }
-        concatAdapter.apply {
-            adapters.forEach {
-                removeAdapter(it)
-            }
-            for (i in categories.indices) {
-                val headerAdapter = HeaderAdapter().apply {
-                    addItem(context?.getString(categories[i].titleResource)!!)
-                }
-                concatAdapter.addAdapter(headerAdapter)
-                val itemsAdapter = ItemsPlaceholderAdapter(interactor).apply {
-                    categories[i].itemsList.observe(viewLifecycleOwner) {
-                        setNestedItemsData(it.toMutableList())
-                    }
-                    categoryType = categories[i].categoryType
-                }
-                concatAdapter.addAdapter(itemsAdapter)
-            }
-        }
-        recyclerView.apply {
-            this.adapter = concatAdapter
+        for (i in categories.indices) {
+            show(categories[i])
         }
     }
     private fun show(category: Category) {
         if (!this::concatAdapter.isInitialized)
             concatAdapter = ConcatAdapter()
 
-        val headerAdapter = HeaderAdapter().apply {
-            addItem(context?.getString(category.titleResource)!!)
-        }
-        concatAdapter.addAdapter(headerAdapter)
-        val itemsAdapter = ItemsPlaceholderAdapter(interactor).apply {
-            category.itemsList.observe(viewLifecycleOwner) {
-                setNestedItemsData(it.toMutableList())
+        scope.launch {
+            val headerAdapter = HeaderAdapter().apply {
+                setHeaderTitle(context?.getString(category.titleResource)!!)
             }
-            categoryType = category.categoryType
-        }
-        concatAdapter.addAdapter(itemsAdapter)
-        recyclerView.apply {
-            this.adapter = concatAdapter
+            Log.d(TAG, "${this.coroutineContext}")
+            // TODO Баг с добавлением лишних объектов
+            category.itemsList.collect {
+                withContext(Dispatchers.Main) {
+                    val itemsAdapter = ItemsPlaceholderAdapter(interactor).apply {
+                        setNestedItems(it.toMutableList())
+                        categoryType = category.categoryType
+                    }
+                    concatAdapter.addAdapter(headerAdapter)
+                    concatAdapter.addAdapter(itemsAdapter)
+                    recyclerView.adapter = concatAdapter
+                }
+            }
         }
     }
 

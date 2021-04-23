@@ -13,6 +13,9 @@ import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
 import com.lefarmico.moviesfinder.databinding.ItemPlaceholderRecyclerBinding
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.utils.PaginationOnScrollListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ItemsPlaceholderAdapter(
     val interactor: Interactor
@@ -62,11 +65,15 @@ class ItemsPlaceholderAdapter(
             } else {
                 layoutManager?.scrollToPosition(0)
             }
+            val scope = CoroutineScope(Dispatchers.Default)
             holder.bind(
                 ItemAdapter {
-                    (context as MainActivity).mainActivityViewModel.onItemClick(it)
+                    scope.launch {
+                        (context as MainActivity).mainActivityViewModel.onItemClick(it)
+                    }
                 }
             )
+
             (adapter as ItemAdapter).setItems(itemsList)
             addOnScrollListener(
                 PaginationOnScrollListener(this.layoutManager!!) {
@@ -78,7 +85,7 @@ class ItemsPlaceholderAdapter(
 
     override fun getItemCount(): Int = 1
 
-    fun setNestedItemsData(itemsList: MutableList<ItemHeaderImpl>) {
+    fun setNestedItems(itemsList: MutableList<ItemHeaderImpl>) {
         this.itemsList = itemsList
         notifyDataSetChanged()
     }
