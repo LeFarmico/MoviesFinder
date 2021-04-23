@@ -8,17 +8,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.activities.MainActivity
-import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
 import com.lefarmico.moviesfinder.databinding.ItemPlaceholderRecyclerBinding
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.utils.PaginationOnScrollListener
+import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ItemsPlaceholderAdapter(
-    val interactor: Interactor
+    val viewModel: MovieFragmentViewModel
 ) : RecyclerView.Adapter<ItemsPlaceholderAdapter.ViewHolder>() {
 
     var itemsList: MutableList<ItemHeaderImpl> = mutableListOf()
@@ -59,13 +60,12 @@ class ItemsPlaceholderAdapter(
         holder.recyclerView.apply {
             layoutManager = itemsLayoutManager
             setRecycledViewPool(viewPool)
-//            addItemDecoration(TopSpacingItemDecoration(1))
             if (state != null) {
                 layoutManager?.onRestoreInstanceState(state)
             } else {
                 layoutManager?.scrollToPosition(0)
             }
-            val scope = CoroutineScope(Dispatchers.Default)
+            val scope = CoroutineScope(Dispatchers.IO)
             holder.bind(
                 ItemAdapter {
                     scope.launch {
@@ -73,11 +73,12 @@ class ItemsPlaceholderAdapter(
                     }
                 }
             )
-
             (adapter as ItemAdapter).setItems(itemsList)
             addOnScrollListener(
                 PaginationOnScrollListener(this.layoutManager!!) {
-                    interactor.updateMoviesFromApi(categoryType, ++page, this@ItemsPlaceholderAdapter)
+                    scope.launch {
+                        viewModel.addPaginationItems(categoryType, ++page, this@ItemsPlaceholderAdapter)
+                    }
                 }
             )
         }
@@ -85,12 +86,12 @@ class ItemsPlaceholderAdapter(
 
     override fun getItemCount(): Int = 1
 
-    fun setNestedItems(itemsList: MutableList<ItemHeaderImpl>) {
+    fun setItems(itemsList: MutableList<ItemHeaderImpl>) {
         this.itemsList = itemsList
         notifyDataSetChanged()
     }
 
-    fun addNestedItemsData(itemsList: MutableList<ItemHeaderImpl>) {
+    fun addItems(itemsList: MutableList<ItemHeaderImpl>) {
         val curItems = this.itemsList
         this.itemsList = (curItems + itemsList).toMutableList()
         notifyDataSetChanged()

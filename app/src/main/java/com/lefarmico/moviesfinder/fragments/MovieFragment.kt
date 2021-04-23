@@ -44,7 +44,7 @@ class MovieFragment : Fragment(), MoviesView {
     @Inject lateinit var interactor: Interactor
     lateinit var concatAdapter: ConcatAdapter
 
-    private val movieFragmentViewModel: MovieFragmentViewModel by viewModels()
+    private val viewModel: MovieFragmentViewModel by viewModels()
     private val TAG = this.javaClass.canonicalName
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,7 +104,7 @@ class MovieFragment : Fragment(), MoviesView {
         recyclerView = binding.mergeMovieScreenContent.findViewById(R.id.recycler_parent)
 
         scope.launch {
-            movieFragmentViewModel.loadMoviesForCategory(
+            viewModel.loadMoviesForCategory(
                 CategoryProvider.Category.POPULAR_CATEGORY,
                 CategoryProvider.Category.UPCOMING_CATEGORY,
                 CategoryProvider.Category.TOP_RATED_CATEGORY,
@@ -115,7 +115,7 @@ class MovieFragment : Fragment(), MoviesView {
             }
         }
         scope.launch {
-            for (element in movieFragmentViewModel.isLoadingProgressBarShown) {
+            for (element in viewModel.isLoadingProgressBarShown) {
                 binding.mergeMovieScreenContent.findViewById<ProgressBar>(R.id.progress_bar).isVisible = element
             }
         }
@@ -178,8 +178,8 @@ class MovieFragment : Fragment(), MoviesView {
             // TODO Баг с добавлением лишних объектов
             category.itemsList.collect {
                 withContext(Dispatchers.Main) {
-                    val itemsAdapter = ItemsPlaceholderAdapter(interactor).apply {
-                        setNestedItems(it.toMutableList())
+                    val itemsAdapter = ItemsPlaceholderAdapter(viewModel).apply {
+                        setItems(it.toMutableList())
                         categoryType = category.categoryType
                     }
                     concatAdapter.addAdapter(headerAdapter)

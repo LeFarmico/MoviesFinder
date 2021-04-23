@@ -10,6 +10,4 @@ interface MainActivityView {
     fun launchFragment(fragment: Fragment, tag: String)
     fun launchItemDetails(movieItem: MovieItem)
     fun showError()
-    fun showLoading()
-    fun endLoading()
 }

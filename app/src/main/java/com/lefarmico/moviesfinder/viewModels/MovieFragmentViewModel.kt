@@ -2,6 +2,7 @@ package com.lefarmico.moviesfinder.viewModels
 
 import androidx.lifecycle.ViewModel
 import com.lefarmico.moviesfinder.App
+import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.data.MainRepository
 import com.lefarmico.moviesfinder.data.appEntity.Category
@@ -20,7 +21,7 @@ class MovieFragmentViewModel : ViewModel() {
 
     init {
         App.appComponent.inject(this)
-        isLoadingProgressBarShown = interactor.isLoadingProgressBarShown
+        isLoadingProgressBarShown = interactor.isFragmentLoadingProgressBarShown
     }
 
     fun loadMoviesForCategory(vararg categoryType: CategoryProvider.Category): Flow<Category> {
@@ -32,5 +33,9 @@ class MovieFragmentViewModel : ViewModel() {
             categoryList.add(category)
         }
         return categoryList.asFlow()
+    }
+
+    suspend fun addPaginationItems(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
+        interactor.updateMoviesFromApi(category, page, adapter)
     }
 }

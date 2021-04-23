@@ -2,7 +2,7 @@ package com.lefarmico.moviesfinder.utils
 
 import com.lefarmico.moviesfinder.data.appEntity.*
 import com.lefarmico.moviesfinder.data.appEntity.Provider
-import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsWithCreditsAndProvidersResult
+import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsResult
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieResult
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbProvidersResult
 import com.lefarmico.moviesfinder.data.entity.preferences.credits.TmdbCast
@@ -32,7 +32,7 @@ object Converter {
     fun convertApiMovieDetailsCreditsProvidersToDTOItem(
         itemHeader: ItemHeader,
         country: String,
-        tmdbItem: TmdbMovieDetailsWithCreditsAndProvidersResult
+        tmdbItem: TmdbMovieDetailsResult
     ): Movie {
         return Movie(
             itemId = tmdbItem.id,

@@ -1,13 +1,12 @@
 package com.lefarmico.moviesfinder.data
 
 import android.util.Log
-import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.data.appEntity.Category
 import com.lefarmico.moviesfinder.data.appEntity.CategoryDb
 import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
 import com.lefarmico.moviesfinder.data.entity.TmdbApi
-import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsWithCreditsAndProvidersResult
+import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsResult
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieListResult
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.lefarmico.moviesfinder.providers.CategoryProvider
@@ -25,75 +24,98 @@ import retrofit2.Response
 class Interactor(private val repo: MainRepository, private val retrofitService: TmdbApi, private val preferenceProvider: PreferenceProvider) {
 
     val scope = CoroutineScope(Dispatchers.IO)
-    val isLoadingProgressBarShown = Channel<Boolean>(Channel.CONFLATED)
+    val isFragmentLoadingProgressBarShown = Channel<Boolean>(Channel.CONFLATED)
+    val isBottomSheetLoadingProgressBarShown = Channel<Boolean>(Channel.CONFLATED)
 
     fun getMovieCategoryFromApi(categoryType: CategoryProvider.Category, page: Int) {
 
         scope.launch {
-            isLoadingProgressBarShown.send(true)
+            isFragmentLoadingProgressBarShown.send(true)
         }
 
         retrofitService.getMovies(categoryType.categoryTitle, ApiConstants.API_KEY, "ru-RU", page)
             .enqueue(object : Callback<TmdbMovieListResult> {
 
-                override fun onResponse(call: Call<TmdbMovieListResult>, response: Response<TmdbMovieListResult>) {
+                override fun onResponse(
+                    call: Call<TmdbMovieListResult>,
+                    response: Response<TmdbMovieListResult>
+                ) {
                     Log.d("Interactor", "load category")
 
-                    val list = Converter.convertApiListToDTOList(response.body()?.tmdbMovie)
+                    val itemList = Converter.convertApiListToDTOList(response.body()?.tmdbMovie)
                     val category = CategoryDb(categoryType, categoryType.getResource())
 
                     scope.launch {
                         repo.putCategoryDd(category)
-                        repo.putItemHeadersToDb(list)
-                        repo.putMoviesByCategoryDB(category, list)
+                        repo.putItemHeadersToDb(itemList)
+                        repo.putMoviesByCategoryDB(category, itemList)
 
-                        isLoadingProgressBarShown.send(element = false)
+                        isFragmentLoadingProgressBarShown.send(element = false)
                     }
                 }
                 override fun onFailure(call: Call<TmdbMovieListResult>, t: Throwable) {
                     scope.launch {
-                        isLoadingProgressBarShown.send(false)
+                        isFragmentLoadingProgressBarShown.send(false)
                     }
                 }
             })
     }
 
-    fun getCategoriesFromDB(categoryType: CategoryProvider.Category): Category {
-        return repo.getCategoryFromDB(categoryType)
-    }
-
     suspend fun getMovieDetailsFromApi(itemHeader: ItemHeader, movieId: Int, viewModel: MainActivityViewModel) {
-        retrofitService.getMovieDetailsWithCreditsAndProviders(movieId, ApiConstants.API_KEY, "ru-RU", "watch/providers,credits")
-            .enqueue(object : Callback<TmdbMovieDetailsWithCreditsAndProvidersResult> {
-                override fun onResponse(call: Call<TmdbMovieDetailsWithCreditsAndProvidersResult>, response: Response<TmdbMovieDetailsWithCreditsAndProvidersResult>) {
+
+        scope.launch {
+            isBottomSheetLoadingProgressBarShown.send(true)
+        }
+
+        retrofitService.getMovieDetails(movieId, ApiConstants.API_KEY, "ru-RU", "watch/providers,credits")
+            .enqueue(object : Callback<TmdbMovieDetailsResult> {
+
+                override fun onResponse(
+                    call: Call<TmdbMovieDetailsResult>,
+                    response: Response<TmdbMovieDetailsResult>
+                ) {
                     val movie = Converter.convertApiMovieDetailsCreditsProvidersToDTOItem(
                         itemHeader,
                         preferenceProvider.getCurrentCountry(),
                         response.body()!!
                     )
-                    viewModel.showItemDetails(movie)
 
-                    val scope = CoroutineScope(Dispatchers.IO)
                     scope.launch {
+                        isBottomSheetLoadingProgressBarShown.send(false)
+                        viewModel.showItemDetails(movie)
                         repo.putMovieToDb(movie)
                     }
                 }
-                override fun onFailure(call: Call<TmdbMovieDetailsWithCreditsAndProvidersResult>, t: Throwable) {
-                    viewModel.onFailureItemDetails(R.string.error_text)
+
+                override fun onFailure(call: Call<TmdbMovieDetailsResult>, t: Throwable) {
+                    scope.launch {
+                        isBottomSheetLoadingProgressBarShown.send(true)
+                    }
                 }
             })
     }
-    fun updateMoviesFromApi(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
+    suspend fun updateMoviesFromApi(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
         retrofitService.getMovies(category.categoryTitle, ApiConstants.API_KEY, "ru-RU", page)
             .enqueue(object : Callback<TmdbMovieListResult> {
+
                 override fun onResponse(call: Call<TmdbMovieListResult>, response: Response<TmdbMovieListResult>) {
                     Log.d("Interactor", "load category")
-                    adapter.addNestedItemsData(Converter.convertApiListToDTOList(response.body()?.tmdbMovie).toMutableList())
+
+                    val itemList = Converter.convertApiListToDTOList(response.body()?.tmdbMovie).toMutableList()
+
+                    scope.launch {
+                        repo.putItemHeadersToDb(itemList)
+                    }
+                    adapter.addItems(itemList)
                 }
 
                 override fun onFailure(call: Call<TmdbMovieListResult>, t: Throwable) {
                     // show error
                 }
             })
+    }
+
+    fun getCategoriesFromDB(categoryType: CategoryProvider.Category): Category {
+        return repo.getCategoryFromDB(categoryType)
     }
 }

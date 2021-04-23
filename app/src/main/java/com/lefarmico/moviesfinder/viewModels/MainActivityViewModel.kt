@@ -1,6 +1,5 @@
 package com.lefarmico.moviesfinder.viewModels
 
-import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,10 +26,6 @@ class MainActivityViewModel() : ViewModel() {
     }
     fun showItemDetails(movieItem: MovieItem) {
         movieDetails.postValue(movieItem)
-    }
-    fun onFailureItemDetails(@StringRes errorText: Int) {
-        // TODO: обработать onFailure()
-        return
     }
 
     suspend fun onItemClick(itemHeader: ItemHeader) {
