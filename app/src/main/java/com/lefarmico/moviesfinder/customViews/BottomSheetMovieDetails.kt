@@ -23,37 +23,23 @@ import com.squareup.picasso.Picasso
 
 class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: AttributeSet) : ConstraintLayout(context, attributeSet) {
 
-    private var binding: BottomSheetMovieDetailsBinding
+    private var binding: BottomSheetMovieDetailsBinding =
+        BottomSheetMovieDetailsBinding.inflate(LayoutInflater.from(context), this, true)
 
-    private val poster: ImageView
-    val backgroundPoster: ImageView
-    private val movieTitle: TextView
-    private val movieRate: RatingView
-    private val length: TextView
-    private val descriptions: TextView
-    private val providerSpinner: Spinner
+    private val poster: ImageView = binding.posterImageView
+    val backgroundPoster: ImageView = binding.posterBackgroundImageView
+    private val movieTitle: TextView = binding.movieTitle
+    private val movieRate: RatingView = binding.movieRate
+    private val length: TextView = binding.length
+    private val descriptions: TextView = binding.movieDescription
+    private val providerSpinner: Spinner = binding.providerSpinner
 
-    private val genres: RecyclerView
-    private val actors: RecyclerView
+    private val genres: RecyclerView = binding.genreRecycler.apply {
+        addItemDecoration(TopSpacingItemDecoration(2))
+    }
+    private val actors: RecyclerView = binding.actorsRecyclerView
 
     lateinit var posterPath: String
-
-    init {
-        binding = BottomSheetMovieDetailsBinding.inflate(LayoutInflater.from(context), this, true)
-
-        poster = binding.posterImageView
-        backgroundPoster = binding.posterBackgroundImageView
-        movieTitle = binding.movieTitle
-        movieRate = binding.movieRate
-        length = binding.length
-        descriptions = binding.movieDescription
-        providerSpinner = binding.providerSpinner
-
-        genres = binding.genreRecycler.apply {
-            addItemDecoration(TopSpacingItemDecoration(2))
-        }
-        actors = binding.actorsRecyclerView
-    }
 
     fun setRate(rate: Int) {
     }
@@ -61,14 +47,6 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     fun setLength() {
     }
 
-    fun setBackground() {
-        backgroundPoster.visibility = View.VISIBLE
-        Picasso.get()
-            .load(ApiConstants.IMAGES_URL + "w500" + posterPath)
-            .error(R.drawable.ic_launcher_foreground)
-            .placeholder(R.drawable.ic_launcher_foreground)
-            .into(backgroundPoster)
-    }
     fun setBackground(posterPath: String?) {
         backgroundPoster.visibility = View.VISIBLE
         Picasso.get()
@@ -77,9 +55,7 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
             .placeholder(R.drawable.ic_launcher_foreground)
             .into(backgroundPoster)
     }
-    fun hideBackground() {
-        backgroundPoster.visibility = View.INVISIBLE
-    }
+
     fun setReleaseDate(dateStringFormat: String) {
         val date = dateStringFormat.split("-")
         binding.releaseDate.text = date[0]
@@ -87,7 +63,7 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
 
     fun setSpinnerProvider(providersList: List<Provider>) {
         val adapter = SpinnerProviderAdapter(context, providersList)
-        binding.providerSpinner.adapter = adapter
+        providerSpinner.adapter = adapter
     }
 
     fun setGenres(genresList: List<String>) {

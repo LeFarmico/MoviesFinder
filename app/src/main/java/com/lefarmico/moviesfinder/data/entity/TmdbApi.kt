@@ -1,7 +1,6 @@
 package com.lefarmico.moviesfinder.data.entity
 
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsResult
-import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsWithCreditsAndProvidersResult
 import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieListResult
 import retrofit2.Call
 import retrofit2.http.GET
@@ -46,10 +45,10 @@ interface TmdbApi {
     ): Call<TmdbMovieDetailsResult>
 
     @GET("3/movie/{movie_id}")
-    fun getMovieDetailsWithCreditsAndProviders(
+    fun getMovieDetails(
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") lang: String,
         @Query("append_to_response") append: String
-    ): Call<TmdbMovieDetailsWithCreditsAndProvidersResult>
+    ): Call<TmdbMovieDetailsResult>
 }

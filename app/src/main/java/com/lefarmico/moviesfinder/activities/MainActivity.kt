@@ -138,16 +138,4 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
             navHostFragment.visibility = View.INVISIBLE
         }
     }
-
-    override fun showLoading() {
-        TODO("Not yet implemented")
-    }
-
-    override fun endLoading() {
-        TODO("Not yet implemented")
-    }
-
-    interface OnFragmentInteractionListener {
-        fun sendMovie(movieItem: MovieItem)
-    }
 }
