@@ -127,6 +127,8 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
             setPoster(movieItem.posterPath)
             setSpinnerProvider(movieItem.watchProviders)
             setBackground(movieItem.posterPath)
+            setActors(movieItem.actors)
+            setLength(movieItem.length)
         }
         BottomSheetBehavior.from(binding.bottomSheet).state = BottomSheetBehavior.STATE_HALF_EXPANDED
         binding.bottomNavigationBarView.visibility = View.INVISIBLE

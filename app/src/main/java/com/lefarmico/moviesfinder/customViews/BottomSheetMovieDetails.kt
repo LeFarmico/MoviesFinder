@@ -12,14 +12,15 @@ import androidx.annotation.Nullable
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.adapters.GenreAdapter
+import com.lefarmico.moviesfinder.adapters.CastAdapter
 import com.lefarmico.moviesfinder.adapters.SpinnerProviderAdapter
 import com.lefarmico.moviesfinder.animations.MaxLineAnimator
+import com.lefarmico.moviesfinder.data.appEntity.Cast
 import com.lefarmico.moviesfinder.data.appEntity.Provider
 import com.lefarmico.moviesfinder.databinding.BottomSheetMovieDetailsBinding
-import com.lefarmico.moviesfinder.decorators.TopSpacingItemDecoration
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.squareup.picasso.Picasso
+import java.util.*
 
 class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: AttributeSet) : ConstraintLayout(context, attributeSet) {
 
@@ -34,9 +35,7 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     private val descriptions: TextView = binding.movieDescription
     private val providerSpinner: Spinner = binding.providerSpinner
 
-    private val genres: RecyclerView = binding.genreRecycler.apply {
-        addItemDecoration(TopSpacingItemDecoration(2))
-    }
+    private val genres: TextView = binding.genresTextView
     private val actors: RecyclerView = binding.actorsRecyclerView
 
     lateinit var posterPath: String
@@ -44,7 +43,8 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     fun setRate(rate: Int) {
     }
 
-    fun setLength() {
+    fun setLength(movieLength: Int) {
+        length.text = "$movieLength m"
     }
 
     fun setBackground(posterPath: String?) {
@@ -67,10 +67,15 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     }
 
     fun setGenres(genresList: List<String>) {
-        setAdapter(genres) {
-            genres.adapter = GenreAdapter()
+        var capitalizeGenres = ""
+        for (i in genresList.indices) {
+            capitalizeGenres += if (i + 1 == genresList.size) {
+                genresList[i].capitalize(Locale.ROOT)
+            } else {
+                genresList[i].capitalize(Locale.ROOT) + " / "
+            }
         }
-        (genres.adapter as GenreAdapter).setItems(genresList)
+        genres.text = capitalizeGenres
     }
 
     fun setTitle(title: String) {
@@ -103,6 +108,13 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
             this.posterPath = posterPath
         else
             this.posterPath = ""
+    }
+
+    fun setActors(cast: List<Cast>) {
+        setAdapter(actors) {
+            actors.adapter = CastAdapter()
+        }
+        (actors.adapter as CastAdapter).setItems(cast)
     }
 
     private fun setAdapter(recyclerView: RecyclerView, set: (RecyclerView) -> Unit) {

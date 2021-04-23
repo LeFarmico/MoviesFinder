@@ -22,8 +22,7 @@ interface MovieItem : Serializable, ItemHeader {
     val length: Int
     val photosPath: List<String>
 }
-interface ShowItem : Serializable, ItemHeader {
-    val genres: List<String>
+interface ShowItem : Serializable, MovieItem {
     val lastAirDate: String
     val numberOfEpisodes: Int
     val numberOfSeasons: Int
