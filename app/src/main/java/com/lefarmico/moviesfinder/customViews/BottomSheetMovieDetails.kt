@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.annotation.Nullable
+import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
@@ -27,8 +28,11 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     private var binding: BottomSheetMovieDetailsBinding =
         BottomSheetMovieDetailsBinding.inflate(LayoutInflater.from(context), this, true)
 
-    private val poster: ImageView = binding.posterImageView
     val backgroundPoster: ImageView = binding.posterBackgroundImageView
+    val backButton: AppCompatButton = binding.backButton.apply {
+        alpha = 0f
+    }
+    private val poster: ImageView = binding.posterImageView
     private val movieTitle: TextView = binding.movieTitle
     private val movieRate: RatingView = binding.movieRate
     private val length: TextView = binding.length

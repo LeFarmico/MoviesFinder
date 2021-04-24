@@ -60,21 +60,35 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
     }
 
     private fun launchBottomSheet() {
-        BottomSheetBehavior.from(binding.bottomSheet).apply {
+        val behavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
             skipCollapsed = true
             state = BottomSheetBehavior.STATE_HIDDEN
 
             addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
 
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
-                    if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                        binding.blackBackgroundFrameLayout.isClickable = false
-                        binding.bottomNavigationBarView.visibility = View.VISIBLE
-                    } else if (newState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
-                        binding.blackBackgroundFrameLayout.isClickable = true
-                        binding.blackBackgroundFrameLayout.setOnClickListener {
-                            state = BottomSheetBehavior.STATE_HIDDEN
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN -> {
                             binding.blackBackgroundFrameLayout.isClickable = false
+                            binding.bottomNavigationBarView.visibility = View.VISIBLE
+                            isDraggable = true
+                        }
+                        BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                            binding.blackBackgroundFrameLayout.isClickable = true
+                            binding.blackBackgroundFrameLayout.setOnClickListener {
+                                state = BottomSheetBehavior.STATE_HIDDEN
+                                binding.blackBackgroundFrameLayout.isClickable = false
+                            }
+                        }
+                        BottomSheetBehavior.STATE_EXPANDED -> {
+                            binding.bottomSheet.backButton.isClickable = true
+                            binding.bottomSheet.backButton.setOnClickListener {
+                                state = BottomSheetBehavior.STATE_HIDDEN
+                            }
+                            isDraggable = false
+                        }
+                        BottomSheetBehavior.STATE_DRAGGING -> {
+                            binding.bottomSheet.backButton.isClickable = false
                         }
                     }
                 }
@@ -82,6 +96,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
                     binding.blackBackgroundFrameLayout.alpha = 0 + slideOffset
                     if (slideOffset >= 0.5) {
                         binding.bottomSheet.backgroundPoster.alpha = slideOffset - 0.5f
+                        binding.bottomSheet.backButton.alpha = slideOffset - 0.5f
                     }
                 }
             })

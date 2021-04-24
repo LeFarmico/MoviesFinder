@@ -33,7 +33,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
             isFragmentLoadingProgressBarShown.send(true)
         }
 
-        retrofitService.getMovies(categoryType.categoryTitle, ApiConstants.API_KEY, "ru-RU", page)
+        retrofitService.getMovies(categoryType.categoryTitle, ApiConstants.API_KEY, "en-US", page)
             .enqueue(object : Callback<TmdbMovieListResult> {
 
                 override fun onResponse(
@@ -67,7 +67,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
             isBottomSheetLoadingProgressBarShown.send(true)
         }
 
-        retrofitService.getMovieDetails(movieId, ApiConstants.API_KEY, "ru-RU", "watch/providers,credits")
+        retrofitService.getMovieDetails(movieId, ApiConstants.API_KEY, "en-US", "watch/providers,credits")
             .enqueue(object : Callback<TmdbMovieDetailsResult> {
 
                 override fun onResponse(
@@ -95,7 +95,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
             })
     }
     suspend fun updateMoviesFromApi(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
-        retrofitService.getMovies(category.categoryTitle, ApiConstants.API_KEY, "ru-RU", page)
+        retrofitService.getMovies(category.categoryTitle, ApiConstants.API_KEY, "en-US", page)
             .enqueue(object : Callback<TmdbMovieListResult> {
 
                 override fun onResponse(call: Call<TmdbMovieListResult>, response: Response<TmdbMovieListResult>) {
