@@ -1,15 +1,14 @@
-package com.lefarmico.moviesfinder.data.entity.preferences.credits
+package com.lefarmico.moviesfinder.data.TmdbEntity.preferences.credits
 
-data class TmdbCast(
+data class TmdbCrew(
     val adult: Boolean,
-    val cast_id: Int,
-    val character: String,
     val credit_id: String,
+    val department: String,
     val gender: Int,
     val id: Int,
+    val job: String,
     val known_for_department: String,
     val name: String,
-    val order: Int,
     val original_name: String,
     val popularity: Double,
     val profile_path: String?

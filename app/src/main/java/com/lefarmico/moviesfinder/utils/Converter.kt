@@ -2,12 +2,12 @@ package com.lefarmico.moviesfinder.utils
 
 import com.lefarmico.moviesfinder.data.appEntity.*
 import com.lefarmico.moviesfinder.data.appEntity.Provider
-import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsResult
-import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieResult
-import com.lefarmico.moviesfinder.data.entity.preferences.TmdbProvidersResult
-import com.lefarmico.moviesfinder.data.entity.preferences.credits.TmdbCast
-import com.lefarmico.moviesfinder.data.entity.preferences.credits.TmdbCrew
-import com.lefarmico.moviesfinder.data.entity.preferences.details.TmdbGenre
+import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieDetailsResult
+import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieResult
+import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbProvidersResult
+import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.credits.TmdbCast
+import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.credits.TmdbCrew
+import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.details.TmdbGenre
 
 object Converter {
     fun convertApiListToDTOList(list: List<TmdbMovieResult>?): List<ItemHeaderImpl> {

@@ -5,9 +5,9 @@ import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.data.appEntity.Category
 import com.lefarmico.moviesfinder.data.appEntity.CategoryDb
 import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
-import com.lefarmico.moviesfinder.data.entity.TmdbApi
-import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsResult
-import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieListResult
+import com.lefarmico.moviesfinder.data.TmdbEntity.TmdbApi
+import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieDetailsResult
+import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieListResult
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.providers.PreferenceProvider

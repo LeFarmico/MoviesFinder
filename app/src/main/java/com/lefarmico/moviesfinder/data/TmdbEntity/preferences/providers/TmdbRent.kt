@@ -1,6 +1,6 @@
-package com.lefarmico.moviesfinder.data.entity.preferences.providers
+package com.lefarmico.moviesfinder.data.TmdbEntity.preferences.providers
 
-data class TmdbBuy(
+data class TmdbRent(
     val display_priority: Int,
     val logo_path: String,
     val provider_id: Int,

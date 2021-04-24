@@ -1,7 +1,7 @@
 package com.lefarmico.moviesfinder.di
 
 import com.lefarmico.moviesfinder.BuildConfig
-import com.lefarmico.moviesfinder.data.entity.TmdbApi
+import com.lefarmico.moviesfinder.data.TmdbEntity.TmdbApi
 import com.lefarmico.moviesfinder.private.ApiConstants
 import dagger.Module
 import dagger.Provides

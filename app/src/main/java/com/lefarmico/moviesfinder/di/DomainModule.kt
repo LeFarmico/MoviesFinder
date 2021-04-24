@@ -3,7 +3,7 @@ package com.lefarmico.moviesfinder.di
 import android.content.Context
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.data.MainRepository
-import com.lefarmico.moviesfinder.data.entity.TmdbApi
+import com.lefarmico.moviesfinder.data.TmdbEntity.TmdbApi
 import com.lefarmico.moviesfinder.providers.PreferenceProvider
 import dagger.Module
 import dagger.Provides

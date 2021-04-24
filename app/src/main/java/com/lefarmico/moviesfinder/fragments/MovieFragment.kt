@@ -104,19 +104,22 @@ class MovieFragment : Fragment(), MoviesView {
         recyclerView = binding.mergeMovieScreenContent.findViewById(R.id.recycler_parent)
 
         scope.launch {
-            viewModel.loadMoviesForCategory(
+            val cat = viewModel.loadMoviesForCategory(
                 CategoryProvider.Category.POPULAR_CATEGORY,
                 CategoryProvider.Category.UPCOMING_CATEGORY,
                 CategoryProvider.Category.TOP_RATED_CATEGORY,
                 CategoryProvider.Category.NOW_PLAYING_CATEGORY
-            ).collect {
-                show(it)
-                Log.d(TAG, it.toString())
+            )
+            for (element in cat) {
+                show(element)
+                Log.d(TAG, "Show")
             }
         }
         scope.launch {
-            for (element in viewModel.isLoadingProgressBarShown) {
-                binding.mergeMovieScreenContent.findViewById<ProgressBar>(R.id.progress_bar).isVisible = element
+            withContext(Dispatchers.Main) {
+                for (element in viewModel.isLoadingProgressBarShown) {
+                    binding.mergeMovieScreenContent.findViewById<ProgressBar>(R.id.progress_bar).isVisible = element
+                }
             }
         }
 
@@ -167,25 +170,29 @@ class MovieFragment : Fragment(), MoviesView {
         }
     }
     private fun show(category: Category) {
-        if (!this::concatAdapter.isInitialized)
+        if (!this::concatAdapter.isInitialized) {
             concatAdapter = ConcatAdapter()
-
+        }
         scope.launch {
             val headerAdapter = HeaderAdapter().apply {
                 setHeaderTitle(context?.getString(category.titleResource)!!)
             }
-            Log.d(TAG, "${this.coroutineContext}")
-            // TODO Баг с добавлением лишних объектов
-            category.itemsList.collect {
-                withContext(Dispatchers.Main) {
-                    val itemsAdapter = ItemsPlaceholderAdapter(viewModel).apply {
-                        setItems(it.toMutableList())
-                        categoryType = category.categoryType
+            val itemsAdapter = ItemsPlaceholderAdapter(viewModel)
+
+            launch {
+                category.itemsList.collect { items ->
+                    withContext(Dispatchers.Main) {
+                        itemsAdapter.apply {
+                            setItems(items.toMutableList())
+                            categoryType = category.categoryType
+                        }
                     }
-                    concatAdapter.addAdapter(headerAdapter)
-                    concatAdapter.addAdapter(itemsAdapter)
-                    recyclerView.adapter = concatAdapter
                 }
+            }
+            withContext(Dispatchers.Main) {
+                concatAdapter.addAdapter(headerAdapter)
+                concatAdapter.addAdapter(itemsAdapter)
+                recyclerView.adapter = concatAdapter
             }
         }
     }
