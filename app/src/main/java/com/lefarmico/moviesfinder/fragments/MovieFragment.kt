@@ -84,6 +84,7 @@ class MovieFragment : Fragment(), MoviesView {
         return binding.root
     }
 
+    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated")
@@ -104,18 +105,12 @@ class MovieFragment : Fragment(), MoviesView {
         recyclerView = binding.mergeMovieScreenContent.findViewById(R.id.recycler_parent)
 
         scope.launch {
-            val cat = viewModel.loadMoviesForCategory(
-                CategoryProvider.Category.POPULAR_CATEGORY,
-                CategoryProvider.Category.UPCOMING_CATEGORY,
-                CategoryProvider.Category.TOP_RATED_CATEGORY,
-                CategoryProvider.Category.NOW_PLAYING_CATEGORY
-            )
-            for (element in cat) {
+            for (element in viewModel.channel) {
                 show(element)
-                Log.d(TAG, "Show")
+                if (viewModel.channel.isEmpty) {
+                    viewModel.channel.close()
+                }
             }
-        }
-        scope.launch {
             withContext(Dispatchers.Main) {
                 for (element in viewModel.isLoadingProgressBarShown) {
                     binding.mergeMovieScreenContent.findViewById<ProgressBar>(R.id.progress_bar).isVisible = element
@@ -188,6 +183,7 @@ class MovieFragment : Fragment(), MoviesView {
                         }
                     }
                 }
+                println("smthg")
             }
             withContext(Dispatchers.Main) {
                 concatAdapter.addAdapter(headerAdapter)

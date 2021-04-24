@@ -16,31 +16,35 @@ import javax.inject.Inject
 class MovieFragmentViewModel : ViewModel() {
 
     var isLoadingProgressBarShown: Channel<Boolean>
+    val channel = Channel<Category>(Channel.BUFFERED)
+    val scope = CoroutineScope(Dispatchers.IO)
 
     @Inject lateinit var interactor: Interactor
     @Inject lateinit var repository: MainRepository
 
     init {
         App.appComponent.inject(this)
+
         isLoadingProgressBarShown = interactor.isFragmentLoadingProgressBarShown
+        loadMoviesForCategory(
+            CategoryProvider.Category.POPULAR_CATEGORY,
+            CategoryProvider.Category.UPCOMING_CATEGORY,
+            CategoryProvider.Category.TOP_RATED_CATEGORY,
+            CategoryProvider.Category.NOW_PLAYING_CATEGORY
+        )
     }
 
-    fun loadMoviesForCategory(vararg categoryType: CategoryProvider.Category): Channel<Category> {
-        val categoryList = mutableListOf<Category>()
-        val channel = Channel<Category>(Channel.BUFFERED)
+    private fun loadMoviesForCategory(vararg categoryType: CategoryProvider.Category) {
         for (i in categoryType.indices) {
             interactor.getMovieCategoryFromApi(categoryType[i], 1)
             val category = interactor.getCategoriesFromDB(categoryType[i])
-            categoryList.add(category)
-            val scope = CoroutineScope(Dispatchers.IO)
             scope.launch {
                 channel.send(category)
             }
         }
-        return channel
     }
 
-    suspend fun addPaginationItems(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
+    fun addPaginationItems(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
         interactor.updateMoviesFromApi(category, page, adapter)
     }
 }

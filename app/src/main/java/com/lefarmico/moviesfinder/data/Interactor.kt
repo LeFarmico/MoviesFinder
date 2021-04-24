@@ -2,12 +2,12 @@ package com.lefarmico.moviesfinder.data
 
 import android.util.Log
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
-import com.lefarmico.moviesfinder.data.appEntity.Category
-import com.lefarmico.moviesfinder.data.appEntity.CategoryDb
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
 import com.lefarmico.moviesfinder.data.TmdbEntity.TmdbApi
 import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieDetailsResult
 import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieListResult
+import com.lefarmico.moviesfinder.data.appEntity.Category
+import com.lefarmico.moviesfinder.data.appEntity.CategoryDb
+import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.providers.PreferenceProvider
@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -94,7 +95,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
                 }
             })
     }
-    suspend fun updateMoviesFromApi(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
+    fun updateMoviesFromApi(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
         retrofitService.getMovies(category.categoryTitle, ApiConstants.API_KEY, "en-US", page)
             .enqueue(object : Callback<TmdbMovieListResult> {
 
@@ -105,8 +106,10 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
 
                     scope.launch {
                         repo.putItemHeadersToDb(itemList)
+                        withContext(Dispatchers.Main) {
+                            adapter.addItems(itemList)
+                        }
                     }
-                    adapter.addItems(itemList)
                 }
 
                 override fun onFailure(call: Call<TmdbMovieListResult>, t: Throwable) {

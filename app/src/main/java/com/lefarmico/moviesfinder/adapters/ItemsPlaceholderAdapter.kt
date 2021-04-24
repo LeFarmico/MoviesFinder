@@ -77,6 +77,7 @@ class ItemsPlaceholderAdapter(
             addOnScrollListener(
                 PaginationOnScrollListener(this.layoutManager!!) {
                     scope.launch {
+                        // TODO: Не добавляет объекты
                         viewModel.addPaginationItems(categoryType, ++page, this@ItemsPlaceholderAdapter)
                     }
                 }
