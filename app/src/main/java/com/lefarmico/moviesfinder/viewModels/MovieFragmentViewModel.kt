@@ -7,9 +7,10 @@ import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.data.MainRepository
 import com.lefarmico.moviesfinder.data.appEntity.Category
 import com.lefarmico.moviesfinder.providers.CategoryProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MovieFragmentViewModel : ViewModel() {
@@ -24,15 +25,19 @@ class MovieFragmentViewModel : ViewModel() {
         isLoadingProgressBarShown = interactor.isFragmentLoadingProgressBarShown
     }
 
-    fun loadMoviesForCategory(vararg categoryType: CategoryProvider.Category): Flow<Category> {
+    fun loadMoviesForCategory(vararg categoryType: CategoryProvider.Category): Channel<Category> {
         val categoryList = mutableListOf<Category>()
-
+        val channel = Channel<Category>(Channel.BUFFERED)
         for (i in categoryType.indices) {
             interactor.getMovieCategoryFromApi(categoryType[i], 1)
             val category = interactor.getCategoriesFromDB(categoryType[i])
             categoryList.add(category)
+            val scope = CoroutineScope(Dispatchers.IO)
+            scope.launch {
+                channel.send(category)
+            }
         }
-        return categoryList.asFlow()
+        return channel
     }
 
     suspend fun addPaginationItems(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
