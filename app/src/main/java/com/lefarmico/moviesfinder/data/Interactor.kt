@@ -8,6 +8,7 @@ import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieListResul
 import com.lefarmico.moviesfinder.data.appEntity.Category
 import com.lefarmico.moviesfinder.data.appEntity.CategoryDb
 import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
+import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.providers.PreferenceProvider
@@ -75,7 +76,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
                     call: Call<TmdbMovieDetailsResult>,
                     response: Response<TmdbMovieDetailsResult>
                 ) {
-                    val movie = Converter.convertApiMovieDetailsCreditsProvidersToDTOItem(
+                    val movie = Converter.convertApiMovieDetailsToDTOItem(
                         itemHeader,
                         preferenceProvider.getCurrentCountry(),
                         response.body()!!
@@ -116,6 +117,12 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
                     // show error
                 }
             })
+    }
+
+    fun updateItemHeader(itemHeaderImpl: ItemHeaderImpl) {
+        scope.launch {
+            repo.updateItemHeader(itemHeaderImpl)
+        }
     }
 
     fun getCategoriesFromDB(categoryType: CategoryProvider.Category): Category {

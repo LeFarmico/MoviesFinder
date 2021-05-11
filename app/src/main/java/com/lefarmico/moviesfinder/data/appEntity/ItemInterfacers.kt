@@ -8,7 +8,7 @@ interface ItemHeader : Serializable {
     val itemId: Int
     val posterPath: String?
     val title: String
-    var isFavorite: Boolean
+    var isWatchlist: Boolean
     val rating: Double
     val description: String
     val yourRate: Int

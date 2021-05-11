@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
+import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
 import com.lefarmico.moviesfinder.data.appEntity.MovieItem
 import javax.inject.Inject
 
@@ -30,5 +31,21 @@ class MainActivityViewModel() : ViewModel() {
 
     suspend fun onItemClick(itemHeader: ItemHeader) {
         interactor.getMovieDetailsFromApi(itemHeader, itemHeader.itemId, this)
+    }
+
+    fun watchlistChanger(item: ItemHeader, watchlistToggle: Boolean) {
+        val updatedItemHeader = ItemHeaderImpl(
+            id = item.id,
+            itemId = item.itemId,
+            posterPath = item.posterPath,
+            title = item.title,
+            rating = item.rating,
+            description = item.description,
+            isWatchlist = watchlistToggle,
+            yourRate = 0,
+            releaseDate = item.releaseDate
+
+        )
+        interactor.updateItemHeader(updatedItemHeader)
     }
 }

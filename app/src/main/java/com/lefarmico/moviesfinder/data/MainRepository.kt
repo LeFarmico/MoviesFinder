@@ -30,4 +30,8 @@ class MainRepository(private val itemDao: ItemDao) {
         )
     }
     suspend fun getAllFromDB(): List<ItemHeaderImpl> = itemDao.getCachedItemHeaders()
+
+    suspend fun updateItemHeader(itemHeaderImpl: ItemHeaderImpl) {
+        itemDao.updateMovieDetails(itemHeaderImpl)
+    }
 }

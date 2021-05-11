@@ -38,7 +38,7 @@ interface ItemDao {
     )
     fun getCategory(category: CategoryProvider.Category): Flow<List<ItemHeaderImpl>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(list: List<ItemHeaderImpl>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

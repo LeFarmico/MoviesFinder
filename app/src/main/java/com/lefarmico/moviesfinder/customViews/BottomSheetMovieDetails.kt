@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.ToggleButton
 import androidx.annotation.Nullable
 import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -42,11 +43,16 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     private val genres: TextView = binding.genresTextView
     private val actors: RecyclerView = binding.actorsRecyclerView
 
+    val isWatchlist: ToggleButton = binding.favoriteToggleButton
+
     lateinit var posterPath: String
 
     fun setRate(rate: Int) {
     }
 
+    fun setWatchlist(isInWatchList: Boolean) {
+        isWatchlist.isChecked = isInWatchList
+    }
     fun setLength(movieLength: Int) {
         length.text = "$movieLength m"
     }

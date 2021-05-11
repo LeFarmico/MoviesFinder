@@ -16,7 +16,6 @@ import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ItemsPlaceholderAdapter(
     val viewModel: MovieFragmentViewModel
@@ -69,7 +68,7 @@ class ItemsPlaceholderAdapter(
             holder.bind(
                 ItemAdapter {
                     scope.launch {
-                        (context as MainActivity).mainActivityViewModel.onItemClick(it)
+                        (context as MainActivity).viewModel.onItemClick(it)
                     }
                 }
             )
