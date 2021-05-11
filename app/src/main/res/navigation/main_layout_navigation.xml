@@ -17,6 +17,6 @@
         tools:layout="@layout/fragment_movie" />
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="com.lefarmico.moviesfinder.fragments.FavoritesFragment"
+        android:name="com.lefarmico.moviesfinder.fragments.ProfileFragment"
         android:label="FavoritesFragment" />
 </navigation>

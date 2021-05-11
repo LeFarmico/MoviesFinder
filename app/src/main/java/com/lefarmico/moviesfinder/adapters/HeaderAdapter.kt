@@ -5,19 +5,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.databinding.ItemHeaderBinding
 
 class HeaderAdapter : RecyclerView.Adapter<HeaderAdapter.ViewHolder>() {
 
     // TODO : Inject to model
-    private val items = mutableListOf<String>()
+    private val items = mutableListOf<Int>()
 
     class ViewHolder(
         itemHeaderBinding: ItemHeaderBinding
     ) : RecyclerView.ViewHolder(itemHeaderBinding.root) {
         private val headerTitle: TextView = itemHeaderBinding.headerTitle
-        fun bind(title: String) {
+        fun bind(@StringRes titleRes: Int) {
+            val title = itemView.context.getString(titleRes)
             headerTitle.text = title
         }
     }
@@ -36,7 +38,7 @@ class HeaderAdapter : RecyclerView.Adapter<HeaderAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = 1
 
-    fun setHeaderTitle(title: String) {
+    fun setHeaderTitle(title: Int) {
         items.add(title)
         notifyDataSetChanged()
     }

@@ -2,12 +2,13 @@ package com.lefarmico.moviesfinder.data
 
 import android.util.Log
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
+import com.lefarmico.moviesfinder.data.TmdbEntity.TmdbApi
+import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieDetailsResult
+import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieListResult
 import com.lefarmico.moviesfinder.data.appEntity.Category
 import com.lefarmico.moviesfinder.data.appEntity.CategoryDb
 import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
-import com.lefarmico.moviesfinder.data.entity.TmdbApi
-import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsResult
-import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieListResult
+import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.providers.PreferenceProvider
@@ -17,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,7 +35,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
             isFragmentLoadingProgressBarShown.send(true)
         }
 
-        retrofitService.getMovies(categoryType.categoryTitle, ApiConstants.API_KEY, "ru-RU", page)
+        retrofitService.getMovies(categoryType.categoryTitle, ApiConstants.API_KEY, "en-US", page)
             .enqueue(object : Callback<TmdbMovieListResult> {
 
                 override fun onResponse(
@@ -67,14 +69,14 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
             isBottomSheetLoadingProgressBarShown.send(true)
         }
 
-        retrofitService.getMovieDetails(movieId, ApiConstants.API_KEY, "ru-RU", "watch/providers,credits")
+        retrofitService.getMovieDetails(movieId, ApiConstants.API_KEY, "en-US", "watch/providers,credits")
             .enqueue(object : Callback<TmdbMovieDetailsResult> {
 
                 override fun onResponse(
                     call: Call<TmdbMovieDetailsResult>,
                     response: Response<TmdbMovieDetailsResult>
                 ) {
-                    val movie = Converter.convertApiMovieDetailsCreditsProvidersToDTOItem(
+                    val movie = Converter.convertApiMovieDetailsToDTOItem(
                         itemHeader,
                         preferenceProvider.getCurrentCountry(),
                         response.body()!!
@@ -94,8 +96,8 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
                 }
             })
     }
-    suspend fun updateMoviesFromApi(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
-        retrofitService.getMovies(category.categoryTitle, ApiConstants.API_KEY, "ru-RU", page)
+    fun updateMoviesFromApi(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
+        retrofitService.getMovies(category.categoryTitle, ApiConstants.API_KEY, "en-US", page)
             .enqueue(object : Callback<TmdbMovieListResult> {
 
                 override fun onResponse(call: Call<TmdbMovieListResult>, response: Response<TmdbMovieListResult>) {
@@ -105,14 +107,22 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
 
                     scope.launch {
                         repo.putItemHeadersToDb(itemList)
+                        withContext(Dispatchers.Main) {
+                            adapter.addItems(itemList)
+                        }
                     }
-                    adapter.addItems(itemList)
                 }
 
                 override fun onFailure(call: Call<TmdbMovieListResult>, t: Throwable) {
                     // show error
                 }
             })
+    }
+
+    fun updateItemHeader(itemHeaderImpl: ItemHeaderImpl) {
+        scope.launch {
+            repo.updateItemHeader(itemHeaderImpl)
+        }
     }
 
     fun getCategoriesFromDB(categoryType: CategoryProvider.Category): Category {

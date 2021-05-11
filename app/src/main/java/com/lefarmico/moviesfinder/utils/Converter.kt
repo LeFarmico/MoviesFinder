@@ -2,12 +2,12 @@ package com.lefarmico.moviesfinder.utils
 
 import com.lefarmico.moviesfinder.data.appEntity.*
 import com.lefarmico.moviesfinder.data.appEntity.Provider
-import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieDetailsResult
-import com.lefarmico.moviesfinder.data.entity.preferences.TmdbMovieResult
-import com.lefarmico.moviesfinder.data.entity.preferences.TmdbProvidersResult
-import com.lefarmico.moviesfinder.data.entity.preferences.credits.TmdbCast
-import com.lefarmico.moviesfinder.data.entity.preferences.credits.TmdbCrew
-import com.lefarmico.moviesfinder.data.entity.preferences.details.TmdbGenre
+import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieDetailsResult
+import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieResult
+import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbProvidersResult
+import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.credits.TmdbCast
+import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.credits.TmdbCrew
+import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.details.TmdbGenre
 
 object Converter {
     fun convertApiListToDTOList(list: List<TmdbMovieResult>?): List<ItemHeaderImpl> {
@@ -20,7 +20,7 @@ object Converter {
                     title = it.title,
                     rating = it.voteAverage,
                     description = it.overview,
-                    isFavorite = false,
+                    isWatchlist = false,
                     yourRate = 0,
                     releaseDate = it.releaseDate
                 )
@@ -29,18 +29,19 @@ object Converter {
         return movieList
     }
 
-    fun convertApiMovieDetailsCreditsProvidersToDTOItem(
+    fun convertApiMovieDetailsToDTOItem(
         itemHeader: ItemHeader,
         country: String,
         tmdbItem: TmdbMovieDetailsResult
     ): Movie {
         return Movie(
+            id = itemHeader.id,
             itemId = tmdbItem.id,
             posterPath = tmdbItem.poster_path,
             title = tmdbItem.title,
             rating = itemHeader.rating,
             description = itemHeader.description,
-            isFavorite = false,
+            isWatchlist = itemHeader.isWatchlist,
             genres = convertGenres(tmdbItem.genres),
             yourRate = 0,
             actors = convertCast(tmdbItem.credits.tmdbCast),
@@ -75,9 +76,10 @@ object Converter {
         }
         return cast
     }
-    private fun convertDirectors(castList: List<TmdbCrew>): List<Cast> {
+    private fun convertDirectors(tmdbCrewList: List<TmdbCrew>): List<Cast> {
         val cast = mutableListOf<Cast>()
-        val count = if (cast.size >= 10) {
+        if (tmdbCrewList == null) return cast
+        val count = if (tmdbCrewList.size >= 10) {
             10
         } else {
             cast.size
@@ -85,10 +87,10 @@ object Converter {
         for (i in 0 until count) {
             cast.add(
                 Cast(
-                    name = castList[i].name,
-                    profilePath = castList[i].profile_path,
-                    character = castList[i].department,
-                    personId = castList[i].id
+                    name = tmdbCrewList[i].name,
+                    profilePath = tmdbCrewList[i].profile_path,
+                    character = tmdbCrewList[i].department,
+                    personId = tmdbCrewList[i].id
                 )
             )
         }

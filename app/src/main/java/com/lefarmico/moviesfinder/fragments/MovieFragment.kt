@@ -16,22 +16,14 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.adapters.HeaderAdapter
-import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
-import com.lefarmico.moviesfinder.data.Interactor
-import com.lefarmico.moviesfinder.data.appEntity.Category
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
-import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.view.MoviesView
 import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
-import javax.inject.Inject
 
 class MovieFragment : Fragment(), MoviesView {
 
@@ -40,9 +32,6 @@ class MovieFragment : Fragment(), MoviesView {
     private val binding get() = _binding!!
 
     lateinit var scope: CoroutineScope
-
-    @Inject lateinit var interactor: Interactor
-    lateinit var concatAdapter: ConcatAdapter
 
     private val viewModel: MovieFragmentViewModel by viewModels()
     private val TAG = this.javaClass.canonicalName
@@ -90,41 +79,45 @@ class MovieFragment : Fragment(), MoviesView {
 
         scope = CoroutineScope(Dispatchers.IO)
 
-        if (this::concatAdapter.isInitialized) {
-            concatAdapter.apply {
-                adapters.forEach {
-                    removeAdapter(it)
-                }
-            }
-        }
+//        if (this::concatAdapter.isInitialized) {
+//            concatAdapter.apply {
+//                adapters.forEach {
+//                    removeAdapter(it)
+//                }
+//            }
+//        }
 
         startFragmentAnimation()
         initToolsBar()
 
         recyclerView = binding.mergeMovieScreenContent.findViewById(R.id.recycler_parent)
 
-        scope.launch {
-            viewModel.loadMoviesForCategory(
-                CategoryProvider.Category.POPULAR_CATEGORY,
-                CategoryProvider.Category.UPCOMING_CATEGORY,
-                CategoryProvider.Category.TOP_RATED_CATEGORY,
-                CategoryProvider.Category.NOW_PLAYING_CATEGORY
-            ).collect {
-                show(it)
-                Log.d(TAG, it.toString())
+        viewModel.concatAdapterLiveData.observe(viewLifecycleOwner) {
+            recyclerView.apply {
+                adapter = it
+                isNestedScrollingEnabled = false
+                layoutManager = LinearLayoutManager(requireContext())
+                setRecycledViewPool(RecyclerView.RecycledViewPool())
             }
         }
         scope.launch {
-            for (element in viewModel.isLoadingProgressBarShown) {
-                binding.mergeMovieScreenContent.findViewById<ProgressBar>(R.id.progress_bar).isVisible = element
+            withContext(Dispatchers.Main) {
+                for (element in viewModel.isLoadingProgressBarShown) {
+                    binding.mergeMovieScreenContent.findViewById<ProgressBar>(R.id.progress_bar).isVisible = element
+                }
             }
         }
+    }
 
-        recyclerView.apply {
-            isNestedScrollingEnabled = false
-            layoutManager = LinearLayoutManager(requireContext())
-            setRecycledViewPool(RecyclerView.RecycledViewPool())
-        }
+    override fun showError() {
+        Toast.makeText(requireContext(), "Something had wrong", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showEmptyCatalog() {
+        Toast.makeText(requireContext(), "Something had wrong", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onStartLoading() {
     }
 
     private fun initToolsBar() {
@@ -156,55 +149,5 @@ class MovieFragment : Fragment(), MoviesView {
             addTransition(recyclerFade)
         }
         TransitionManager.go(scene, customTransition)
-    }
-
-    override fun showCatalog(categories: List<Category>) {
-        if (!this::concatAdapter.isInitialized) {
-            concatAdapter = ConcatAdapter()
-        }
-        for (i in categories.indices) {
-            show(categories[i])
-        }
-    }
-    private fun show(category: Category) {
-        if (!this::concatAdapter.isInitialized)
-            concatAdapter = ConcatAdapter()
-
-        scope.launch {
-            val headerAdapter = HeaderAdapter().apply {
-                setHeaderTitle(context?.getString(category.titleResource)!!)
-            }
-            Log.d(TAG, "${this.coroutineContext}")
-            // TODO Баг с добавлением лишних объектов
-            category.itemsList.collect {
-                withContext(Dispatchers.Main) {
-                    val itemsAdapter = ItemsPlaceholderAdapter(viewModel).apply {
-                        setItems(it.toMutableList())
-                        categoryType = category.categoryType
-                    }
-                    concatAdapter.addAdapter(headerAdapter)
-                    concatAdapter.addAdapter(itemsAdapter)
-                    recyclerView.adapter = concatAdapter
-                }
-            }
-        }
-    }
-
-    override fun showError() {
-        recyclerView = binding.mergeMovieScreenContent.findViewById(R.id.recycler_parent)
-
-        recyclerView.apply {
-            isNestedScrollingEnabled = false
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = ConcatAdapter()
-            setRecycledViewPool(RecyclerView.RecycledViewPool())
-        }
-    }
-
-    override fun showEmptyCatalog() {
-        Toast.makeText(requireContext(), "Something had wrong", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onStartLoading() {
     }
 }

@@ -38,4 +38,10 @@
     <string name="background_image">Background Image</string>
     <string name="storyline">Storyline</string>
     <string name="watch_list">Watch list</string>
+    <string name="search">Search</string>
+    <string name="movies_watched">Movies watched</string>
+    <string name="tv_series_watched">TV Series watched</string>
+    <string name="hours_spent">Hours spent</string>
+    <string name="tv_series_watchlist">TV series watchlist</string>
+    <string name="personal_lists">Personal lists</string>
 </resources>

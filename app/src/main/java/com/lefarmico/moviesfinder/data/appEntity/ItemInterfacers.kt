@@ -8,7 +8,7 @@ interface ItemHeader : Serializable {
     val itemId: Int
     val posterPath: String?
     val title: String
-    var isFavorite: Boolean
+    var isWatchlist: Boolean
     val rating: Double
     val description: String
     val yourRate: Int
@@ -22,8 +22,7 @@ interface MovieItem : Serializable, ItemHeader {
     val length: Int
     val photosPath: List<String>
 }
-interface ShowItem : Serializable, ItemHeader {
-    val genres: List<String>
+interface ShowItem : Serializable, MovieItem {
     val lastAirDate: String
     val numberOfEpisodes: Int
     val numberOfSeasons: Int

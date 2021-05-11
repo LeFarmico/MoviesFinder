@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.data.entity.preferences.providers
+package com.lefarmico.moviesfinder.data.TmdbEntity.preferences.providers
 
 data class TmdbProvidersResults(
     val AR: TmdbProvider?,
