@@ -23,6 +23,8 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
 import com.lefarmico.moviesfinder.view.MoviesView
 import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.*
 
 class MovieFragment : Fragment(), MoviesView {
@@ -92,21 +94,27 @@ class MovieFragment : Fragment(), MoviesView {
 
         recyclerView = binding.mergeMovieScreenContent.findViewById(R.id.recycler_parent)
 
-        viewModel.concatAdapterLiveData.observe(viewLifecycleOwner) {
-            recyclerView.apply {
-                adapter = it
-                isNestedScrollingEnabled = false
-                layoutManager = LinearLayoutManager(requireContext())
-                setRecycledViewPool(RecyclerView.RecycledViewPool())
-            }
-        }
-        scope.launch {
-            withContext(Dispatchers.Main) {
-                for (element in viewModel.isLoadingProgressBarShown) {
-                    binding.mergeMovieScreenContent.findViewById<ProgressBar>(R.id.progress_bar).isVisible = element
+        viewModel.concatAdapterData
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    recyclerView.apply {
+                        adapter = it
+                        isNestedScrollingEnabled = false
+                        layoutManager = LinearLayoutManager(requireContext())
+                        setRecycledViewPool(RecyclerView.RecycledViewPool())
+                    }
+                },
+                {
                 }
+            )
+        viewModel.progressBar
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                binding.mergeMovieScreenContent.findViewById<ProgressBar>(R.id.progress_bar).isVisible = it
             }
-        }
     }
 
     override fun showError() {

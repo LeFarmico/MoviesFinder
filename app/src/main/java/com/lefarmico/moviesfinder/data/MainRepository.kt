@@ -6,13 +6,13 @@ import com.lefarmico.moviesfinder.providers.CategoryProvider
 
 class MainRepository(private val itemDao: ItemDao) {
 
-    suspend fun putItemHeadersToDb(itemList: List<ItemHeaderImpl>) = itemDao.insertAll(itemList)
+    fun putItemHeadersToDb(itemList: List<ItemHeaderImpl>) = itemDao.insertAll(itemList)
 
-    suspend fun putMovieToDb(movie: Movie) = itemDao.insertMovie(movie)
+    fun putMovieToDb(movie: Movie) = itemDao.insertMovie(movie)
 
-    suspend fun putCategoryDd(categoryDb: CategoryDb) = itemDao.insertCategoryDb(categoryDb)
+    fun putCategoryDd(categoryDb: CategoryDb) = itemDao.insertCategoryDb(categoryDb)
 
-    suspend fun putMoviesByCategoryDB(categoryDb: CategoryDb, itemHeaderImplList: List<ItemHeaderImpl>) {
+    fun putMoviesByCategoryDB(categoryDb: CategoryDb, itemHeaderImplList: List<ItemHeaderImpl>) {
         for (i in itemHeaderImplList.indices) {
             itemDao.insertMovieByCategory(
                 MoviesByCategoryDb(
@@ -29,9 +29,9 @@ class MainRepository(private val itemDao: ItemDao) {
             itemDao.getCategory(categoryType)
         )
     }
-    suspend fun getAllFromDB(): List<ItemHeaderImpl> = itemDao.getCachedItemHeaders()
+    fun getAllFromDB(): List<ItemHeaderImpl> = itemDao.getCachedItemHeaders()
 
-    suspend fun updateItemHeader(itemHeaderImpl: ItemHeaderImpl) {
+    fun updateItemHeader(itemHeaderImpl: ItemHeaderImpl) {
         itemDao.updateMovieDetails(itemHeaderImpl)
     }
 }

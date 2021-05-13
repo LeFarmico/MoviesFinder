@@ -10,18 +10,23 @@ import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.data.MainRepository
 import com.lefarmico.moviesfinder.data.appEntity.Category
 import com.lefarmico.moviesfinder.providers.CategoryProvider
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 class MovieFragmentViewModel : ViewModel() {
 
-    var isLoadingProgressBarShown: Channel<Boolean>
+//    var isLoadingProgressBarShown: Channel<Boolean>
     private val channel = Channel<Category>(Channel.BUFFERED)
     private val scope = CoroutineScope(Dispatchers.IO)
 
     val concatAdapterLiveData = MutableLiveData<ConcatAdapter>()
+    val concatAdapterData: Single<ConcatAdapter>
+    val progressBar: BehaviorSubject<Boolean>
 
     @Inject lateinit var interactor: Interactor
     @Inject lateinit var repository: MainRepository
@@ -29,52 +34,50 @@ class MovieFragmentViewModel : ViewModel() {
     init {
         App.appComponent.inject(this)
 
-        isLoadingProgressBarShown = interactor.isFragmentLoadingProgressBarShown
+        progressBar = interactor.progressBarState
         loadMoviesForCategory(
             CategoryProvider.Category.POPULAR_CATEGORY,
             CategoryProvider.Category.UPCOMING_CATEGORY,
             CategoryProvider.Category.TOP_RATED_CATEGORY,
             CategoryProvider.Category.NOW_PLAYING_CATEGORY
         )
-        postConcatAdapterLiveData()
+        concatAdapterData = postConcatAdapterLiveData()
     }
 
     fun addPaginationItems(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
         interactor.updateMoviesFromApi(category, page, adapter)
     }
 
-    private fun postConcatAdapterLiveData() {
-        val concatAdapter = ConcatAdapter()
-        scope.launch {
-            for (element in channel) {
-                setAdapters(element, concatAdapter)
-                concatAdapterLiveData.postValue(concatAdapter)
+    private fun postConcatAdapterLiveData(): Single<ConcatAdapter> {
+        return Single.create { subscriber ->
+            val concatAdapter = ConcatAdapter()
+            scope.launch {
+                for (element in channel) {
+                    withContext(Dispatchers.Main) {
+                        setAdapters(element, concatAdapter)
+                    }
+                }
             }
+            subscriber.onSuccess(concatAdapter)
         }
     }
     private fun setAdapters(category: Category, concatAdapter: ConcatAdapter) {
-        scope.launch {
-            val headerAdapter = HeaderAdapter().apply {
-                setHeaderTitle(category.titleResource)
-            }
-            val itemsAdapter = ItemsPlaceholderAdapter(this@MovieFragmentViewModel)
 
-            launch {
-                category.itemsList.collect { items ->
-                    withContext(Dispatchers.Main) {
-                        itemsAdapter.apply {
-                            setItems(items.toMutableList())
-                            categoryType = category.categoryType
-                        }
-                    }
-                }
-                println("smthg")
-            }
-            withContext(Dispatchers.Main) {
-                concatAdapter.addAdapter(headerAdapter)
-                concatAdapter.addAdapter(itemsAdapter)
-            }
+        val headerAdapter = HeaderAdapter().apply {
+            setHeaderTitle(category.titleResource)
         }
+        val itemsAdapter = ItemsPlaceholderAdapter(this@MovieFragmentViewModel)
+        category.itemsList
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { items ->
+                itemsAdapter.apply {
+                    setItems(items.toMutableList())
+                    categoryType = category.categoryType
+                }
+            }
+        concatAdapter.addAdapter(headerAdapter)
+        concatAdapter.addAdapter(itemsAdapter)
     }
 
     private fun loadMoviesForCategory(vararg categoryType: CategoryProvider.Category) {
