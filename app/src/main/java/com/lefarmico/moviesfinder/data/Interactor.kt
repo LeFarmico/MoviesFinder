@@ -5,15 +5,15 @@ import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.data.TmdbEntity.TmdbApi
 import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieDetailsResult
 import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieListResult
-import com.lefarmico.moviesfinder.data.appEntity.Category
-import com.lefarmico.moviesfinder.data.appEntity.CategoryDb
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
+import com.lefarmico.moviesfinder.data.appEntity.*
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.providers.PreferenceProvider
 import com.lefarmico.moviesfinder.utils.Converter
 import com.lefarmico.moviesfinder.viewModels.MainActivityViewModel
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -26,14 +26,14 @@ import retrofit2.Response
 class Interactor(private val repo: MainRepository, private val retrofitService: TmdbApi, private val preferenceProvider: PreferenceProvider) {
 
     val scope = CoroutineScope(Dispatchers.IO)
+    val progressBarState: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    val bottomSheetProgressBarState: BehaviorSubject<Boolean> = BehaviorSubject.create()
     val isFragmentLoadingProgressBarShown = Channel<Boolean>(Channel.CONFLATED)
     val isBottomSheetLoadingProgressBarShown = Channel<Boolean>(Channel.CONFLATED)
 
     fun getMovieCategoryFromApi(categoryType: CategoryProvider.Category, page: Int) {
 
-        scope.launch {
-            isFragmentLoadingProgressBarShown.send(true)
-        }
+        progressBarState.onNext(true)
 
         retrofitService.getMovies(categoryType.categoryTitle, ApiConstants.API_KEY, "en-US", page)
             .enqueue(object : Callback<TmdbMovieListResult> {
@@ -47,27 +47,24 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
                     val itemList = Converter.convertApiListToDTOList(response.body()?.tmdbMovie)
                     val category = CategoryDb(categoryType, categoryType.getResource())
 
-                    scope.launch {
+                    Completable.fromSingle<Category> {
                         repo.putCategoryDd(category)
                         repo.putItemHeadersToDb(itemList)
                         repo.putMoviesByCategoryDB(category, itemList)
-
-                        isFragmentLoadingProgressBarShown.send(element = false)
                     }
+                        .subscribeOn(Schedulers.io())
+                        .subscribe()
+                    progressBarState.onNext(false)
                 }
                 override fun onFailure(call: Call<TmdbMovieListResult>, t: Throwable) {
-                    scope.launch {
-                        isFragmentLoadingProgressBarShown.send(false)
-                    }
+                    progressBarState.onNext(false)
                 }
             })
     }
 
-    suspend fun getMovieDetailsFromApi(itemHeader: ItemHeader, movieId: Int, viewModel: MainActivityViewModel) {
+    fun getMovieDetailsFromApi(itemHeader: ItemHeader, movieId: Int, viewModel: MainActivityViewModel) {
 
-        scope.launch {
-            isBottomSheetLoadingProgressBarShown.send(true)
-        }
+        bottomSheetProgressBarState.onNext(true)
 
         retrofitService.getMovieDetails(movieId, ApiConstants.API_KEY, "en-US", "watch/providers,credits")
             .enqueue(object : Callback<TmdbMovieDetailsResult> {
@@ -82,17 +79,17 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
                         response.body()!!
                     )
 
-                    scope.launch {
-                        isBottomSheetLoadingProgressBarShown.send(false)
+                    Completable.fromSingle<Movie> {
+                        bottomSheetProgressBarState.onNext(false)
                         viewModel.showItemDetails(movie)
                         repo.putMovieToDb(movie)
                     }
+                        .subscribeOn(Schedulers.io())
+                        .subscribe()
                 }
 
                 override fun onFailure(call: Call<TmdbMovieDetailsResult>, t: Throwable) {
-                    scope.launch {
-                        isBottomSheetLoadingProgressBarShown.send(true)
-                    }
+                    bottomSheetProgressBarState.onNext(false)
                 }
             })
     }
