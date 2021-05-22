@@ -11,39 +11,65 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
-import com.lefarmico.moviesfinder.view.MoviesView
+import com.lefarmico.moviesfinder.view.MovieView
 import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.*
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class MovieFragment : Fragment(), MoviesView {
+class MovieFragment : Fragment(), MovieView {
 
     lateinit var recyclerView: RecyclerView
     private var _binding: FragmentMovieBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var scope: CoroutineScope
-
-    private val viewModel: MovieFragmentViewModel by viewModels()
+    override val viewModel: MovieFragmentViewModel by viewModels()
     private val TAG = this.javaClass.canonicalName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         App.appComponent.inject(this)
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate")
+        Log.d(TAG, "onCreate ${this.hashCode()}")
+    }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        Log.d(TAG, "onCreateView")
+        _binding = FragmentMovieBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d(TAG, "onViewCreated")
+
+        startFragmentAnimation()
+        launchRecyclerViewParams()
+
+        launchProgressBar(
+            binding.movieFragment.findViewById(R.id.progress_bar),
+            viewModel.progressBar
+        )
+        launchAdapter(recyclerView, viewModel.concatAdapterData)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop")
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         Log.d(TAG, "onDestroyView")
@@ -59,103 +85,50 @@ class MovieFragment : Fragment(), MoviesView {
         Log.d(TAG, "onDetach")
     }
 
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop")
-        scope.cancel()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        Log.d(TAG, "onCreateView")
-        _binding = FragmentMovieBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "onViewCreated")
-
-        scope = CoroutineScope(Dispatchers.IO)
-
-//        if (this::concatAdapter.isInitialized) {
-//            concatAdapter.apply {
-//                adapters.forEach {
-//                    removeAdapter(it)
-//                }
-//            }
-//        }
-
-        startFragmentAnimation()
-        initToolsBar()
-
-        recyclerView = binding.mergeMovieScreenContent.findViewById(R.id.recycler_parent)
-
-        viewModel.concatAdapterData
+    override fun launchAdapter(
+        recyclerView: RecyclerView,
+        concatAdapterSingle: Single<ConcatAdapter>
+    ): Disposable {
+        return concatAdapterSingle
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                {
-                    recyclerView.apply {
-                        adapter = it
-                        isNestedScrollingEnabled = false
-                        layoutManager = LinearLayoutManager(requireContext())
-                        setRecycledViewPool(RecyclerView.RecycledViewPool())
-                    }
-                },
-                {
-                }
+                { recyclerView.adapter = it },
+                { throw (NullPointerException()) }
             )
-        viewModel.progressBar
+    }
+    override fun launchProgressBar(
+        progressBar: ProgressBar,
+        progressBarBehaviorSubject: BehaviorSubject<Boolean>
+    ): Disposable {
+        return progressBarBehaviorSubject
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                binding.mergeMovieScreenContent.findViewById<ProgressBar>(R.id.progress_bar).isVisible = it
+                progressBar.isVisible = it
             }
     }
 
-    override fun showError() {
-        Toast.makeText(requireContext(), "Something had wrong", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun showEmptyCatalog() {
-        Toast.makeText(requireContext(), "Something had wrong", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onStartLoading() {
-    }
-
-    private fun initToolsBar() {
-        binding.root.findViewById<SearchView>(R.id.search_view_bar).setOnClickListener {
-            (it as SearchView).isIconified = false
-        }
-        binding.root.findViewById<SearchView>(R.id.search_view_bar)
-            .setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return true
-                }
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    return true
-                }
-            })
-    }
     private fun startFragmentAnimation() {
         val scene = Scene.getSceneForLayout(
-            binding.mergeMovieScreenContent,
+            binding.movieFragment,
             R.layout.merge_fragment_movie,
             requireContext()
         )
-        val searchFade = Fade(Fade.MODE_IN).addTarget(R.id.search_view_bar)
         val recyclerFade = Fade(Fade.MODE_IN).addTarget(R.id.recycler_parent)
-
         val customTransition = TransitionSet().apply {
             duration = 1000
-            addTransition(searchFade)
             addTransition(recyclerFade)
         }
         TransitionManager.go(scene, customTransition)
+    }
+
+    private fun launchRecyclerViewParams() {
+        recyclerView = binding.movieFragment.findViewById(R.id.recycler_parent)
+        recyclerView.apply {
+            isNestedScrollingEnabled = false
+            layoutManager = LinearLayoutManager(requireContext())
+            setRecycledViewPool(RecyclerView.RecycledViewPool())
+        }
     }
 }

@@ -16,7 +16,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Call
@@ -28,8 +27,6 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
     val scope = CoroutineScope(Dispatchers.IO)
     val progressBarState: BehaviorSubject<Boolean> = BehaviorSubject.create()
     val bottomSheetProgressBarState: BehaviorSubject<Boolean> = BehaviorSubject.create()
-    val isFragmentLoadingProgressBarShown = Channel<Boolean>(Channel.CONFLATED)
-    val isBottomSheetLoadingProgressBarShown = Channel<Boolean>(Channel.CONFLATED)
 
     fun getMovieCategoryFromApi(categoryType: CategoryProvider.Category, page: Int) {
 

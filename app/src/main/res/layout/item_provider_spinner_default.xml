@@ -8,19 +8,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/TextStyle.Description"
-        android:text="Watch online"
-        android:layout_marginStart="10dp"
+        android:text="@string/watch_online"
+        android:layout_marginStart="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="24dp"
         app:tint="@color/main_contrast_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:contentDescription="@string/open_arrow" />
 </androidx.constraintlayout.widget.ConstraintLayout>

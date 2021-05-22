@@ -44,4 +44,14 @@
     <string name="hours_spent">Hours spent</string>
     <string name="tv_series_watchlist">TV series watchlist</string>
     <string name="personal_lists">Personal lists</string>
+    <string name="some_provider">Some Provider</string>
+    <string name="rating_star">Rating Star</string>
+    <string name="_0_0">0.0</string>
+    <string name="_10">/10</string>
+    <string name="watch_online">Watch online</string>
+    <string name="open_arrow">Open Arrow</string>
+    <string name="profile_photo_background">Profile photo background</string>
+    <string name="_145">145</string>
+    <string name="_72">72</string>
+    <string name="_2258">2258</string>
 </resources>
