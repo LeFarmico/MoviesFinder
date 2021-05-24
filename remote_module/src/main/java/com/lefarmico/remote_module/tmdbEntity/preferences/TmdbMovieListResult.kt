@@ -1,5 +1,4 @@
-package com.lefarmico.moviesfinder.data.TmdbEntity.preferences
-
+package com.lefarmico.remote_module.tmdbEntity.preferences
 import com.google.gson.annotations.SerializedName
 
 data class TmdbMovieListResult(

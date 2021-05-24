@@ -1,10 +1,10 @@
-package com.lefarmico.moviesfinder.data.TmdbEntity.preferences
+package com.lefarmico.remote_module.tmdbEntity.preferences
 
 import com.google.gson.annotations.SerializedName
-import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.details.TmdbGenre
-import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.details.TmdbProductionCompany
-import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.details.TmdbProductionCountry
-import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.details.TmdbSpokenLanguage
+import com.lefarmico.remote_module.tmdbEntity.preferences.details.TmdbGenre
+import com.lefarmico.remote_module.tmdbEntity.preferences.details.TmdbProductionCompany
+import com.lefarmico.remote_module.tmdbEntity.preferences.details.TmdbProductionCountry
+import com.lefarmico.remote_module.tmdbEntity.preferences.details.TmdbSpokenLanguage
 
 data class TmdbMovieDetailsResult(
     @SerializedName("adult")

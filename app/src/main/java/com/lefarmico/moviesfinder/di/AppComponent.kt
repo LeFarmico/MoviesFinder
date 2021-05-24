@@ -4,14 +4,15 @@ package com.lefarmico.moviesfinder.di
 import com.lefarmico.moviesfinder.fragments.MovieFragment
 import com.lefarmico.moviesfinder.viewModels.MainActivityViewModel
 import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
+import com.lefarmico.remote_module.RemoteProvider
 import dagger.Component
 import javax.inject.Singleton
 
 @Component(
+    dependencies = [RemoteProvider::class],
     modules = [
         DataBaseModel::class,
-        DomainModule::class,
-        RemoteModule::class
+        DomainModule::class
     ]
 )
 

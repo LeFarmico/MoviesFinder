@@ -4,6 +4,8 @@ plugins {
     id 'kotlin-kapt'
 }
 
+apply from: "$project.rootDir/versions.gradle"
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -44,50 +46,51 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.5.0'
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'com.google.android.material:material:1.3.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation "androidx.recyclerview:recyclerview:1.2.0"
     implementation "androidx.fragment:fragment-ktx:1.3.4"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.android.material:material:1.3.0'
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     // Picasso
-    def picassoVer = 2.71828
-    implementation "com.squareup.picasso:picasso:$picassoVer"
+    implementation picasso
 
     // Dagger 2
-    def daggerVer = 2.31
-    implementation "com.google.dagger:dagger:$daggerVer"
-    implementation "com.google.dagger:dagger-android-support:$daggerVer"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVer"
-    kapt "com.google.dagger:dagger-compiler:$daggerVer"
+    implementation dagger
+    implementation daggerAndroid
+    kapt daggerAndroidProcessor
+    kapt daggerCompiler
 
     // Navigation Components
-    def nav_version = "2.3.5"
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+    implementation navigationFragment
+    implementation navigationUI
+    implementation navigationDynamicFeatures
 
     // GSON
-    def gson_version = "2.8.6"
-    implementation "com.google.code.gson:gson:$gson_version"
+    implementation gson
 
     // OkHttp
-    def ok_http_version = "4.9.0"
-    implementation "com.squareup.okhttp3:okhttp:$ok_http_version"
-    implementation "com.squareup.okhttp3:logging-interceptor:$ok_http_version"
+    implementation okHttp
+    implementation okHttpInterceptor
 
     // Retrofit
-    def retrofit_version = "2.9.0"
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+    implementation retrofit
+    implementation retrofitGsonConverter
+    implementation retrofitRXJava
 
-    // BlurView
-    implementation 'com.eightbitlab:blurview:1.6.6'
+    //Room
+    implementation roomRuntime
+    kapt roomCompiler
+    implementation roomKtx
+    implementation roomRx
+
+    // RXJava
+    implementation rxjava3Android
+    implementation rxjava3
 
     //CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
@@ -96,15 +99,5 @@ dependencies {
     def neumorphism_version = "0.3.0"
     implementation "com.github.fornewid:neumorphism:$neumorphism_version"
 
-    //Room
-    def room_version = "2.3.0-rc01"
-    implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-    implementation "androidx.room:room-ktx:$room_version"
-    implementation "androidx.room:room-rxjava3:$room_version"
-
-    // RXJava
-    def rx_version = "3.0.0"
-    implementation "io.reactivex.rxjava3:rxandroid:$rx_version"
-    implementation "io.reactivex.rxjava3:rxjava:$rx_version"
+    implementation project(":remote_module")
 }
