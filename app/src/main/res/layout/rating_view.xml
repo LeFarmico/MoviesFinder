@@ -7,20 +7,21 @@
 
     <ImageView
         android:id="@+id/star"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@drawable/ic_baseline_star_24"
         app:tint="@color/active_color"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/rating"
-        app:layout_constraintBottom_toBottomOf="@+id/rating"/>
+        app:layout_constraintBottom_toBottomOf="@+id/rating"
+        android:contentDescription="@string/rating_star" />
 
     <TextView
         android:id="@+id/rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/TextStyle.PrimaryHeading"
-        android:text="0.0"
+        android:text="@string/_0_0"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@+id/star"/>
     <TextView
@@ -28,7 +29,7 @@
         android:layout_height="wrap_content"
         style="@style/TextStyle.SecondaryHeading"
         android:textColor="@color/view_description_color"
-        android:text="/10"
+        android:text="@string/_10"
         app:layout_constraintStart_toEndOf="@+id/rating"
         app:layout_constraintBottom_toBottomOf="@+id/rating"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

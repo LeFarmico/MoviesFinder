@@ -1,6 +1,6 @@
-package com.lefarmico.moviesfinder.data.TmdbEntity.preferences.providers
+package com.lefarmico.remote_module.tmdbEntity.preferences.providers
 
-data class TmdbBuy(
+data class TmdbFlatrate(
     val display_priority: Int,
     val logo_path: String,
     val provider_id: Int,

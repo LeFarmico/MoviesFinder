@@ -1,8 +1,6 @@
-package com.lefarmico.moviesfinder.di
+package com.lefarmico.remote_module
 
-import com.lefarmico.moviesfinder.BuildConfig
-import com.lefarmico.moviesfinder.data.TmdbEntity.TmdbApi
-import com.lefarmico.moviesfinder.private.ApiConstants
+import com.lefarmico.remote_module.tmdbEntity.TmdbApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -22,9 +20,7 @@ class RemoteModule {
         .readTimeout(30, TimeUnit.SECONDS)
         .addInterceptor(
             HttpLoggingInterceptor().apply {
-                if (BuildConfig.DEBUG) {
-                    level = HttpLoggingInterceptor.Level.BASIC
-                }
+                level = HttpLoggingInterceptor.Level.BASIC
             }
         )
         .build()

@@ -1,8 +1,8 @@
-package com.lefarmico.moviesfinder.data.TmdbEntity.preferences
+package com.lefarmico.remote_module.tmdbEntity.preferences
 
 import com.google.gson.annotations.SerializedName
-import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.credits.TmdbCast
-import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.credits.TmdbCrew
+import com.lefarmico.remote_module.tmdbEntity.preferences.credits.TmdbCast
+import com.lefarmico.remote_module.tmdbEntity.preferences.credits.TmdbCrew
 
 data class TmdbCreditsResult(
     @SerializedName("cast")

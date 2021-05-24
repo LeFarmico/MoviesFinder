@@ -13,9 +13,7 @@ import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
 import com.lefarmico.moviesfinder.data.appEntity.MovieItem
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
-import com.lefarmico.moviesfinder.fragments.ProfileFragment
-import com.lefarmico.moviesfinder.fragments.MovieFragment
-import com.lefarmico.moviesfinder.fragments.SeriesFragment
+import com.lefarmico.moviesfinder.fragments.SearchFragment
 import com.lefarmico.moviesfinder.view.MainActivityView
 import com.lefarmico.moviesfinder.viewModels.MainActivityViewModel
 import javax.inject.Inject
@@ -27,7 +25,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
 
     val viewModel: MainActivityViewModel by viewModels()
 
-    lateinit var fragmentsList: List<Pair<String, Fragment>>
+    private lateinit var fragmentsList: List<Pair<String, Fragment>>
 
     private val TAG = this.javaClass.canonicalName
 
@@ -35,26 +33,23 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate")
 
-        fragmentsList = listOf(
-            Pair("MovieFragment", MovieFragment()), // 0
-            Pair("SeriesFragment", SeriesFragment()), // 1
-            Pair("FavoritesFragment", ProfileFragment()), // 2
-        )
+        fragmentsList = viewModel.fragmentsList
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if (savedInstanceState == null) {
+            viewModel.postFragmentData(fragmentsList[0])
+        }
         viewModel.movieDetails.observe(this) {
             launchItemDetails(it)
         }
         viewModel.fragmentData.observe(this) {
             launchFragment(it.second, it.first)
         }
-        if (savedInstanceState == null) {
-            viewModel.postFragmentData(fragmentsList[0])
-        }
 
         launchBottomSheet()
+        launchSearchViewListener()
 
         binding.bottomNavigationBarView
             .setOnNavigationItemSelectedListener(setMenuChangeListener())
@@ -91,6 +86,8 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
                         BottomSheetBehavior.STATE_DRAGGING -> {
                             binding.bottomSheet.backButton.isClickable = false
                         }
+                        BottomSheetBehavior.STATE_COLLAPSED -> {}
+                        BottomSheetBehavior.STATE_SETTLING -> {}
                     }
                 }
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -102,6 +99,15 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
                 }
             })
         }
+    }
+
+    private fun launchSearchViewListener() {
+        Log.d("LaunchFragment", "SearchFragment")
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.nav_host_fragment, SearchFragment(), "SearchFragment")
+            .addToBackStack("SearchFragment")
+            .commit()
     }
 
     private fun setMenuChangeListener(): BottomNavigationView.OnNavigationItemSelectedListener {

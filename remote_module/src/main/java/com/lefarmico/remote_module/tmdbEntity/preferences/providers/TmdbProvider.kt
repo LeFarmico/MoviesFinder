@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.data.TmdbEntity.preferences.providers
+package com.lefarmico.remote_module.tmdbEntity.preferences.providers
 
 import com.google.gson.annotations.SerializedName
 

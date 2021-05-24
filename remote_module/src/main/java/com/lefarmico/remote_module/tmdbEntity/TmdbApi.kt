@@ -1,7 +1,6 @@
-package com.lefarmico.moviesfinder.data.TmdbEntity
-
-import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieDetailsResult
-import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieListResult
+package com.lefarmico.remote_module.tmdbEntity
+import com.lefarmico.remote_module.tmdbEntity.preferences.TmdbMovieDetailsResult
+import com.lefarmico.remote_module.tmdbEntity.preferences.TmdbMovieListResult
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

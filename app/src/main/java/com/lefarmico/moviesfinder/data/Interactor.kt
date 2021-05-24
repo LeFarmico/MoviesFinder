@@ -2,21 +2,20 @@ package com.lefarmico.moviesfinder.data
 
 import android.util.Log
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
-import com.lefarmico.moviesfinder.data.TmdbEntity.TmdbApi
-import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieDetailsResult
-import com.lefarmico.moviesfinder.data.TmdbEntity.preferences.TmdbMovieListResult
 import com.lefarmico.moviesfinder.data.appEntity.*
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.providers.PreferenceProvider
 import com.lefarmico.moviesfinder.utils.Converter
 import com.lefarmico.moviesfinder.viewModels.MainActivityViewModel
+import com.lefarmico.remote_module.tmdbEntity.TmdbApi
+import com.lefarmico.remote_module.tmdbEntity.preferences.TmdbMovieDetailsResult
+import com.lefarmico.remote_module.tmdbEntity.preferences.TmdbMovieListResult
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Call
@@ -28,8 +27,6 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
     val scope = CoroutineScope(Dispatchers.IO)
     val progressBarState: BehaviorSubject<Boolean> = BehaviorSubject.create()
     val bottomSheetProgressBarState: BehaviorSubject<Boolean> = BehaviorSubject.create()
-    val isFragmentLoadingProgressBarShown = Channel<Boolean>(Channel.CONFLATED)
-    val isBottomSheetLoadingProgressBarShown = Channel<Boolean>(Channel.CONFLATED)
 
     fun getMovieCategoryFromApi(categoryType: CategoryProvider.Category, page: Int) {
 

@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.data.TmdbEntity.preferences.credits
+package com.lefarmico.remote_module.tmdbEntity.preferences.credits
 
 data class TmdbCrew(
     val adult: Boolean,
