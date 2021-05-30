@@ -76,7 +76,6 @@ class ItemsPlaceholderAdapter(
             addOnScrollListener(
                 PaginationOnScrollListener(this.layoutManager!!) {
                     scope.launch {
-                        // TODO: Не добавляет объекты
                         viewModel.addPaginationItems(categoryType, ++page, this@ItemsPlaceholderAdapter)
                     }
                 }
@@ -99,7 +98,6 @@ class ItemsPlaceholderAdapter(
 
     override fun onViewRecycled(holder: ViewHolder) {
         super.onViewRecycled(holder)
-
         val key = getItemId(holder.layoutPosition)
         scrollStates[key] = holder
             .itemView

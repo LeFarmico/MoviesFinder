@@ -3,6 +3,7 @@ package com.lefarmico.remote_module
 import com.lefarmico.remote_module.tmdbEntity.TmdbApi
 import dagger.Module
 import dagger.Provides
+import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -29,6 +30,7 @@ class RemoteModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
         .baseUrl(Private.BASE_URL)
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()

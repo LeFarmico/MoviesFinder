@@ -1,5 +1,6 @@
 package com.lefarmico.moviesfinder.utils
 
+import android.util.Log
 import com.lefarmico.moviesfinder.data.appEntity.*
 import com.lefarmico.remote_module.tmdbEntity.preferences.TmdbMovieDetailsResult
 import com.lefarmico.remote_module.tmdbEntity.preferences.TmdbMovieResult
@@ -7,6 +8,7 @@ import com.lefarmico.remote_module.tmdbEntity.preferences.TmdbProvidersResult
 import com.lefarmico.remote_module.tmdbEntity.preferences.credits.TmdbCast
 import com.lefarmico.remote_module.tmdbEntity.preferences.credits.TmdbCrew
 import com.lefarmico.remote_module.tmdbEntity.preferences.details.TmdbGenre
+import java.lang.NullPointerException
 
 object Converter {
     fun convertApiListToDTOList(list: List<TmdbMovieResult>?): List<ItemHeaderImpl> {
@@ -26,6 +28,24 @@ object Converter {
             )
         }
         return movieList
+    }
+
+    fun convertApiToDTO(item: TmdbMovieResult): ItemHeaderImpl? {
+        return try {
+            ItemHeaderImpl(
+                itemId = item.id,
+                posterPath = item.posterPath,
+                title = item.title,
+                rating = item.voteAverage,
+                description = item.overview,
+                isWatchlist = false,
+                yourRate = 0,
+                releaseDate = item.releaseDate
+            )
+        } catch (e: NullPointerException) {
+            Log.e("Converter", "Converter cached Null from TmdbMovieResult object", e)
+            null
+        }
     }
 
     fun convertApiMovieDetailsToDTOItem(

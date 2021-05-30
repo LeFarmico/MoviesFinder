@@ -91,6 +91,8 @@ dependencies {
     // RXJava
     implementation rxjava3Android
     implementation rxjava3
+    implementation rxjavaKotlin
+    implementation rxjavaRetrofitAdapter
 
     //CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'

@@ -2,124 +2,104 @@ package com.lefarmico.moviesfinder.data
 
 import android.util.Log
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
-import com.lefarmico.moviesfinder.data.appEntity.*
+import com.lefarmico.moviesfinder.data.appEntity.CategoryDb
+import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
+import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
+import com.lefarmico.moviesfinder.data.appEntity.Movie
 import com.lefarmico.moviesfinder.private.ApiConstants
+import com.lefarmico.moviesfinder.private.ApiConstants.API_KEY
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.providers.PreferenceProvider
 import com.lefarmico.moviesfinder.utils.Converter
 import com.lefarmico.moviesfinder.viewModels.MainActivityViewModel
 import com.lefarmico.remote_module.tmdbEntity.TmdbApi
-import com.lefarmico.remote_module.tmdbEntity.preferences.TmdbMovieDetailsResult
-import com.lefarmico.remote_module.tmdbEntity.preferences.TmdbMovieListResult
-import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class Interactor(private val repo: MainRepository, private val retrofitService: TmdbApi, private val preferenceProvider: PreferenceProvider) {
 
-    val scope = CoroutineScope(Dispatchers.IO)
     val progressBarState: BehaviorSubject<Boolean> = BehaviorSubject.create()
     val bottomSheetProgressBarState: BehaviorSubject<Boolean> = BehaviorSubject.create()
 
-    fun getMovieCategoryFromApi(categoryType: CategoryProvider.Category, page: Int) {
-
+    fun putToDbMovieCategoryFromApi(categoryType: CategoryProvider.Category, page: Int) {
         progressBarState.onNext(true)
-
-        retrofitService.getMovies(categoryType.categoryTitle, ApiConstants.API_KEY, "en-US", page)
-            .enqueue(object : Callback<TmdbMovieListResult> {
-
-                override fun onResponse(
-                    call: Call<TmdbMovieListResult>,
-                    response: Response<TmdbMovieListResult>
-                ) {
-                    Log.d("Interactor", "load category")
-
-                    val itemList = Converter.convertApiListToDTOList(response.body()?.tmdbMovie)
+        retrofitService.getMovies(categoryType.categoryTitle, API_KEY, "en-US", page)
+            .subscribeOn(Schedulers.io())
+            .map {
+                Converter.convertApiListToDTOList(it.tmdbMovie)
+            }
+            .subscribeBy(
+                onError = {
+                    progressBarState.onNext(false)
+                },
+                onNext = { itemList ->
+                    progressBarState.onNext(false)
                     val category = CategoryDb(categoryType, categoryType.getResource())
-
-                    Completable.fromSingle<Category> {
-                        repo.putCategoryDd(category)
-                        repo.putItemHeadersToDb(itemList)
-                        repo.putMoviesByCategoryDB(category, itemList)
-                    }
-                        .subscribeOn(Schedulers.io())
-                        .subscribe()
-                    progressBarState.onNext(false)
+                    repo.putCategoryDd(category)
+                    repo.putItemHeadersToDb(itemList)
+                    repo.putMoviesByCategoryDB(category, itemList)
                 }
-                override fun onFailure(call: Call<TmdbMovieListResult>, t: Throwable) {
-                    progressBarState.onNext(false)
-                }
-            })
+            )
     }
 
     fun getMovieDetailsFromApi(itemHeader: ItemHeader, movieId: Int, viewModel: MainActivityViewModel) {
-
         bottomSheetProgressBarState.onNext(true)
-
         retrofitService.getMovieDetails(movieId, ApiConstants.API_KEY, "en-US", "watch/providers,credits")
-            .enqueue(object : Callback<TmdbMovieDetailsResult> {
-
-                override fun onResponse(
-                    call: Call<TmdbMovieDetailsResult>,
-                    response: Response<TmdbMovieDetailsResult>
-                ) {
-                    val movie = Converter.convertApiMovieDetailsToDTOItem(
-                        itemHeader,
-                        preferenceProvider.getCurrentCountry(),
-                        response.body()!!
-                    )
-
-                    Completable.fromSingle<Movie> {
-                        bottomSheetProgressBarState.onNext(false)
-                        viewModel.showItemDetails(movie)
-                        repo.putMovieToDb(movie)
-                    }
-                        .subscribeOn(Schedulers.io())
-                        .subscribe()
-                }
-
-                override fun onFailure(call: Call<TmdbMovieDetailsResult>, t: Throwable) {
+            .subscribeOn(Schedulers.io())
+            .map {
+                Converter.convertApiMovieDetailsToDTOItem(
+                    itemHeader,
+                    preferenceProvider.getCurrentCountry(),
+                    it
+                )
+            }.subscribeBy(
+                onNext = { movie ->
                     bottomSheetProgressBarState.onNext(false)
+                    viewModel.showItemDetails(movie)
                 }
-            })
+            )
     }
     fun updateMoviesFromApi(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
         retrofitService.getMovies(category.categoryTitle, ApiConstants.API_KEY, "en-US", page)
-            .enqueue(object : Callback<TmdbMovieListResult> {
-
-                override fun onResponse(call: Call<TmdbMovieListResult>, response: Response<TmdbMovieListResult>) {
-                    Log.d("Interactor", "load category")
-
-                    val itemList = Converter.convertApiListToDTOList(response.body()?.tmdbMovie).toMutableList()
-
-                    scope.launch {
-                        repo.putItemHeadersToDb(itemList)
-                        withContext(Dispatchers.Main) {
-                            adapter.addItems(itemList)
-                        }
-                    }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .map {
+                Converter.convertApiListToDTOList(it.tmdbMovie).toMutableList()
+            }.subscribeBy(
+                onError = { Log.e("Interactor", it.message!!) },
+                onNext = { itemList ->
+                    adapter.addItems(itemList)
                 }
+            )
+    }
 
-                override fun onFailure(call: Call<TmdbMovieListResult>, t: Throwable) {
-                    // show error
-                }
-            })
+    fun putMovieDetails(movie: Movie) {
+        repo.putMovieToDb(movie)
+    }
+
+    fun deleteMovieDetails(movie: Movie) {
+        repo.deleteMovieFromDB(movie)
     }
 
     fun updateItemHeader(itemHeaderImpl: ItemHeaderImpl) {
-        scope.launch {
-            repo.updateItemHeader(itemHeaderImpl)
-        }
+        repo.updateItemHeader(itemHeaderImpl)
     }
 
-    fun getCategoriesFromDB(categoryType: CategoryProvider.Category): Category {
+    fun getCategoriesFromDB(categoryType: CategoryProvider.Category): Single<List<ItemHeaderImpl>> {
         return repo.getCategoryFromDB(categoryType)
+    }
+
+    fun getSearchResultFromApi(searchQuery: String): Observable<List<ItemHeaderImpl>> =
+        retrofitService.getMovieFromSearch(API_KEY, "en-US", searchQuery, 1)
+            .subscribeOn(Schedulers.io())
+            .map { result ->
+                Converter.convertApiListToDTOList(result.tmdbMovie)
+            }
+
+    fun getLastedSearchQueries() {
     }
 }

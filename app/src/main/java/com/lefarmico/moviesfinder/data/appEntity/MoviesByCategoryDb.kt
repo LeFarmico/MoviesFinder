@@ -3,7 +3,6 @@ package com.lefarmico.moviesfinder.data.appEntity
 import androidx.room.*
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 
-// TODO : Правильно свзязатя
 @Entity(
     tableName = "movies_by_category",
     indices = [Index("movie_id", "category_type", unique = true)],

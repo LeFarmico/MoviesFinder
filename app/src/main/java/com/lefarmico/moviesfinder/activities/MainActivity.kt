@@ -10,7 +10,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.Interactor
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
 import com.lefarmico.moviesfinder.data.appEntity.MovieItem
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.fragments.SearchFragment
@@ -49,7 +48,9 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
         }
 
         launchBottomSheet()
-        launchSearchViewListener()
+        binding.searchFab.setOnClickListener {
+            launchSearchViewListener()
+        }
 
         binding.bottomNavigationBarView
             .setOnNavigationItemSelectedListener(setMenuChangeListener())
@@ -154,9 +155,9 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
             setWatchlist(movieItem.isWatchlist)
             isWatchlist.setOnClickListener {
                 if (isWatchlist.isChecked) {
-                    viewModel.watchlistChanger(movieItem as ItemHeader, true)
+                    viewModel.watchlistChanger(movieItem, true)
                 } else {
-                    viewModel.watchlistChanger(movieItem as ItemHeader, false)
+                    viewModel.watchlistChanger(movieItem, false)
                 }
             }
         }

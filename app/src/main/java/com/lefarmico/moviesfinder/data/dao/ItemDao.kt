@@ -7,6 +7,7 @@ import com.lefarmico.moviesfinder.data.appEntity.Movie
 import com.lefarmico.moviesfinder.data.appEntity.MoviesByCategoryDb
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 
 @Dao
 interface ItemDao {
@@ -35,7 +36,10 @@ interface ItemDao {
             "INNER JOIN movies_by_category ON movies_by_category.movie_id = cached_item_header.movie_id " +
             "WHERE movies_by_category.category_type LIKE :category"
     )
-    fun getCategory(category: CategoryProvider.Category): Observable<List<ItemHeaderImpl>>
+    fun getCategory(category: CategoryProvider.Category): Single<List<ItemHeaderImpl>>
+
+    @Query("SELECT * FROM cached_item_header WHERE is_favorites = 1")
+    fun getFavoritesMovies(): Observable<ItemHeaderImpl>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(list: List<ItemHeaderImpl>)
@@ -51,4 +55,7 @@ interface ItemDao {
 
     @Update(entity = ItemHeaderImpl::class)
     fun updateMovieDetails(item: ItemHeaderImpl)
+
+    @Delete
+    fun deleteMovie(movie: Movie)
 }

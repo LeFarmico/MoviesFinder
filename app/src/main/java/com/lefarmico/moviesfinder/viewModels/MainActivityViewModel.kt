@@ -8,14 +8,20 @@ import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
 import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
+import com.lefarmico.moviesfinder.data.appEntity.Movie
 import com.lefarmico.moviesfinder.data.appEntity.MovieItem
 import com.lefarmico.moviesfinder.fragments.MovieFragment
 import com.lefarmico.moviesfinder.fragments.ProfileFragment
 import com.lefarmico.moviesfinder.fragments.SeriesFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainActivityViewModel : ViewModel() {
 
+    private val scope = CoroutineScope(Dispatchers.IO)
     private val TAG = this.javaClass.canonicalName
     @Inject lateinit var interactor: Interactor
     var fragmentsList: List<Pair<String, Fragment>>
@@ -44,24 +50,32 @@ class MainActivityViewModel : ViewModel() {
         interactor.getMovieDetailsFromApi(itemHeader, itemHeader.itemId, this)
     }
 
-    fun watchlistChanger(item: ItemHeader, watchlistToggle: Boolean) {
-        val updatedItemHeader = ItemHeaderImpl(
-            id = item.id,
-            itemId = item.itemId,
-            posterPath = item.posterPath,
-            title = item.title,
-            rating = item.rating,
-            description = item.description,
-            isWatchlist = watchlistToggle,
-            yourRate = 0,
-            releaseDate = item.releaseDate
+    fun watchlistChanger(item: MovieItem, watchlistToggle: Boolean) {
+        scope.launch {
+            val updatedItemHeader = ItemHeaderImpl(
+                id = item.id,
+                itemId = item.itemId,
+                posterPath = item.posterPath,
+                title = item.title,
+                rating = item.rating,
+                description = item.description,
+                isWatchlist = watchlistToggle,
+                yourRate = 0,
+                releaseDate = item.releaseDate
 
-        )
-        interactor.updateItemHeader(updatedItemHeader)
+            )
+            interactor.updateItemHeader(updatedItemHeader)
+            if (watchlistToggle) {
+                interactor.putMovieDetails(item as Movie)
+            } else {
+                interactor.deleteMovieDetails(item as Movie)
+            }
+        }
     }
 
     override fun onCleared() {
         super.onCleared()
         Log.d(TAG, "onCleared")
+        scope.cancel()
     }
 }
