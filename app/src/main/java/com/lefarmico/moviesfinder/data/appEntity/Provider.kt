@@ -1,6 +1,5 @@
 package com.lefarmico.moviesfinder.data.appEntity
 
-
 data class Provider(
     val providerType: ProviderType? = null,
     val name: String,

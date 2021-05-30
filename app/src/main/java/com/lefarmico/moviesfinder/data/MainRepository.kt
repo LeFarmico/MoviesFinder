@@ -1,8 +1,12 @@
 package com.lefarmico.moviesfinder.data
 
-import com.lefarmico.moviesfinder.data.appEntity.*
+import com.lefarmico.moviesfinder.data.appEntity.CategoryDb
+import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
+import com.lefarmico.moviesfinder.data.appEntity.Movie
+import com.lefarmico.moviesfinder.data.appEntity.MoviesByCategoryDb
 import com.lefarmico.moviesfinder.data.dao.ItemDao
 import com.lefarmico.moviesfinder.providers.CategoryProvider
+import io.reactivex.rxjava3.core.Single
 
 class MainRepository(private val itemDao: ItemDao) {
 
@@ -22,16 +26,14 @@ class MainRepository(private val itemDao: ItemDao) {
         }
     }
 
-    fun getCategoryFromDB(categoryType: CategoryProvider.Category): Category {
-        return Category(
-            categoryType.getResource(),
-            categoryType,
-            itemDao.getCategory(categoryType)
-        )
-    }
-    fun getAllFromDB(): List<ItemHeaderImpl> = itemDao.getCachedItemHeaders()
+    fun getCategoryFromDB(categoryType: CategoryProvider.Category): Single<List<ItemHeaderImpl>> =
+        itemDao.getCategory(categoryType)
 
     fun updateItemHeader(itemHeaderImpl: ItemHeaderImpl) {
         itemDao.updateMovieDetails(itemHeaderImpl)
+    }
+
+    fun deleteMovieFromDB(movie: Movie) {
+        itemDao.deleteMovie(movie)
     }
 }

@@ -43,4 +43,6 @@ ext {
     // RXJava
     rxjava3Android = "io.reactivex.rxjava3:rxandroid:$rx_version"
     rxjava3 = "io.reactivex.rxjava3:rxjava:$rx_version"
+    rxjavaKotlin = "io.reactivex.rxjava3:rxkotlin:$rx_version"
+    rxjavaRetrofitAdapter = "com.github.akarnokd:rxjava3-retrofit-adapter:$rx_version"
 }
