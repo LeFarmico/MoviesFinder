@@ -12,11 +12,11 @@ interface MovieView {
 
     val viewModel: MovieFragmentViewModel
 
-    fun launchAdapter(
+    fun adapterObserver(
         recyclerView: RecyclerView,
         concatAdapterSingle: Single<ConcatAdapter>
     ): Disposable
-    fun launchProgressBar(
+    fun progressBarObserver(
         progressBar: ProgressBar,
         progressBarBehaviorSubject: BehaviorSubject<Boolean>
     ): Disposable

@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 class MovieFragmentViewModel : ViewModel(), MovieViewModel {
 
-    override val concatAdapterData: Single<ConcatAdapter>
+    override val concatAdapterObserver: Single<ConcatAdapter>
     override val progressBar: BehaviorSubject<Boolean>
 
     @Inject lateinit var interactor: Interactor
@@ -29,17 +29,17 @@ class MovieFragmentViewModel : ViewModel(), MovieViewModel {
         App.appComponent.inject(this)
 
         progressBar = interactor.progressBarState
-        concatAdapterData = postConcatAdapterLiveData()
+        concatAdapterObserver = createConcatAdapterObserver()
     }
 
     fun addPaginationItems(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
         interactor.updateMoviesFromApi(category, page, adapter)
     }
 
-    private fun postConcatAdapterLiveData(): Single<ConcatAdapter> {
+    private fun createConcatAdapterObserver(): Single<ConcatAdapter> {
         return Single.create { subscriber ->
             val concatAdapter = ConcatAdapter()
-            setAdapter(
+            setAdaptersToConcat(
                 concatAdapter,
                 CategoryProvider.Category.POPULAR_CATEGORY,
                 CategoryProvider.Category.UPCOMING_CATEGORY,
@@ -49,9 +49,9 @@ class MovieFragmentViewModel : ViewModel(), MovieViewModel {
             subscriber.onSuccess(concatAdapter)
         }
     }
-    private fun setAdapter(concatAdapter: ConcatAdapter, vararg categoryTypes: CategoryProvider.Category) {
+    private fun setAdaptersToConcat(concatAdapter: ConcatAdapter, vararg categoryTypes: CategoryProvider.Category) {
         for (i in categoryTypes.indices) {
-            loadMoviesForCategory(categoryTypes[i])
+            loadMoviesByCategory(categoryTypes[i])
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { itemList ->
@@ -69,7 +69,7 @@ class MovieFragmentViewModel : ViewModel(), MovieViewModel {
         }
     }
 
-    private fun loadMoviesForCategory(categoryType: CategoryProvider.Category): Single<List<ItemHeaderImpl>> {
+    private fun loadMoviesByCategory(categoryType: CategoryProvider.Category): Single<List<ItemHeaderImpl>> {
         interactor.putToDbMovieCategoryFromApi(categoryType, 1)
         return interactor.getCategoriesFromDB(categoryType)
     }
