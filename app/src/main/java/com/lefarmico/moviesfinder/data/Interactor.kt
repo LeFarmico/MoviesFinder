@@ -3,10 +3,9 @@ package com.lefarmico.moviesfinder.data
 import android.util.Log
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.data.appEntity.CategoryDb
+import com.lefarmico.moviesfinder.data.appEntity.Header
 import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
 import com.lefarmico.moviesfinder.data.appEntity.Movie
-import com.lefarmico.moviesfinder.private.ApiConstants
 import com.lefarmico.moviesfinder.private.ApiConstants.API_KEY
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.providers.PreferenceProvider
@@ -24,6 +23,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
 
     val progressBarState: BehaviorSubject<Boolean> = BehaviorSubject.create()
     val bottomSheetProgressBarState: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    val movieDetailsBehaviourSubject: BehaviorSubject<Movie> = BehaviorSubject.create()
 
     fun putToDbMovieCategoryFromApi(categoryType: CategoryProvider.Category, page: Int) {
         progressBarState.onNext(true)
@@ -48,7 +48,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
 
     fun getMovieDetailsFromApi(itemHeader: ItemHeader, movieId: Int, viewModel: MainActivityViewModel) {
         bottomSheetProgressBarState.onNext(true)
-        retrofitService.getMovieDetails(movieId, ApiConstants.API_KEY, "en-US", "watch/providers,credits")
+        retrofitService.getMovieDetails(movieId, API_KEY, "en-US", "watch/providers,credits")
             .subscribeOn(Schedulers.io())
             .map {
                 Converter.convertApiMovieDetailsToDTOItem(
@@ -58,13 +58,15 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
                 )
             }.subscribeBy(
                 onNext = { movie ->
+                    // TODO
                     bottomSheetProgressBarState.onNext(false)
+                    movieDetailsBehaviourSubject.onNext(movie)
                     viewModel.showItemDetails(movie)
                 }
             )
     }
     fun updateMoviesFromApi(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
-        retrofitService.getMovies(category.categoryTitle, ApiConstants.API_KEY, "en-US", page)
+        retrofitService.getMovies(category.categoryTitle, API_KEY, "en-US", page)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map {
@@ -77,7 +79,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
             )
     }
 
-    fun putMovieDetails(movie: Movie) {
+    fun putMovieDetailsToDb(movie: Movie) {
         repo.putMovieToDb(movie)
     }
 
@@ -85,21 +87,30 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
         repo.deleteMovieFromDB(movie)
     }
 
-    fun updateItemHeader(itemHeaderImpl: ItemHeaderImpl) {
-        repo.updateItemHeader(itemHeaderImpl)
+    fun updateItemHeader(itemHeader: ItemHeader) {
+        repo.updateItemHeader(itemHeader as Header)
     }
 
-    fun getCategoriesFromDB(categoryType: CategoryProvider.Category): Single<List<ItemHeaderImpl>> {
+    fun getCategoriesFromDB(categoryType: CategoryProvider.Category): Single<List<Header>> {
         return repo.getCategoryFromDB(categoryType)
     }
 
-    fun getSearchResultFromApi(searchQuery: String): Observable<List<ItemHeaderImpl>> =
+    fun getSearchResultFromApi(searchQuery: String): Observable<List<Header>> =
         retrofitService.getMovieFromSearch(API_KEY, "en-US", searchQuery, 1)
             .subscribeOn(Schedulers.io())
             .map { result ->
                 Converter.convertApiListToDTOList(result.tmdbMovie)
             }
 
-    fun getLastedSearchQueries() {
+    fun getLastedSearchRequests(): Single<List<String>> = repo.getSearchRequests()
+
+    fun putSearchRequestToDb(requestText: String) {
+        Single.create<String> {
+            it.onSuccess(requestText)
+        }
+            .subscribeOn(Schedulers.io())
+            .subscribe { request ->
+                repo.putSearchRequestToDB(request)
+            }
     }
 }

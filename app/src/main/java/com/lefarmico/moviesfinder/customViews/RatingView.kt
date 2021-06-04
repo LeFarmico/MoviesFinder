@@ -10,15 +10,10 @@ import com.lefarmico.moviesfinder.databinding.RatingViewBinding
 
 class RatingView(context: Context, @Nullable attributeSet: AttributeSet) : ConstraintLayout(context, attributeSet) {
 
-    private var binding: RatingViewBinding
+    private var binding: RatingViewBinding =
+        RatingViewBinding.inflate(LayoutInflater.from(context), this, true)
 
-    private val ratingValue: TextView
-
-    init {
-        binding = RatingViewBinding.inflate(LayoutInflater.from(context), this, true)
-
-        ratingValue = binding.rating
-    }
+    private val ratingValue: TextView = binding.rating
 
     fun setRatingValue(value: Double) {
         if (value > 0.0 && value <= 10.0) {

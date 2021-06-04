@@ -8,6 +8,7 @@ import com.lefarmico.moviesfinder.data.appEntity.MovieItem
 interface MainActivityView {
     var interactor: Interactor
     fun launchFragment(fragment: Fragment, tag: String)
+    fun launchFragmentWithBackStack(fragment: Fragment, tag: String)
     fun launchItemDetails(movieItem: MovieItem)
     fun showError()
 }

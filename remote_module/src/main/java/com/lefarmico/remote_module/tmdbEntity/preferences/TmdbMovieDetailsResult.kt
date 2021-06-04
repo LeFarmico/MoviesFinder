@@ -32,7 +32,7 @@ data class TmdbMovieDetailsResult(
     @SerializedName("popularity")
     val popularity: Double,
     @SerializedName("poster_path")
-    val poster_path: String,
+    val poster_path: String?,
     @SerializedName("production_companies")
     val production_companies: List<TmdbProductionCompany>,
     @SerializedName("production_countries")

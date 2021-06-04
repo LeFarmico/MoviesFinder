@@ -3,11 +3,10 @@ package com.lefarmico.moviesfinder.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.ConcatAdapter
 import com.lefarmico.moviesfinder.App
-import com.lefarmico.moviesfinder.adapters.HeaderAdapter
+import com.lefarmico.moviesfinder.adapters.GroupHeaderAdapter
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.data.Interactor
-import com.lefarmico.moviesfinder.data.MainRepository
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
+import com.lefarmico.moviesfinder.data.appEntity.Header
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.view.MovieViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -19,17 +18,16 @@ import javax.inject.Inject
 
 class MovieFragmentViewModel : ViewModel(), MovieViewModel {
 
-    override val concatAdapterObserver: Single<ConcatAdapter>
-    override val progressBar: BehaviorSubject<Boolean>
+    override val concatAdapterObservable: Single<ConcatAdapter>
+    override val progressBarBehaviourSubject: BehaviorSubject<Boolean>
 
     @Inject lateinit var interactor: Interactor
-    @Inject lateinit var repository: MainRepository
 
     init {
         App.appComponent.inject(this)
 
-        progressBar = interactor.progressBarState
-        concatAdapterObserver = createConcatAdapterObserver()
+        progressBarBehaviourSubject = interactor.progressBarState
+        concatAdapterObservable = createConcatAdapterObserver()
     }
 
     fun addPaginationItems(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
@@ -55,7 +53,7 @@ class MovieFragmentViewModel : ViewModel(), MovieViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { itemList ->
-                    val headerAdapter = HeaderAdapter().apply {
+                    val headerAdapter = GroupHeaderAdapter().apply {
                         setHeaderTitle(categoryTypes[i].getResource())
                     }
                     val itemsAdapter = ItemsPlaceholderAdapter(this@MovieFragmentViewModel)
@@ -69,7 +67,7 @@ class MovieFragmentViewModel : ViewModel(), MovieViewModel {
         }
     }
 
-    private fun loadMoviesByCategory(categoryType: CategoryProvider.Category): Single<List<ItemHeaderImpl>> {
+    private fun loadMoviesByCategory(categoryType: CategoryProvider.Category): Single<List<Header>> {
         interactor.putToDbMovieCategoryFromApi(categoryType, 1)
         return interactor.getCategoriesFromDB(categoryType)
     }

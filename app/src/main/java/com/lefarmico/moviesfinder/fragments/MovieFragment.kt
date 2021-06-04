@@ -63,31 +63,17 @@ class MovieFragment : Fragment(), MovieView {
 
         val progressBarObserver = progressBarObserver(
             binding.movieFragment.findViewById(R.id.progress_bar),
-            viewModel.progressBar
+            viewModel.progressBarBehaviourSubject
         )
-        adapterObserver(recyclerView, viewModel.concatAdapterObserver)
+        adapterObserver(recyclerView, viewModel.concatAdapterObservable)
 
         compositeDisposable.add(progressBarObserver)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop")
-    }
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.d(TAG, "onDestroyView")
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "onDestroy")
         compositeDisposable.clear()
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        Log.d(TAG, "onDetach")
     }
 
     override fun adapterObserver(

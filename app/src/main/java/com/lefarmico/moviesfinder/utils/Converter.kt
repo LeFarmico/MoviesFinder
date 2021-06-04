@@ -11,11 +11,11 @@ import com.lefarmico.remote_module.tmdbEntity.preferences.details.TmdbGenre
 import java.lang.NullPointerException
 
 object Converter {
-    fun convertApiListToDTOList(list: List<TmdbMovieResult>?): List<ItemHeaderImpl> {
-        val movieList = mutableListOf<ItemHeaderImpl>()
+    fun convertApiListToDTOList(list: List<TmdbMovieResult>?): List<Header> {
+        val movieList = mutableListOf<Header>()
         list?.forEach {
             movieList.add(
-                ItemHeaderImpl(
+                Header(
                     itemId = it.id,
                     posterPath = it.posterPath,
                     title = it.title,
@@ -30,9 +30,9 @@ object Converter {
         return movieList
     }
 
-    fun convertApiToDTO(item: TmdbMovieResult): ItemHeaderImpl? {
+    fun convertApiToDTO(item: TmdbMovieResult): Header? {
         return try {
-            ItemHeaderImpl(
+            Header(
                 itemId = item.id,
                 posterPath = item.posterPath,
                 title = item.title,
@@ -56,7 +56,7 @@ object Converter {
         return Movie(
             id = itemHeader.id,
             itemId = tmdbItem.id,
-            posterPath = tmdbItem.poster_path,
+            posterPath = tmdbItem.poster_path ?: "",
             title = tmdbItem.title,
             rating = itemHeader.rating,
             description = itemHeader.description,
