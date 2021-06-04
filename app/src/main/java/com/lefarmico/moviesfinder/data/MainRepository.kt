@@ -1,39 +1,44 @@
 package com.lefarmico.moviesfinder.data
 
-import com.lefarmico.moviesfinder.data.appEntity.CategoryDb
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
-import com.lefarmico.moviesfinder.data.appEntity.Movie
-import com.lefarmico.moviesfinder.data.appEntity.MoviesByCategoryDb
+import com.lefarmico.moviesfinder.data.appEntity.*
 import com.lefarmico.moviesfinder.data.dao.ItemDao
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import io.reactivex.rxjava3.core.Single
 
 class MainRepository(private val itemDao: ItemDao) {
 
-    fun putItemHeadersToDb(itemList: List<ItemHeaderImpl>) = itemDao.insertAll(itemList)
+    fun putItemHeadersToDb(headerList: List<Header>) = itemDao.insertAll(headerList)
 
     fun putMovieToDb(movie: Movie) = itemDao.insertMovie(movie)
 
     fun putCategoryDd(categoryDb: CategoryDb) = itemDao.insertCategoryDb(categoryDb)
 
-    fun putMoviesByCategoryDB(categoryDb: CategoryDb, itemHeaderImplList: List<ItemHeaderImpl>) {
-        for (i in itemHeaderImplList.indices) {
+    fun putMoviesByCategoryDB(categoryDb: CategoryDb, headerList: List<Header>) {
+        headerList.forEach { header ->
             itemDao.insertMovieByCategory(
                 MoviesByCategoryDb(
-                    movieId = itemHeaderImplList[i].itemId, categoryType = categoryDb.categoryName
+                    movieId = header.itemId, categoryType = categoryDb.categoryName
                 )
             )
         }
     }
 
-    fun getCategoryFromDB(categoryType: CategoryProvider.Category): Single<List<ItemHeaderImpl>> =
+    fun getCategoryFromDB(categoryType: CategoryProvider.Category): Single<List<Header>> =
         itemDao.getCategory(categoryType)
 
-    fun updateItemHeader(itemHeaderImpl: ItemHeaderImpl) {
-        itemDao.updateMovieDetails(itemHeaderImpl)
+    fun updateItemHeader(itemHeader: ItemHeader) {
+        itemDao.updateMovieDetails(itemHeader as Header)
     }
 
     fun deleteMovieFromDB(movie: Movie) {
         itemDao.deleteMovie(movie)
     }
+
+    fun putSearchRequestToDB(requestText: String) {
+        itemDao.putSearchRequest(
+            SearchRequestDb(textRequest = requestText)
+        )
+    }
+
+    fun getSearchRequests(): Single<List<String>> = itemDao.getLastSearchRequests()
 }

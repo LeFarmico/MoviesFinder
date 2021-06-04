@@ -1,10 +1,7 @@
 package com.lefarmico.moviesfinder.data.dao
 
 import androidx.room.*
-import com.lefarmico.moviesfinder.data.appEntity.CategoryDb
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
-import com.lefarmico.moviesfinder.data.appEntity.Movie
-import com.lefarmico.moviesfinder.data.appEntity.MoviesByCategoryDb
+import com.lefarmico.moviesfinder.data.appEntity.*
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -13,13 +10,13 @@ import io.reactivex.rxjava3.core.Single
 interface ItemDao {
 
     @Query("SELECT * FROM cached_item_header")
-    fun getCachedItemHeaders(): List<ItemHeaderImpl>
+    fun getCachedItemHeaders(): List<Header>
 
     @Query("SELECT * FROM category_db WHERE category_name = :category")
     fun getCategoryDb(category: CategoryProvider.Category): CategoryDb
 
     @Query("SELECT * FROM cached_item_header WHERE movie_id = :movieId")
-    fun getItemHeader(movieId: Int): ItemHeaderImpl
+    fun getItemHeader(movieId: Int): Header
 
     @Query(
         "SELECT " +
@@ -36,13 +33,13 @@ interface ItemDao {
             "INNER JOIN movies_by_category ON movies_by_category.movie_id = cached_item_header.movie_id " +
             "WHERE movies_by_category.category_type LIKE :category"
     )
-    fun getCategory(category: CategoryProvider.Category): Single<List<ItemHeaderImpl>>
+    fun getCategory(category: CategoryProvider.Category): Single<List<Header>>
 
     @Query("SELECT * FROM cached_item_header WHERE is_favorites = 1")
-    fun getFavoritesMovies(): Observable<ItemHeaderImpl>
+    fun getFavoritesMovies(): Observable<Header>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAll(list: List<ItemHeaderImpl>)
+    fun insertAll(list: List<Header>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMovie(movie: Movie)
@@ -53,9 +50,15 @@ interface ItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCategoryDb(categoryDb: CategoryDb)
 
-    @Update(entity = ItemHeaderImpl::class)
-    fun updateMovieDetails(item: ItemHeaderImpl)
+    @Update(entity = Header::class)
+    fun updateMovieDetails(item: Header)
 
     @Delete
     fun deleteMovie(movie: Movie)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun putSearchRequest(searchRequestDb: SearchRequestDb)
+
+    @Query("SELECT text_request FROM search_request LIMIT 6")
+    fun getLastSearchRequests(): Single<List<String>>
 }

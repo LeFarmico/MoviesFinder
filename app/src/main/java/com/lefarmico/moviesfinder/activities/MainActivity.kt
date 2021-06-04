@@ -9,12 +9,15 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.customViews.BottomSheetMovieDetails
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.data.appEntity.MovieItem
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.fragments.SearchFragment
 import com.lefarmico.moviesfinder.view.MainActivityView
 import com.lefarmico.moviesfinder.viewModels.MainActivityViewModel
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView {
@@ -25,64 +28,79 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
     val viewModel: MainActivityViewModel by viewModels()
 
     private lateinit var fragmentsList: List<Pair<String, Fragment>>
+    private lateinit var bottomSheetBehaviour: BottomSheetBehavior<BottomSheetMovieDetails>
 
     private val TAG = this.javaClass.canonicalName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate")
-
-        fragmentsList = viewModel.fragmentsList
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        bottomSheetBehaviour = BottomSheetBehavior.from(binding.bottomSheet)
+        fragmentsList = viewModel.fragmentsList
+
         if (savedInstanceState == null) {
-            viewModel.postFragmentData(fragmentsList[0])
+            viewModel.postFragment(fragmentsList[0])
         }
-        viewModel.movieDetails.observe(this) {
-            launchItemDetails(it)
-        }
-        viewModel.fragmentData.observe(this) {
+        viewModel.movieDetails
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                launchItemDetails(it)
+            }
+
+        // TODO : Понять как лучше сделать
+        viewModel.fragmentLiveData.observe(this) {
             launchFragment(it.second, it.first)
         }
 
-        launchBottomSheet()
+        applyBottomSheetStateCallbacks()
         binding.searchFab.setOnClickListener {
-            launchSearchViewListener()
+            launchFragmentWithBackStack(SearchFragment(), "SearchFragment")
         }
 
-        binding.bottomNavigationBarView
-            .setOnNavigationItemSelectedListener(setMenuChangeListener())
+        binding.bottomNavigationBarView.setOnNavigationItemSelectedListener(setNavigationListener())
     }
 
-    private fun launchBottomSheet() {
-        BottomSheetBehavior.from(binding.bottomSheet).apply {
+    private fun applyBottomSheetStateCallbacks() {
+        bottomSheetBehaviour.apply {
             skipCollapsed = true
             state = BottomSheetBehavior.STATE_HIDDEN
 
             addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    binding.blackBackgroundFrameLayout.alpha = 0 + slideOffset
+                    if (slideOffset >= 0.5) {
+                        binding.bottomSheet.setAlphaParamsListener(slideOffset - 0.5f)
+                    }
+                }
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
                         BottomSheetBehavior.STATE_HIDDEN -> {
-                            binding.blackBackgroundFrameLayout.isClickable = false
-                            binding.bottomNavigationBarView.visibility = View.VISIBLE
-                            isDraggable = true
+                            binding.apply {
+                                isDraggable = true
+                                blackBackgroundFrameLayout.isClickable = false
+                                bottomNavigationBarView.visibility = View.VISIBLE
+                            }
                         }
                         BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                            binding.blackBackgroundFrameLayout.isClickable = true
-                            binding.blackBackgroundFrameLayout.setOnClickListener {
-                                state = BottomSheetBehavior.STATE_HIDDEN
-                                binding.blackBackgroundFrameLayout.isClickable = false
+                            binding.apply {
+                                bottomNavigationBarView.visibility = View.INVISIBLE
+                                blackBackgroundFrameLayout.isClickable = true
+                                blackBackgroundFrameLayout.setOnClickListener {
+                                    it.isClickable = false
+                                    state = BottomSheetBehavior.STATE_HIDDEN
+                                }
                             }
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
-                            binding.bottomSheet.backButton.isClickable = true
-                            binding.bottomSheet.backButton.setOnClickListener {
-                                state = BottomSheetBehavior.STATE_HIDDEN
-                            }
                             isDraggable = false
+                            binding.bottomSheet.backButton.apply {
+                                isClickable = true
+                                setOnClickListener { state = BottomSheetBehavior.STATE_HIDDEN }
+                            }
                         }
                         BottomSheetBehavior.STATE_DRAGGING -> {
                             binding.bottomSheet.backButton.isClickable = false
@@ -91,39 +109,32 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
                         BottomSheetBehavior.STATE_SETTLING -> {}
                     }
                 }
-                override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    binding.blackBackgroundFrameLayout.alpha = 0 + slideOffset
-                    if (slideOffset >= 0.5) {
-                        binding.bottomSheet.backgroundPoster.alpha = slideOffset - 0.5f
-                        binding.bottomSheet.backButton.alpha = slideOffset - 0.5f
-                    }
-                }
             })
         }
     }
 
-    private fun launchSearchViewListener() {
-        Log.d("LaunchFragment", "SearchFragment")
+    override fun launchFragmentWithBackStack(fragment: Fragment, tag: String) {
+        Log.d("LaunchFragment", "$fragment")
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.nav_host_fragment, SearchFragment(), "SearchFragment")
-            .addToBackStack("SearchFragment")
+            .replace(R.id.nav_host_fragment, fragment, tag)
+            .addToBackStack(tag)
             .commit()
     }
 
-    private fun setMenuChangeListener(): BottomNavigationView.OnNavigationItemSelectedListener {
+    private fun setNavigationListener(): BottomNavigationView.OnNavigationItemSelectedListener {
         return BottomNavigationView.OnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.movies_menu -> {
-                    viewModel.postFragmentData(fragmentsList[0])
+                    viewModel.postFragment(fragmentsList[0])
                     true
                 }
                 R.id.series_menu -> {
-                    viewModel.postFragmentData(fragmentsList[1])
+                    viewModel.postFragment(fragmentsList[1])
                     true
                 }
                 R.id.favorites_menu -> {
-                    viewModel.postFragmentData(fragmentsList[2])
+                    viewModel.postFragment(fragmentsList[2])
                     true
                 }
                 else -> false
@@ -141,28 +152,13 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
 
     override fun launchItemDetails(movieItem: MovieItem) {
         binding.bottomSheet.apply {
-            setRate(5)
-            setReleaseDate(movieItem.releaseDate)
-            setGenres(movieItem.genres)
-            setTitle(movieItem.title)
-            setRating(movieItem.rating)
-            setDescription(movieItem.description)
-            setPoster(movieItem.posterPath)
-            setSpinnerProvider(movieItem.watchProviders)
-            setBackground(movieItem.posterPath)
-            setActors(movieItem.actors)
-            setLength(movieItem.length)
-            setWatchlist(movieItem.isWatchlist)
-            isWatchlist.setOnClickListener {
-                if (isWatchlist.isChecked) {
-                    viewModel.watchlistChanger(movieItem, true)
-                } else {
-                    viewModel.watchlistChanger(movieItem, false)
-                }
-            }
+            setMovieItem(movieItem)
+            watchListCallback(
+                { viewModel.watchlistHandler(movieItem, true) },
+                { viewModel.watchlistHandler(movieItem, false) }
+            )
         }
-        BottomSheetBehavior.from(binding.bottomSheet).state = BottomSheetBehavior.STATE_HALF_EXPANDED
-        binding.bottomNavigationBarView.visibility = View.INVISIBLE
+        bottomSheetBehaviour.state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
 
     override fun showError() {

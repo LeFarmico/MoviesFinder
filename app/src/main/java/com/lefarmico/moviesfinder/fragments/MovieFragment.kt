@@ -24,6 +24,7 @@ import com.lefarmico.moviesfinder.view.MovieView
 import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -33,6 +34,7 @@ class MovieFragment : Fragment(), MovieView {
     lateinit var recyclerView: RecyclerView
     private var _binding: FragmentMovieBinding? = null
     private val binding get() = _binding!!
+    private var compositeDisposable = CompositeDisposable()
 
     override val viewModel: MovieFragmentViewModel by viewModels()
     private val TAG = this.javaClass.canonicalName
@@ -57,35 +59,24 @@ class MovieFragment : Fragment(), MovieView {
         Log.d(TAG, "onViewCreated")
 
         startFragmentAnimation()
-        launchRecyclerViewParams()
+        setRecyclerViewParams()
 
-        launchProgressBar(
+        val progressBarObserver = progressBarObserver(
             binding.movieFragment.findViewById(R.id.progress_bar),
-            viewModel.progressBar
+            viewModel.progressBarBehaviourSubject
         )
-        launchAdapter(recyclerView, viewModel.concatAdapterData)
-    }
+        adapterObserver(recyclerView, viewModel.concatAdapterObservable)
 
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop")
-    }
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.d(TAG, "onDestroyView")
+        compositeDisposable.add(progressBarObserver)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "onDestroy")
+        compositeDisposable.clear()
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        Log.d(TAG, "onDetach")
-    }
-
-    override fun launchAdapter(
+    override fun adapterObserver(
         recyclerView: RecyclerView,
         concatAdapterSingle: Single<ConcatAdapter>
     ): Disposable {
@@ -97,7 +88,7 @@ class MovieFragment : Fragment(), MovieView {
                 { throw (NullPointerException()) }
             )
     }
-    override fun launchProgressBar(
+    override fun progressBarObserver(
         progressBar: ProgressBar,
         progressBarBehaviorSubject: BehaviorSubject<Boolean>
     ): Disposable {
@@ -123,7 +114,7 @@ class MovieFragment : Fragment(), MovieView {
         TransitionManager.go(scene, customTransition)
     }
 
-    private fun launchRecyclerViewParams() {
+    private fun setRecyclerViewParams() {
         recyclerView = binding.movieFragment.findViewById(R.id.recycler_parent)
         recyclerView.apply {
             isNestedScrollingEnabled = false

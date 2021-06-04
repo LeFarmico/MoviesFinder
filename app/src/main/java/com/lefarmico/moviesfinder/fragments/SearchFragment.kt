@@ -9,16 +9,12 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.activities.MainActivity
 import com.lefarmico.moviesfinder.adapters.ItemAdapter
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
+import com.lefarmico.moviesfinder.adapters.TextAdapter
 import com.lefarmico.moviesfinder.databinding.FragmentSearchBinding
 import com.lefarmico.moviesfinder.viewModels.SearchFragmentViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
@@ -27,7 +23,6 @@ class SearchFragment : Fragment() {
     private val TAG = this.javaClass.canonicalName
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
-    private var compositeDisposable = CompositeDisposable()
     val viewModel: SearchFragmentViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,36 +42,42 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initToolsBar()
-        searchRequest()
-    }
-
-    private fun initToolsBar() {
-        binding.root.findViewById<SearchView>(R.id.search_view_bar).setOnClickListener {
-            (it as SearchView).isIconified = false
-        }
-        binding.searchViewBar
-            .setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.searchViewBar.apply {
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
+                    if (!query.isNullOrBlank()) {
+                        viewModel.putSearchRequest(query)
+                    }
                     return true
                 }
                 override fun onQueryTextChange(newText: String?): Boolean {
+                    viewModel.searchSubject.onNext(newText)
                     return true
                 }
             })
-    }
-
-    private fun searchRequest() {
-        Observable.create<List<ItemHeaderImpl>> { observable ->
-            val searchRequest: Disposable = viewModel.getSearchRequestResults(
-                binding.searchViewBar.query.toString()
-            ).subscribeOn(Schedulers.io())
-                .subscribe(
-                    { observable.onNext(it) },
-                    { throw it }
-                )
+            setOnClickListener {
+                isIconified = false
+            }
         }
-            .throttleFirst(2, TimeUnit.SECONDS)
+        viewModel.getSearchRequests()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { items ->
+                binding.lastRequestRecycler.adapter = TextAdapter().apply {
+                    setItems(items)
+                }
+            }
+
+        viewModel.searchViewObservable()
+            .debounce(1, TimeUnit.SECONDS)
+            .filter {
+                !it.isNullOrBlank()
+            }
+            .distinctUntilChanged()
+            .flatMap { requestText ->
+                viewModel.getSearchRequestResults(requestText)
+            }
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 Toast.makeText(context, "Calback is ${it.size}", Toast.LENGTH_SHORT).show()

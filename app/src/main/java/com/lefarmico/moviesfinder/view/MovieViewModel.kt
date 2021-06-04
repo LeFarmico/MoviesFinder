@@ -6,6 +6,6 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 interface MovieViewModel {
 
-    val concatAdapterData: Single<ConcatAdapter>
-    val progressBar: BehaviorSubject<Boolean>
+    val concatAdapterObservable: Single<ConcatAdapter>
+    val progressBarBehaviourSubject: BehaviorSubject<Boolean>
 }

@@ -27,4 +27,17 @@ data class Movie(
     @ColumnInfo(name = "length") override val length: Int,
     @ColumnInfo(name = "photos_path") override val photosPath: List<String>,
     @ColumnInfo(name = "release_date") override val releaseDate: String
-) : MovieItem
+) : MovieItem {
+    fun toItemHeaderImpl(): Header =
+        Header(
+            id = this.id,
+            itemId = this.itemId,
+            posterPath = this.posterPath,
+            title = this.title,
+            rating = this.rating,
+            description = this.description,
+            isWatchlist = this.isWatchlist,
+            yourRate = this.yourRate,
+            releaseDate = this.releaseDate
+        )
+}

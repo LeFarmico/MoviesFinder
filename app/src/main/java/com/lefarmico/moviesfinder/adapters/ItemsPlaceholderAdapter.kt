@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.activities.MainActivity
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeaderImpl
+import com.lefarmico.moviesfinder.data.appEntity.Header
 import com.lefarmico.moviesfinder.databinding.ItemPlaceholderRecyclerBinding
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.utils.PaginationOnScrollListener
@@ -21,7 +21,7 @@ class ItemsPlaceholderAdapter(
     val viewModel: MovieFragmentViewModel
 ) : RecyclerView.Adapter<ItemsPlaceholderAdapter.ViewHolder>() {
 
-    var itemsList: MutableList<ItemHeaderImpl> = mutableListOf()
+    var itemsList: MutableList<Header> = mutableListOf()
 
     private val scrollStates: MutableMap<Long, Parcelable?> = mutableMapOf()
     lateinit var categoryType: CategoryProvider.Category
@@ -85,12 +85,12 @@ class ItemsPlaceholderAdapter(
 
     override fun getItemCount(): Int = 1
 
-    fun setItems(itemsList: MutableList<ItemHeaderImpl>) {
+    fun setItems(itemsList: MutableList<Header>) {
         this.itemsList = itemsList
         notifyDataSetChanged()
     }
 
-    fun addItems(itemsList: MutableList<ItemHeaderImpl>) {
+    fun addItems(itemsList: MutableList<Header>) {
         val curItems = this.itemsList
         this.itemsList = (curItems + itemsList).toMutableList()
         notifyDataSetChanged()

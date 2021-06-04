@@ -7,10 +7,11 @@ import com.lefarmico.moviesfinder.data.dao.ItemDao
 
 @Database(
     entities = [
-        ItemHeaderImpl::class,
+        Header::class,
         Movie::class,
         CategoryDb::class,
-        MoviesByCategoryDb::class
+        MoviesByCategoryDb::class,
+        SearchRequestDb::class
     ],
     version = 1, exportSchema = false
 )
