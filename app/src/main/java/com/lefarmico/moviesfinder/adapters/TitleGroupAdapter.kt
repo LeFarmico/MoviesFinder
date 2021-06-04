@@ -9,7 +9,7 @@ import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.databinding.ItemHeaderBinding
 
-class GroupHeaderAdapter : RecyclerView.Adapter<GroupHeaderAdapter.ViewHolder>() {
+class TitleGroupAdapter : RecyclerView.Adapter<TitleGroupAdapter.ViewHolder>() {
 
     // TODO : Inject to model
     private val items = mutableListOf<Int>()

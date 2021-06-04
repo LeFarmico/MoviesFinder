@@ -3,13 +3,14 @@ package com.lefarmico.moviesfinder.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.ConcatAdapter
 import com.lefarmico.moviesfinder.App
-import com.lefarmico.moviesfinder.adapters.GroupHeaderAdapter
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
+import com.lefarmico.moviesfinder.adapters.TitleGroupAdapter
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.data.appEntity.Header
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.view.MovieViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -48,22 +49,33 @@ class MovieFragmentViewModel : ViewModel(), MovieViewModel {
         }
     }
     private fun setAdaptersToConcat(concatAdapter: ConcatAdapter, vararg categoryTypes: CategoryProvider.Category) {
-        for (i in categoryTypes.indices) {
-            loadMoviesByCategory(categoryTypes[i])
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { itemList ->
-                    val headerAdapter = GroupHeaderAdapter().apply {
-                        setHeaderTitle(categoryTypes[i].getResource())
-                    }
-                    val itemsAdapter = ItemsPlaceholderAdapter(this@MovieFragmentViewModel)
-                    itemsAdapter.apply {
-                        this.categoryType = categoryTypes[i]
-                        setItems(itemList.toMutableList())
-                    }
-                    concatAdapter.addAdapter(headerAdapter)
-                    concatAdapter.addAdapter(itemsAdapter)
+        loadCategories(categoryTypes.toList())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { pair ->
+                val titleGroupAdapter = TitleGroupAdapter().apply {
+                    setHeaderTitle(pair.first.getResource())
                 }
+                val itemsAdapter = ItemsPlaceholderAdapter(this@MovieFragmentViewModel)
+                itemsAdapter.apply {
+                    this.categoryType = pair.first
+                    setItems(pair.second.toMutableList())
+                }
+                concatAdapter.addAdapter(titleGroupAdapter)
+                concatAdapter.addAdapter(itemsAdapter)
+            }
+    }
+
+    private fun loadCategories(
+        categoryType: List<CategoryProvider.Category>
+    ): Observable<Pair<CategoryProvider.Category, List<Header>>> {
+        return Observable.create { emitter ->
+            categoryType.forEach { category ->
+                loadMoviesByCategory(category)
+                    .subscribe { headerList ->
+                        emitter.onNext(Pair(category, headerList))
+                    }
+            }
         }
     }
 
