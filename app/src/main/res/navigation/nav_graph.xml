@@ -2,21 +2,21 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_layout_navigation"
-    app:startDestination="@id/movieFragment">
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/movies_menu">
 
     <fragment
-        android:id="@+id/seriesFragment"
+        android:id="@+id/movies_menu"
+        android:name="com.lefarmico.moviesfinder.fragments.MovieFragment"
+        android:label="fragment_movie"
+        tools:layout="@layout/fragment_movie" />
+    <fragment
+        android:id="@+id/series_menu"
         android:name="com.lefarmico.moviesfinder.fragments.SeriesFragment"
         android:label="fragment_series"
         tools:layout="@layout/fragment_series" />
     <fragment
-        android:id="@+id/movieFragment"
-        android:name="com.lefarmico.moviesfinder.fragments.MovieFragment"
-        android:label="fragment_items"
-        tools:layout="@layout/fragment_movie" />
-    <fragment
-        android:id="@+id/favoritesFragment"
+        android:id="@+id/favorites_menu"
         android:name="com.lefarmico.moviesfinder.fragments.ProfileFragment"
-        android:label="FavoritesFragment" />
+        android:label="ProfileFragment" />
 </navigation>
