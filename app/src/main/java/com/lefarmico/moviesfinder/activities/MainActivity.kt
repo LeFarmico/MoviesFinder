@@ -6,6 +6,11 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.R
@@ -26,6 +31,8 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
     @Inject override lateinit var interactor: Interactor
 
     val viewModel: MainActivityViewModel by viewModels()
+    private lateinit var navController: NavController
+    private lateinit var appBarConfig: AppBarConfiguration
 
     private lateinit var fragmentsList: List<Pair<String, Fragment>>
     private lateinit var bottomSheetBehaviour: BottomSheetBehavior<BottomSheetMovieDetails>
@@ -37,13 +44,25 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
         Log.d(TAG, "onCreate")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+        binding.bottomNavigationBarView.setupWithNavController(navController)
+        appBarConfig = AppBarConfiguration(
+            setOf(R.id.movies_menu, R.id.series_menu, R.id.favorites_menu),
+        )
+        setupActionBarWithNavController(navController, appBarConfig)
+
+//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfig)
+//        NavigationUI.setupWithNavController(binding.bottomNavigationBarView, navController)
 
         bottomSheetBehaviour = BottomSheetBehavior.from(binding.bottomSheet)
         fragmentsList = viewModel.fragmentsList
 
-        if (savedInstanceState == null) {
-            viewModel.postFragment(fragmentsList[0])
-        }
+//        if (savedInstanceState == null) {
+//            viewModel.postFragment(fragmentsList[0])
+//        }
         viewModel.movieDetails
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -51,17 +70,21 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
                 launchItemDetails(it)
             }
 
-        // TODO : Понять как лучше сделать
-        viewModel.fragmentLiveData.observe(this) {
-            launchFragment(it.second, it.first)
-        }
+//        // TODO : Понять как лучше сделать
+//        viewModel.fragmentLiveData.observe(this) {
+//            launchFragment(it.second, it.first)
+//        }
 
         applyBottomSheetStateCallbacks()
         binding.searchFab.setOnClickListener {
             launchFragmentWithBackStack(SearchFragment(), "SearchFragment")
         }
 
-        binding.bottomNavigationBarView.setOnNavigationItemSelectedListener(setNavigationListener())
+//        binding.bottomNavigationBarView.setOnNavigationItemSelectedListener(setNavigationListener())
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp()
     }
 
     private fun applyBottomSheetStateCallbacks() {
