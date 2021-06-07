@@ -54,6 +54,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
         )
         setupActionBarWithNavController(navController, appBarConfig)
 
+
         bottomSheetBehaviour = BottomSheetBehavior.from(binding.bottomSheet)
         fragmentsList = viewModel.fragmentsList
 
