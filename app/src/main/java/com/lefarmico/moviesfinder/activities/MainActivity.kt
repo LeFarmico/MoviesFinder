@@ -54,15 +54,10 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
         )
         setupActionBarWithNavController(navController, appBarConfig)
 
-//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfig)
-//        NavigationUI.setupWithNavController(binding.bottomNavigationBarView, navController)
 
         bottomSheetBehaviour = BottomSheetBehavior.from(binding.bottomSheet)
         fragmentsList = viewModel.fragmentsList
 
-//        if (savedInstanceState == null) {
-//            viewModel.postFragment(fragmentsList[0])
-//        }
         viewModel.movieDetails
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -70,16 +65,15 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
                 launchItemDetails(it)
             }
 
-//        // TODO : Понять как лучше сделать
-//        viewModel.fragmentLiveData.observe(this) {
-//            launchFragment(it.second, it.first)
-//        }
-
         applyBottomSheetStateCallbacks()
         binding.searchFab.setOnClickListener {
             launchFragmentWithBackStack(SearchFragment(), "SearchFragment")
         }
 
+//        // TODO : Понять как лучше сделать
+//        viewModel.fragmentLiveData.observe(this) {
+//            launchFragment(it.second, it.first)
+//        }
 //        binding.bottomNavigationBarView.setOnNavigationItemSelectedListener(setNavigationListener())
     }
 
