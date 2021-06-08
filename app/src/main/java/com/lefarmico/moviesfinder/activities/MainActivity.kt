@@ -11,24 +11,18 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.customViews.BottomSheetMovieDetails
-import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.data.appEntity.MovieItem
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
-import com.lefarmico.moviesfinder.fragments.SearchFragment
-import com.lefarmico.moviesfinder.view.MainActivityView
 import com.lefarmico.moviesfinder.viewModels.MainActivityViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
-import javax.inject.Inject
 
-class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    @Inject override lateinit var interactor: Interactor
 
     val viewModel: MainActivityViewModel by viewModels()
     private lateinit var navController: NavController
@@ -48,12 +42,12 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
+
         binding.bottomNavigationBarView.setupWithNavController(navController)
         appBarConfig = AppBarConfiguration(
             setOf(R.id.movies_menu, R.id.series_menu, R.id.favorites_menu),
         )
         setupActionBarWithNavController(navController, appBarConfig)
-
 
         bottomSheetBehaviour = BottomSheetBehavior.from(binding.bottomSheet)
         fragmentsList = viewModel.fragmentsList
@@ -67,14 +61,8 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
 
         applyBottomSheetStateCallbacks()
         binding.searchFab.setOnClickListener {
-            launchFragmentWithBackStack(SearchFragment(), "SearchFragment")
+            navController.navigate(R.id.searchFragment)
         }
-
-//        // TODO : Понять как лучше сделать
-//        viewModel.fragmentLiveData.observe(this) {
-//            launchFragment(it.second, it.first)
-//        }
-//        binding.bottomNavigationBarView.setOnNavigationItemSelectedListener(setNavigationListener())
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -130,44 +118,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
         }
     }
 
-    override fun launchFragmentWithBackStack(fragment: Fragment, tag: String) {
-        Log.d("LaunchFragment", "$fragment")
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.nav_host_fragment, fragment, tag)
-            .addToBackStack(tag)
-            .commit()
-    }
-
-    private fun setNavigationListener(): BottomNavigationView.OnNavigationItemSelectedListener {
-        return BottomNavigationView.OnNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.movies_menu -> {
-                    viewModel.postFragment(fragmentsList[0])
-                    true
-                }
-                R.id.series_menu -> {
-                    viewModel.postFragment(fragmentsList[1])
-                    true
-                }
-                R.id.favorites_menu -> {
-                    viewModel.postFragment(fragmentsList[2])
-                    true
-                }
-                else -> false
-            }
-        }
-    }
-
-    override fun launchFragment(fragment: Fragment, tag: String) {
-        Log.d("LaunchFragment", tag)
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.nav_host_fragment, fragment, tag)
-            .commit()
-    }
-
-    override fun launchItemDetails(movieItem: MovieItem) {
+    private fun launchItemDetails(movieItem: MovieItem) {
         binding.bottomSheet.apply {
             setMovieItem(movieItem)
             watchListCallback(
@@ -176,12 +127,5 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainActivityView
             )
         }
         bottomSheetBehaviour.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-    }
-
-    override fun showError() {
-        binding.apply {
-            errorTextView.visibility = View.VISIBLE
-            navHostFragment.visibility = View.INVISIBLE
-        }
     }
 }

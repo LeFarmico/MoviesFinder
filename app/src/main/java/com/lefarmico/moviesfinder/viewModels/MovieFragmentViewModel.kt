@@ -27,6 +27,13 @@ class MovieFragmentViewModel : ViewModel(), MovieViewModel {
     init {
         App.appComponent.inject(this)
 
+        putMoviesToDbFromAPI(
+            CategoryProvider.Category.POPULAR_CATEGORY,
+            CategoryProvider.Category.UPCOMING_CATEGORY,
+            CategoryProvider.Category.TOP_RATED_CATEGORY,
+            CategoryProvider.Category.NOW_PLAYING_CATEGORY
+        )
+
         progressBarBehaviourSubject = interactor.progressBarState
         concatAdapterObservable = createConcatAdapterObserver()
     }
@@ -71,7 +78,7 @@ class MovieFragmentViewModel : ViewModel(), MovieViewModel {
     ): Observable<Pair<CategoryProvider.Category, List<Header>>> {
         return Observable.create { emitter ->
             categoryType.forEach { category ->
-                loadMoviesByCategory(category)
+                loadMovies(category)
                     .subscribe { headerList ->
                         emitter.onNext(Pair(category, headerList))
                     }
@@ -79,8 +86,12 @@ class MovieFragmentViewModel : ViewModel(), MovieViewModel {
         }
     }
 
-    private fun loadMoviesByCategory(categoryType: CategoryProvider.Category): Single<List<Header>> {
-        interactor.putToDbMovieCategoryFromApi(categoryType, 1)
-        return interactor.getCategoriesFromDB(categoryType)
+    private fun putMoviesToDbFromAPI(vararg categoryType: CategoryProvider.Category) {
+        categoryType.forEach {
+            interactor.putToDbMovieCategoryFromApi(it, 1)
+        }
     }
+
+    private fun loadMovies(categoryType: CategoryProvider.Category): Single<List<Header>> =
+        interactor.getCategoriesFromDB(categoryType)
 }

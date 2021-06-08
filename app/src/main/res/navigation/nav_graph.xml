@@ -19,4 +19,9 @@
         android:id="@+id/favorites_menu"
         android:name="com.lefarmico.moviesfinder.fragments.ProfileFragment"
         android:label="ProfileFragment" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.lefarmico.moviesfinder.fragments.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
 </navigation>
