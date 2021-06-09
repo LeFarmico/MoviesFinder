@@ -11,19 +11,22 @@ import com.lefarmico.remote_module.tmdbEntity.preferences.details.TmdbGenre
 import java.lang.NullPointerException
 
 object Converter {
-    fun convertApiListToDTOList(list: List<TmdbMovieResult>?): List<Header> {
+    fun convertApiListToDTOList(list: List<TmdbMovieResult?>?): List<Header> {
         val movieList = mutableListOf<Header>()
         list?.forEach {
+            if (it?.id == null) {
+                throw NullPointerException("id parameter is Null")
+            }
             movieList.add(
                 Header(
                     itemId = it.id,
-                    posterPath = it.posterPath,
-                    title = it.title,
-                    rating = it.voteAverage,
-                    description = it.overview,
-                    isWatchlist = false,
-                    yourRate = 0,
-                    releaseDate = it.releaseDate
+                    posterPath = it.posterPath ?: "",
+                    title = it.title ?: "",
+                    rating = it.voteAverage ?: 0.0,
+                    description = it.overview ?: "",
+                    isWatchlist = false ?: false,
+                    yourRate = 0 ?: 0,
+                    releaseDate = it.releaseDate ?: "00.00.0000"
                 )
             )
         }
@@ -58,9 +61,9 @@ object Converter {
             itemId = tmdbItem.id,
             posterPath = tmdbItem.poster_path ?: "",
             title = tmdbItem.title,
-            rating = itemHeader.rating,
-            description = itemHeader.description,
-            isWatchlist = itemHeader.isWatchlist,
+            rating = itemHeader.rating ?: 0.0,
+            description = itemHeader.description ?: "",
+            isWatchlist = itemHeader.isWatchlist ?: false,
             genres = convertGenres(tmdbItem.genres),
             yourRate = 0,
             actors = convertCast(tmdbItem.credits.tmdbCast),
@@ -68,7 +71,7 @@ object Converter {
             watchProviders = convertProviders(tmdbItem.providers, country),
             length = tmdbItem.runtime,
             photosPath = listOf(),
-            releaseDate = itemHeader.releaseDate
+            releaseDate = itemHeader.releaseDate ?: "00.00.0000"
         )
     }
     private fun convertGenres(genresList: List<TmdbGenre>): List<String> {

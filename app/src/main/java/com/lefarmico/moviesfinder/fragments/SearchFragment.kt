@@ -10,8 +10,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.lefarmico.moviesfinder.activities.MainActivity
-import com.lefarmico.moviesfinder.adapters.ItemAdapter
-import com.lefarmico.moviesfinder.adapters.TextAdapter
+import com.lefarmico.moviesfinder.adapters.SearchAdapter
 import com.lefarmico.moviesfinder.databinding.FragmentSearchBinding
 import com.lefarmico.moviesfinder.viewModels.SearchFragmentViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -59,14 +58,15 @@ class SearchFragment : Fragment() {
                 isIconified = false
             }
         }
-        viewModel.getSearchRequests()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { items ->
-                binding.lastRequestRecycler.adapter = TextAdapter().apply {
-                    setItems(items)
-                }
-            }
+//        viewModel.getSearchRequests()
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe { items ->
+//                binding.requestRecycler.adapter = SearchAdapter {
+//                }.apply {
+//                    setLastSearchItems(items)
+//                }
+//            }
 
         viewModel.searchViewObservable()
             .debounce(1, TimeUnit.SECONDS)
@@ -79,13 +79,13 @@ class SearchFragment : Fragment() {
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                Toast.makeText(context, "Calback is ${it.size}", Toast.LENGTH_SHORT).show()
-                binding.itemsRecycler.apply {
-                    adapter = ItemAdapter {
+            .subscribe { list ->
+                Toast.makeText(context, "Calback is ${list.size}", Toast.LENGTH_SHORT).show()
+                binding.requestRecycler.apply {
+                    adapter = SearchAdapter {
                         (context as MainActivity).viewModel.onItemClick(it)
                     }.apply {
-                        setItems(it)
+                        setSearchItems(list)
                     }
                 }
             }

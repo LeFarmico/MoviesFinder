@@ -11,7 +11,8 @@
         android:id="@+id/search_view_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_marginVertical="8dp"
+        android:layout_marginHorizontal="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -27,35 +28,21 @@
         style="@style/TextStyle.PrimaryHeading"
         android:text="@string/recently_searched"
         app:layout_constraintTop_toBottomOf="@id/search_view_bar"
-        app:layout_constraintBottom_toTopOf="@id/last_request_recycler"
+        app:layout_constraintBottom_toTopOf="@id/request_recycler"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/last_request_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        tools:itemCount="6"
-        app:spanCount="2"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="8dp"
-        tools:listitem="@layout/item_text"
-        app:layout_constraintTop_toBottomOf="@id/recently_searched_text_view"
-        app:layout_constraintBottom_toTopOf="@id/items_recycler"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/items_recycler"
+        android:id="@+id/request_recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/last_request_recycler"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="6"
+        android:layout_marginVertical="8dp"
+        tools:listitem="@layout/item_search"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/recently_searched_text_view"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="3"
-        android:orientation="horizontal"
-        tools:listitem="@layout/item"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

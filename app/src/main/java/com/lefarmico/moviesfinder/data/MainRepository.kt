@@ -35,7 +35,7 @@ class MainRepository(private val itemDao: ItemDao) {
     }
 
     fun putSearchRequestToDB(requestText: String) {
-        itemDao.putSearchRequest(
+        itemDao.putSearchHeader(
             SearchRequestDb(textRequest = requestText)
         )
     }

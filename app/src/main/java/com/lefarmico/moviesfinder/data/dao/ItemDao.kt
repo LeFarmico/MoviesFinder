@@ -57,8 +57,8 @@ interface ItemDao {
     fun deleteMovie(movie: Movie)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun putSearchRequest(searchRequestDb: SearchRequestDb)
+    fun putSearchHeader(searchRequestDb: SearchRequestDb)
 
-    @Query("SELECT text_request FROM search_request LIMIT 6")
+    @Query("SELECT text_request FROM search_request")
     fun getLastSearchRequests(): Single<List<String>>
 }

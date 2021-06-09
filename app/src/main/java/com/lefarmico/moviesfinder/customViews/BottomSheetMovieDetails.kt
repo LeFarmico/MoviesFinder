@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapters.CastAdapter
 import com.lefarmico.moviesfinder.adapters.SpinnerProviderAdapter
+import com.lefarmico.moviesfinder.animations.MaxLineAnimator
 import com.lefarmico.moviesfinder.data.appEntity.Cast
 import com.lefarmico.moviesfinder.data.appEntity.MovieItem
 import com.lefarmico.moviesfinder.databinding.BottomSheetMovieDetailsBinding
@@ -47,13 +49,13 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
         movieTitle.text = movieItem.title
         releaseDate.text = parseReleaseDate(movieItem.releaseDate)
         generalRating.setRatingValue(movieItem.rating)
-        movieDescription.text = movieItem.description
         providerSpinner.adapter = SpinnerProviderAdapter(context, movieItem.watchProviders)
         isWatchlist.isChecked = movieItem.isWatchlist
-        movieLength.text = "${movieItem.length} + m"
+        movieLength.text = "${movieItem.length}min"
         setCastAdapter(movieItem.actors)
         setPoster(movieItem.posterPath)
         setBackground(movieItem.posterPath)
+        setDescription(movieItem.description)
     }
 
     fun watchListCallback(onChecked: () -> Unit, notChecked: () -> Unit) {
@@ -104,6 +106,18 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     private fun setAdapter(recyclerView: RecyclerView, set: (RecyclerView) -> Unit) {
         if (recyclerView.adapter == null) {
             set(recyclerView)
+        }
+    }
+
+    private fun setDescription(description: String) {
+        movieDescription.apply {
+            text = description
+            maxLines = 5
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            setOnClickListener {
+                MaxLineAnimator(movieDescription, 500L, true, 5, context)
+                    .start()
+            }
         }
     }
 }
