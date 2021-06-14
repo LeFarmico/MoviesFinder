@@ -9,12 +9,12 @@
         app:showAsAction="withText"/>
     <item
         android:id="@+id/series_menu"
-        android:icon="@drawable/ic_baseline_camera_24"
-        android:title="@string/shows"
+        android:icon="@drawable/ic_baseline_thumb_up_alt_24"
+        android:title="@string/for_you"
         app:showAsAction="withText"/>
     <item
         android:id="@+id/favorites_menu"
-        android:icon="@drawable/ic_baseline_favorite_24"
-        android:title="@string/favorites"
+        android:icon="@drawable/ic_baseline_account_circle_24"
+        android:title="@string/profile"
         app:showAsAction="withText"/>
 </menu>
