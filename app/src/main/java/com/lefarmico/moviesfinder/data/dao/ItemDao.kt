@@ -20,18 +20,19 @@ interface ItemDao {
 
     @Query(
         "SELECT " +
-            "cached_item_header.id, " +
-            "cached_item_header.movie_id, " +
-            "cached_item_header.poster_path,  " +
-            "cached_item_header.title, " +
-            "cached_item_header.rating, " +
-            "cached_item_header.overview, " +
-            "cached_item_header.is_favorites, " +
-            "cached_item_header.your_rate, " +
-            "cached_item_header.release_date " +
-            "FROM cached_item_header " +
-            "INNER JOIN movies_by_category ON movies_by_category.movie_id = cached_item_header.movie_id " +
-            "WHERE movies_by_category.category_type LIKE :category"
+            "movie.id, " +
+            "movie.movie_id, " +
+            "movie.poster_path,  " +
+            "movie.title, " +
+            "movie.rating, " +
+            "movie.overview, " +
+            "movie.is_favorites, " +
+            "movie.your_rate, " +
+            "movie.release_date " +
+            "FROM cached_item_header movie " +
+            "INNER JOIN movies_by_category mbc ON mbc.movie_id = movie.movie_id " +
+            "WHERE mbc.category_type LIKE :category " +
+            "ORDER BY movie.title "
     )
     fun getCategory(category: CategoryProvider.Category): Single<List<Header>>
 

@@ -51,7 +51,7 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
         generalRating.setRatingValue(movieItem.rating)
         providerSpinner.adapter = SpinnerProviderAdapter(context, movieItem.watchProviders)
         isWatchlist.isChecked = movieItem.isWatchlist
-        movieLength.text = "${movieItem.length}min"
+        movieLength.text = "Length: ${movieItem.length} min"
         setCastAdapter(movieItem.actors)
         setPoster(movieItem.posterPath)
         setBackground(movieItem.posterPath)
@@ -79,7 +79,7 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     }
 
     private fun parseReleaseDate(dateStringFormat: String): String =
-        dateStringFormat.split("-")[0]
+        "Release: ${dateStringFormat.split("-")[0]}"
 
     private fun concatGenres(genresList: List<String>): StringBuffer =
         StringBuffer().apply {
@@ -98,14 +98,10 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     }
 
     private fun setCastAdapter(cast: List<Cast>) {
-        setAdapter(actors) {
+        if (actors.adapter == null) {
             actors.adapter = CastAdapter().apply { setItems(cast) }
-        }
-    }
-
-    private fun setAdapter(recyclerView: RecyclerView, set: (RecyclerView) -> Unit) {
-        if (recyclerView.adapter == null) {
-            set(recyclerView)
+        } else {
+            (actors.adapter as CastAdapter).setItems(cast)
         }
     }
 

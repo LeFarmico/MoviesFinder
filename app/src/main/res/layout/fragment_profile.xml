@@ -113,7 +113,7 @@
             app:layout_constraintEnd_toEndOf="@id/your_rate_text_view"
             app:layout_constraintBottom_toBottomOf="parent"
             android:textColor="@color/view_description_color"
-            android:text="@string/tv_series_watched"/>
+            android:text="@string/watchlist"/>
 
         <View
             android:id="@+id/vertical_divider_2"
@@ -152,60 +152,37 @@
 
     <TextView
         android:id="@+id/watchlist_text_view"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginHorizontal="16dp"
         android:text="@string/watch_list"
         style="@style/TextStyle.SecondaryHeading"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/additional_details"/>
+
+    <TextView
+        android:id="@+id/watched_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:text="@string/watched"
+        android:textColor="@color/view_description_color"
+        style="@style/TextStyle.SecondaryHeading"
+        app:layout_constraintStart_toEndOf="@id/watchlist_text_view"
         app:layout_constraintTop_toBottomOf="@id/additional_details"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/watchlist_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+        app:spanCount="3"
+        android:orientation="vertical"
         tools:listitem="@layout/item"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/watchlist_text_view"/>
-
-    <TextView
-        android:id="@+id/tv_series_watchlist_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/tv_series_watchlist"
-        style="@style/TextStyle.SecondaryHeading"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/watchlist_recycler_view"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tv_series_watchlist_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:orientation="horizontal"
-        tools:listitem="@layout/item"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_series_watchlist_text_view"/>
-
-    <TextView
-        android:id="@+id/lists_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/personal_lists"
-        style="@style/TextStyle.SecondaryHeading"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_series_watchlist_recycler_view"/>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

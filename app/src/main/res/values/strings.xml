@@ -55,4 +55,8 @@
     <string name="_72">72</string>
     <string name="_2258">2258</string>
     <string name="recently_searched">Recently Searched</string>
+    <string name="profile">Profile</string>
+    <string name="for_you">For you</string>
+    <string name="watched">Watched</string>
+    <string name="watchlist">Watchlist</string>
 </resources>

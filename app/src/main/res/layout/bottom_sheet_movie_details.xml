@@ -11,6 +11,20 @@
     android:focusable="true"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/margin_start"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintGuide_begin="16dp"
+        android:orientation="vertical"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/margin_end"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintGuide_end="16dp"
+        android:orientation="vertical"/>
+
     <ImageView
         android:id="@+id/poster_background_image_view"
         android:layout_width="0dp"
@@ -37,7 +51,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <View
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="@+id/descriptions"
@@ -50,10 +64,9 @@
         android:id="@+id/poster_card_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="64dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/back_button"
+        app:layout_constraintStart_toStartOf="@id/margin_start"
         android:clickable="false"
         app:cardCornerRadius="5dp">
         <ImageView
@@ -81,21 +94,18 @@
     <LinearLayout
         android:id="@+id/descriptions"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="80dp"
         android:orientation="vertical"
-        android:layout_marginTop="160dp"
         app:layout_constraintStart_toEndOf="@id/poster_card_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/margin_end"
         app:layout_constraintBottom_toBottomOf="@id/poster_card_view"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="20dp">
+        android:layout_marginStart="16dp">
 
         <TextView
             android:id="@+id/genres_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:textSize="12sp"
             style="@style/TextStyle"
             android:text="@string/genres"
@@ -119,166 +129,167 @@
             android:text="@string/release_date"/>
     </LinearLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/descriptions"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:orientation="vertical">
+        app:layout_constraintTop_toBottomOf="@id/poster_card_view"
+        app:layout_constraintStart_toStartOf="@id/margin_start"
+        app:layout_constraintEnd_toEndOf="@id/margin_end"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/additional_details"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginHorizontal="16dp">
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/poster_card_view"
+            app:layout_constraintStart_toStartOf="@id/margin_start"
+            app:layout_constraintEnd_toEndOf="@id/margin_end"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="vertical">
 
-            <com.lefarmico.moviesfinder.customViews.RatingView
-                android:id="@+id/movie_rate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleX="0.8"
-                android:scaleY="0.8"
-                app:layout_constraintBottom_toTopOf="@+id/movies_watched_text_view"
-                app:layout_constraintEnd_toStartOf="@id/vertical_divider_1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/additional_details"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="16dp">
+
+                <com.lefarmico.moviesfinder.customViews.RatingView
+                    android:id="@+id/movie_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
+                    app:layout_constraintBottom_toTopOf="@+id/movies_watched_text_view"
+                    app:layout_constraintEnd_toStartOf="@id/vertical_divider_1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/movies_watched_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextStyle.Warning"
+                    app:layout_constraintTop_toBottomOf="@+id/movie_rate"
+                    app:layout_constraintStart_toStartOf="@id/movie_rate"
+                    app:layout_constraintEnd_toEndOf="@id/movie_rate"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:textColor="@color/main_contrast_color"
+                    android:text="@string/users_rate"/>
+
+                <View
+                    android:id="@+id/vertical_divider_1"
+                    style="@style/Divider.Vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/your_rate_text_view"
+                    app:layout_constraintStart_toEndOf="@id/movie_rate"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.lefarmico.moviesfinder.customViews.PersonalRatingView
+                    android:id="@+id/your_rate_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_series_text_view"
+                    app:layout_constraintEnd_toStartOf="@id/vertical_divider_2"
+                    app:layout_constraintStart_toEndOf="@id/vertical_divider_1"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:rating_number="80"
+                    app:view_size="32dp" />
+                <TextView
+                    android:id="@+id/tv_series_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextStyle.Warning"
+                    app:layout_constraintTop_toBottomOf="@+id/your_rate_text_view"
+                    app:layout_constraintStart_toStartOf="@id/your_rate_text_view"
+                    app:layout_constraintEnd_toEndOf="@id/your_rate_text_view"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:textColor="@color/main_contrast_color"
+                    android:text="@string/my_rate"/>
+
+                <View
+                    android:id="@+id/vertical_divider_2"
+                    style="@style/Divider.Vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/favorite_toggle_button"
+                    app:layout_constraintStart_toEndOf="@id/your_rate_text_view"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ToggleButton
+                    android:id="@+id/favorite_toggle_button"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:background="@drawable/toggle_favorites_shape"
+                    android:backgroundTint="@color/active_color"
+                    android:textOff=""
+                    android:textOn=""
+                    app:layout_constraintBottom_toTopOf="@+id/hours_spent_text_view"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/vertical_divider_2"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/hours_spent_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextStyle.Warning"
+                    app:layout_constraintTop_toBottomOf="@+id/favorite_toggle_button"
+                    app:layout_constraintStart_toStartOf="@id/favorite_toggle_button"
+                    app:layout_constraintEnd_toEndOf="@id/favorite_toggle_button"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:textColor="@color/main_contrast_color"
+                    android:text="@string/watch_list"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Spinner
+                android:id="@+id/provider_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:spinnerMode="dropdown"
+                android:background="@drawable/buttons_shape"
+                android:popupBackground="@drawable/buttons_shape"
+                tools:listitem="@layout/item_provider_spinner_default"/>
+
             <TextView
-                android:id="@+id/movies_watched_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/TextStyle.Warning"
-                app:layout_constraintTop_toBottomOf="@+id/movie_rate"
-                app:layout_constraintStart_toStartOf="@id/movie_rate"
-                app:layout_constraintEnd_toEndOf="@id/movie_rate"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:textColor="@color/main_contrast_color"
-                android:text="@string/users_rate"/>
+                style="@style/TextStyle.SecondaryHeading"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/storyline"/>
 
-            <View
-                android:id="@+id/vertical_divider_1"
-                style="@style/Divider.Vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/your_rate_text_view"
-                app:layout_constraintStart_toEndOf="@id/movie_rate"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.lefarmico.moviesfinder.customViews.PersonalRatingView
-                android:id="@+id/your_rate_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                app:layout_constraintBottom_toTopOf="@+id/tv_series_text_view"
-                app:layout_constraintEnd_toStartOf="@id/vertical_divider_2"
-                app:layout_constraintStart_toEndOf="@id/vertical_divider_1"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rating_number="80"
-                app:view_size="32dp" />
             <TextView
-                android:id="@+id/tv_series_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/TextStyle.Warning"
-                app:layout_constraintTop_toBottomOf="@+id/your_rate_text_view"
-                app:layout_constraintStart_toStartOf="@id/your_rate_text_view"
-                app:layout_constraintEnd_toEndOf="@id/your_rate_text_view"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:textColor="@color/main_contrast_color"
-                android:text="@string/my_rate"/>
+                android:id="@+id/movie_description"
+                style="@style/TextStyle.Description"
+                tools:text="@tools:sample/lorem/random"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-            <View
-                android:id="@+id/vertical_divider_2"
-                style="@style/Divider.Vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/favorite_toggle_button"
-                app:layout_constraintStart_toEndOf="@id/your_rate_text_view"
-                app:layout_constraintTop_toTopOf="parent" />
+            <View style="@style/Divider"
+                android:id="@+id/divider_2"
+                android:layout_marginTop="16dp"/>
 
-            <ToggleButton
-                android:id="@+id/favorite_toggle_button"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginHorizontal="20dp"
-                android:background="@drawable/toggle_favorites_shape"
-                android:backgroundTint="@color/active_color"
-                android:textOff=""
-                android:textOn=""
-                app:layout_constraintBottom_toTopOf="@+id/hours_spent_text_view"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/vertical_divider_2"
-                app:layout_constraintTop_toTopOf="parent" />
             <TextView
-                android:id="@+id/hours_spent_text_view"
-                android:layout_width="wrap_content"
+                android:id="@+id/actors_text_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/TextStyle.Warning"
-                app:layout_constraintTop_toBottomOf="@+id/favorite_toggle_button"
-                app:layout_constraintStart_toStartOf="@id/favorite_toggle_button"
-                app:layout_constraintEnd_toEndOf="@id/favorite_toggle_button"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:textColor="@color/main_contrast_color"
-                android:text="@string/watch_list"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                style="@style/TextStyle.SecondaryHeading"
+                android:text="@string/cast"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/divider_2"/>
 
-        <Spinner
-            android:id="@+id/provider_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginHorizontal="16dp"
-            android:spinnerMode="dropdown"
-            android:background="@drawable/buttons_shape"
-            android:popupBackground="@drawable/buttons_shape"
-            tools:listitem="@layout/item_provider_spinner_default"/>
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TextStyle.SecondaryHeading"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/storyline"/>
-
-
-        <TextView
-            android:id="@+id/movie_description"
-            style="@style/TextStyle.Description"
-            tools:text="@tools:sample/lorem/random"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"/>
-
-        <View style="@style/Divider"
-            android:id="@+id/divider_2"
-            android:layout_marginTop="16dp"
-            android:layout_marginHorizontal="16dp"/>
-
-        <TextView
-            android:id="@+id/actors_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginHorizontal="16dp"
-            style="@style/TextStyle.SecondaryHeading"
-            android:text="@string/cast"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/divider_2"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/actors_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            app:layout_constraintTop_toBottomOf="@id/actors_text_view"
-            android:orientation="horizontal"
-            tools:listitem="@layout/item_cast"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-    </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/actors_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/actors_text_view"
+                android:orientation="horizontal"
+                tools:listitem="@layout/item_cast"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        </LinearLayout>
+    </ScrollView>
 
 
 

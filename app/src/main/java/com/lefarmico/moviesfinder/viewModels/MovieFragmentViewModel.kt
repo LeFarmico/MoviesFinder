@@ -76,14 +76,13 @@ class MovieFragmentViewModel : ViewModel(), MovieViewModel {
     private fun loadCategories(
         categoryType: List<CategoryProvider.Category>
     ): Observable<Pair<CategoryProvider.Category, List<Header>>> {
-        return Observable.create { emitter ->
-            categoryType.forEach { category ->
-                loadMovies(category)
-                    .subscribe { headerList ->
-                        emitter.onNext(Pair(category, headerList))
-                    }
-            }
+        val types = categoryType.map { category ->
+            loadMovies(category).map {
+                it
+                Pair(category, it)
+            }.toObservable()
         }
+        return Observable.fromIterable(types).flatMap { it }
     }
 
     private fun putMoviesToDbFromAPI(vararg categoryType: CategoryProvider.Category) {
