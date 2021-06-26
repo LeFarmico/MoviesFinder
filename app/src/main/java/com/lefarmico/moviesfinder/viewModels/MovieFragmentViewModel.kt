@@ -1,96 +1,74 @@
 package com.lefarmico.moviesfinder.viewModels
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.ConcatAdapter
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
-import com.lefarmico.moviesfinder.adapters.TitleGroupAdapter
+import com.lefarmico.moviesfinder.adapters.MoviesConcatAdapterBuilder
 import com.lefarmico.moviesfinder.data.Interactor
-import com.lefarmico.moviesfinder.data.appEntity.Header
 import com.lefarmico.moviesfinder.providers.CategoryProvider
-import com.lefarmico.moviesfinder.view.MovieViewModel
+import com.lefarmico.moviesfinder.utils.PaginationController
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlinx.coroutines.*
 import javax.inject.Inject
 
-class MovieFragmentViewModel : ViewModel(), MovieViewModel {
-
-    override val concatAdapterObservable: Single<ConcatAdapter>
-    override val progressBarBehaviourSubject: BehaviorSubject<Boolean>
+class MovieFragmentViewModel : ViewModel(), PaginationController {
+    var concatAdapterLiveData = MutableLiveData<ConcatAdapter>()
+    val progressBarState = MutableLiveData<Boolean>()
 
     @Inject lateinit var interactor: Interactor
 
+    private val categoryList = listOf(
+        CategoryProvider.Category.POPULAR_CATEGORY,
+        CategoryProvider.Category.UPCOMING_CATEGORY,
+        CategoryProvider.Category.TOP_RATED_CATEGORY,
+        CategoryProvider.Category.NOW_PLAYING_CATEGORY
+    )
+
     init {
         App.appComponent.inject(this)
-
-        putMoviesToDbFromAPI(
-            CategoryProvider.Category.POPULAR_CATEGORY,
-            CategoryProvider.Category.UPCOMING_CATEGORY,
-            CategoryProvider.Category.TOP_RATED_CATEGORY,
-            CategoryProvider.Category.NOW_PLAYING_CATEGORY
-        )
-
-        progressBarBehaviourSubject = interactor.progressBarState
-        concatAdapterObservable = createConcatAdapterObserver()
+        putMoviesToDbFromAPI(categoryList)
+        setConcatAdapterByCategory(categoryList)
+        progressBarStateObserver()
     }
 
-    fun addPaginationItems(category: CategoryProvider.Category, page: Int, adapter: ItemsPlaceholderAdapter) {
-        interactor.updateMoviesFromApi(category, page, adapter)
-    }
-
-    private fun createConcatAdapterObserver(): Single<ConcatAdapter> {
-        return Single.create { subscriber ->
-            val concatAdapter = ConcatAdapter()
-            setAdaptersToConcat(
-                concatAdapter,
-                CategoryProvider.Category.POPULAR_CATEGORY,
-                CategoryProvider.Category.UPCOMING_CATEGORY,
-                CategoryProvider.Category.TOP_RATED_CATEGORY,
-                CategoryProvider.Category.NOW_PLAYING_CATEGORY
-            )
-            subscriber.onSuccess(concatAdapter)
-        }
-    }
-    private fun setAdaptersToConcat(concatAdapter: ConcatAdapter, vararg categoryTypes: CategoryProvider.Category) {
-        loadCategories(categoryTypes.toList())
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { pair ->
-                val titleGroupAdapter = TitleGroupAdapter().apply {
-                    setHeaderTitle(pair.first.getResource())
-                }
-                val itemsAdapter = ItemsPlaceholderAdapter(this@MovieFragmentViewModel)
-                itemsAdapter.apply {
-                    this.categoryType = pair.first
-                    setItems(pair.second.toMutableList())
-                }
-                concatAdapter.addAdapter(titleGroupAdapter)
-                concatAdapter.addAdapter(itemsAdapter)
-            }
-    }
-
-    private fun loadCategories(
+    private fun setConcatAdapterByCategory(
         categoryType: List<CategoryProvider.Category>
-    ): Observable<Pair<CategoryProvider.Category, List<Header>>> {
+    ): ConcatAdapter {
+        val concatBuilder = MoviesConcatAdapterBuilder(this)
         val types = categoryType.map { category ->
-            loadMovies(category).map {
-                it
-                Pair(category, it)
-            }.toObservable()
+            interactor.getCategoriesFromDb(category) { headersList ->
+                concatBuilder.addHeader(category.getResource())
+                concatBuilder.addMoviesByCategory(category, headersList)
+                concatAdapterLiveData.postValue(concatBuilder.build())
+            }
         }
-        return Observable.fromIterable(types).flatMap { it }
+        return concatBuilder.build()
     }
 
-    private fun putMoviesToDbFromAPI(vararg categoryType: CategoryProvider.Category) {
-        categoryType.forEach {
+    private fun putMoviesToDbFromAPI(categoryList: List<CategoryProvider.Category>) {
+        categoryList.forEach {
             interactor.putToDbMovieCategoryFromApi(it, 1)
         }
     }
 
-    private fun loadMovies(categoryType: CategoryProvider.Category): Single<List<Header>> =
-        interactor.getCategoriesFromDB(categoryType)
+    override fun paginateItems(
+        category: CategoryProvider.Category,
+        page: Int,
+        paginationReceiver: ItemsPlaceholderAdapter
+    ) {
+        interactor.updateMoviesFromApi(category, page) { items ->
+            paginationReceiver.addItems(items)
+        }
+    }
+
+    private fun progressBarStateObserver() {
+        interactor.loadingState
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                progressBarState.postValue(it)
+            }
+    }
 }

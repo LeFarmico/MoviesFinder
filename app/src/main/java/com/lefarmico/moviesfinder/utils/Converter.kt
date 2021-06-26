@@ -61,8 +61,8 @@ object Converter {
             itemId = tmdbItem.id,
             posterPath = tmdbItem.poster_path ?: "",
             title = tmdbItem.title,
-            rating = itemHeader.rating ?: 0.0,
-            description = itemHeader.description ?: "",
+            rating = tmdbItem.vote_average ?: 0.0,
+            description = tmdbItem.overview ?: "",
             isWatchlist = itemHeader.isWatchlist ?: false,
             genres = convertGenres(tmdbItem.genres),
             yourRate = 0,
@@ -71,7 +71,7 @@ object Converter {
             watchProviders = convertProviders(tmdbItem.providers, country),
             length = tmdbItem.runtime,
             photosPath = listOf(),
-            releaseDate = itemHeader.releaseDate ?: "00.00.0000"
+            releaseDate = tmdbItem.release_date ?: "00.00.0000"
         )
     }
     private fun convertGenres(genresList: List<TmdbGenre>): List<String> {

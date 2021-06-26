@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -28,7 +27,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var appBarConfig: AppBarConfiguration
 
-    private lateinit var fragmentsList: List<Pair<String, Fragment>>
     private lateinit var bottomSheetBehaviour: BottomSheetBehavior<BottomSheetMovieDetails>
 
     private val TAG = this.javaClass.canonicalName
@@ -50,7 +48,6 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfig)
 
         bottomSheetBehaviour = BottomSheetBehavior.from(binding.bottomSheet)
-        fragmentsList = viewModel.fragmentsList
 
         viewModel.movieDetails
             .subscribeOn(Schedulers.io())

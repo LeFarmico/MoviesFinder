@@ -14,4 +14,12 @@
         <attr name="view_size" format="dimension"/>
         <attr name="rating_number" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="LogoTextBehavior">
+        <attr name="finalYPosition" format="dimension"/>
+        <attr name="startXPosition" format="dimension"/>
+        <attr name="startToolbarPosition" format="dimension"/>
+        <attr name="startHeight" format="dimension"/>
+        <attr name="finalHeight" format="dimension"/>
+    </declare-styleable>
 </resources>

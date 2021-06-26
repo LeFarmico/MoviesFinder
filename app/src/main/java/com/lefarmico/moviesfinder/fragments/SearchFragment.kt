@@ -58,36 +58,30 @@ class SearchFragment : Fragment() {
                 isIconified = false
             }
         }
-//        viewModel.getSearchRequests()
+
+        viewModel.searchAdapterLiveData.observe(viewLifecycleOwner) {
+            binding.requestRecycler.adapter = it
+        }
+//        viewModel.searchViewObservable()
+//            .debounce(1, TimeUnit.SECONDS)
+//            .filter {
+//                !it.isNullOrBlank()
+//            }
+//            .distinctUntilChanged()
+//            .flatMap { requestText ->
+//                viewModel.getSearchRequestResults(requestText)
+//            }
 //            .subscribeOn(Schedulers.io())
 //            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe { items ->
-//                binding.requestRecycler.adapter = SearchAdapter {
-//                }.apply {
-//                    setLastSearchItems(items)
+//            .subscribe { list ->
+//                Toast.makeText(context, "Calback is ${list.size}", Toast.LENGTH_SHORT).show()
+//                binding.requestRecycler.apply {
+//                    adapter = SearchAdapter {
+//                        (context as MainActivity).viewModel.onItemClick(it)
+//                    }.apply {
+//                        setSearchItems(list)
+//                    }
 //                }
 //            }
-
-        viewModel.searchViewObservable()
-            .debounce(1, TimeUnit.SECONDS)
-            .filter {
-                !it.isNullOrBlank()
-            }
-            .distinctUntilChanged()
-            .flatMap { requestText ->
-                viewModel.getSearchRequestResults(requestText)
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { list ->
-                Toast.makeText(context, "Calback is ${list.size}", Toast.LENGTH_SHORT).show()
-                binding.requestRecycler.apply {
-                    adapter = SearchAdapter {
-                        (context as MainActivity).viewModel.onItemClick(it)
-                    }.apply {
-                        setSearchItems(list)
-                    }
-                }
-            }
     }
 }

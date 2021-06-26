@@ -14,28 +14,19 @@ import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
-import com.lefarmico.moviesfinder.view.MovieView
 import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class MovieFragment : Fragment(), MovieView {
+class MovieFragment : Fragment() {
 
     lateinit var recyclerView: RecyclerView
     private var _binding: FragmentMovieBinding? = null
     private val binding get() = _binding!!
-    private var compositeDisposable = CompositeDisposable()
 
-    override val viewModel: MovieFragmentViewModel by viewModels()
+    val viewModel: MovieFragmentViewModel by viewModels()
     private val TAG = this.javaClass.canonicalName
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,43 +50,13 @@ class MovieFragment : Fragment(), MovieView {
         startFragmentAnimation()
         setRecyclerViewParams()
 
-        val progressBarObserver = progressBarObserver(
-            binding.movieFragment.findViewById(R.id.progress_bar),
-            viewModel.progressBarBehaviourSubject
-        )
-        adapterObserver(recyclerView, viewModel.concatAdapterObservable)
-
-        compositeDisposable.add(progressBarObserver)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy")
-        compositeDisposable.clear()
-    }
-
-    override fun adapterObserver(
-        recyclerView: RecyclerView,
-        concatAdapterSingle: Single<ConcatAdapter>
-    ): Disposable {
-        return concatAdapterSingle
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { recyclerView.adapter = it },
-                { throw (NullPointerException()) }
-            )
-    }
-    override fun progressBarObserver(
-        progressBar: ProgressBar,
-        progressBarBehaviorSubject: BehaviorSubject<Boolean>
-    ): Disposable {
-        return progressBarBehaviorSubject
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                progressBar.isVisible = it
-            }
+        viewModel.progressBarState.observe(viewLifecycleOwner) {
+            val progressBar = binding.movieFragment.findViewById(R.id.progress_bar) as ProgressBar
+            progressBar.isVisible = it
+        }
+        viewModel.concatAdapterLiveData.observe(viewLifecycleOwner) {
+            recyclerView.adapter = it
+        }
     }
 
     private fun startFragmentAnimation() {

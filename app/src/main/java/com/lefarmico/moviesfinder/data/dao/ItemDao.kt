@@ -37,7 +37,7 @@ interface ItemDao {
     fun getCategory(category: CategoryProvider.Category): Single<List<Header>>
 
     @Query("SELECT * FROM cached_item_header WHERE is_favorites = 1")
-    fun getFavoritesMovies(): Observable<Header>
+    fun getFavoritesMovies(): Single<List<Header>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(list: List<Header>)

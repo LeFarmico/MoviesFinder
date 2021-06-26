@@ -11,14 +11,14 @@ import com.lefarmico.moviesfinder.activities.MainActivity
 import com.lefarmico.moviesfinder.data.appEntity.Header
 import com.lefarmico.moviesfinder.databinding.ItemPlaceholderRecyclerBinding
 import com.lefarmico.moviesfinder.providers.CategoryProvider
+import com.lefarmico.moviesfinder.utils.PaginationController
 import com.lefarmico.moviesfinder.utils.PaginationOnScrollListener
-import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ItemsPlaceholderAdapter(
-    val viewModel: MovieFragmentViewModel
+    private val paginationController: PaginationController
 ) : RecyclerView.Adapter<ItemsPlaceholderAdapter.ViewHolder>() {
 
     var itemsList: MutableList<Header> = mutableListOf()
@@ -76,7 +76,7 @@ class ItemsPlaceholderAdapter(
             addOnScrollListener(
                 PaginationOnScrollListener(this.layoutManager!!) {
                     scope.launch {
-                        viewModel.addPaginationItems(categoryType, ++page, this@ItemsPlaceholderAdapter)
+                        paginationController.paginateItems(categoryType, ++page, this@ItemsPlaceholderAdapter)
                     }
                 }
             )
