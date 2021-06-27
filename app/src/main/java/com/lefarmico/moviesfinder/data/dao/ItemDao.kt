@@ -3,7 +3,6 @@ package com.lefarmico.moviesfinder.data.dao
 import androidx.room.*
 import com.lefarmico.moviesfinder.data.appEntity.*
 import com.lefarmico.moviesfinder.providers.CategoryProvider
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 
 @Dao
@@ -37,7 +36,7 @@ interface ItemDao {
     fun getCategory(category: CategoryProvider.Category): Single<List<Header>>
 
     @Query("SELECT * FROM cached_item_header WHERE is_favorites = 1")
-    fun getFavoritesMovies(): Observable<Header>
+    fun getFavoritesMovies(): Single<List<Header>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(list: List<Header>)

@@ -3,6 +3,7 @@ package com.lefarmico.moviesfinder.di
 
 import com.lefarmico.moviesfinder.viewModels.MainActivityViewModel
 import com.lefarmico.moviesfinder.viewModels.MovieFragmentViewModel
+import com.lefarmico.moviesfinder.viewModels.ProfileFragmentViewModel
 import com.lefarmico.moviesfinder.viewModels.SearchFragmentViewModel
 import com.lefarmico.remote_module.RemoteProvider
 import dagger.Component
@@ -19,6 +20,7 @@ import javax.inject.Singleton
 @Singleton
 interface AppComponent {
     // ViewModels
+    fun inject(viewModel: ProfileFragmentViewModel)
     fun inject(viewModel: MainActivityViewModel)
     fun inject(viewModel: MovieFragmentViewModel)
     fun inject(viewModel: SearchFragmentViewModel)

@@ -3,6 +3,8 @@ package com.lefarmico.moviesfinder.utils
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
+import com.lefarmico.moviesfinder.providers.CategoryProvider
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -39,4 +41,8 @@ class PaginationOnScrollListener(
             }
         }
     }
+}
+
+interface PaginationController {
+    fun paginateItems(category: CategoryProvider.Category, page: Int, paginationReceiver: ItemsPlaceholderAdapter)
 }

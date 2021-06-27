@@ -11,9 +11,9 @@ class MainRepository(private val itemDao: ItemDao) {
 
     fun putMovieToDb(movie: Movie) = itemDao.insertMovie(movie)
 
-    fun putCategoryDd(categoryDb: CategoryDb) = itemDao.insertCategoryDb(categoryDb)
+    fun putCategoryToDb(categoryDb: CategoryDb) = itemDao.insertCategoryDb(categoryDb)
 
-    fun putMoviesByCategoryDB(categoryDb: CategoryDb, headerList: List<Header>) {
+    fun putMoviesByCategoryToDb(categoryDb: CategoryDb, headerList: List<Header>) {
         headerList.forEach { header ->
             itemDao.insertMovieByCategory(
                 MoviesByCategoryDb(
@@ -41,4 +41,6 @@ class MainRepository(private val itemDao: ItemDao) {
     }
 
     fun getSearchRequests(): Single<List<String>> = itemDao.getLastSearchRequests()
+
+    fun getFavoriteMovies(): Single<List<Header>> = itemDao.getFavoritesMovies()
 }

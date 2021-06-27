@@ -63,6 +63,5 @@
         app:menu="@menu/bottom_navigation_bar"
         android:layout_gravity="bottom"
         style="@style/BottomNavigatorStyle"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"/>
-
+        />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
