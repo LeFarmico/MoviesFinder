@@ -5,17 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.lefarmico.moviesfinder.activities.MainActivity
-import com.lefarmico.moviesfinder.adapters.SearchAdapter
 import com.lefarmico.moviesfinder.databinding.FragmentSearchBinding
 import com.lefarmico.moviesfinder.viewModels.SearchFragmentViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
 
 class SearchFragment : Fragment() {
 
@@ -59,29 +54,11 @@ class SearchFragment : Fragment() {
             }
         }
 
-        viewModel.searchAdapterLiveData.observe(viewLifecycleOwner) {
-            binding.requestRecycler.adapter = it
+        viewModel.searchAdapterLiveData.observe(viewLifecycleOwner) { adapter ->
+            adapter.setOnClickEvent {
+                (requireContext() as MainActivity).viewModel.onItemClick(it.itemHeader)
+            }
+            binding.requestRecycler.adapter = adapter
         }
-//        viewModel.searchViewObservable()
-//            .debounce(1, TimeUnit.SECONDS)
-//            .filter {
-//                !it.isNullOrBlank()
-//            }
-//            .distinctUntilChanged()
-//            .flatMap { requestText ->
-//                viewModel.getSearchRequestResults(requestText)
-//            }
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe { list ->
-//                Toast.makeText(context, "Calback is ${list.size}", Toast.LENGTH_SHORT).show()
-//                binding.requestRecycler.apply {
-//                    adapter = SearchAdapter {
-//                        (context as MainActivity).viewModel.onItemClick(it)
-//                    }.apply {
-//                        setSearchItems(list)
-//                    }
-//                }
-//            }
     }
 }

@@ -8,11 +8,6 @@
         android:title="@string/movies"
         app:showAsAction="withText"/>
     <item
-        android:id="@+id/series_menu"
-        android:icon="@drawable/ic_baseline_thumb_up_alt_24"
-        android:title="@string/for_you"
-        app:showAsAction="withText"/>
-    <item
         android:id="@+id/favorites_menu"
         android:icon="@drawable/ic_baseline_account_circle_24"
         android:title="@string/profile"

@@ -39,7 +39,7 @@ class ProfileFragment : Fragment() {
         }
         viewModel.itemsLiveData.observe(viewLifecycleOwner) { adapter ->
             adapter.setOnClickEvent { header ->
-                (context as MainActivity).viewModel.onItemClick(header)
+                (requireContext() as MainActivity).viewModel.onItemClick(header)
             }
             binding.watchlistRecyclerView.adapter = adapter
         }

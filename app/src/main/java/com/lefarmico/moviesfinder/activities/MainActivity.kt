@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigationBarView.setupWithNavController(navController)
         appBarConfig = AppBarConfiguration(
-            setOf(R.id.movies_menu, R.id.series_menu, R.id.favorites_menu),
+            setOf(R.id.movies_menu, R.id.favorites_menu),
         )
         setupActionBarWithNavController(navController, appBarConfig)
 

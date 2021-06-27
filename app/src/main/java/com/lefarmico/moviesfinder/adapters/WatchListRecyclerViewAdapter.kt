@@ -11,14 +11,14 @@ import com.lefarmico.moviesfinder.customViews.RatingView
 import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
 import com.lefarmico.moviesfinder.databinding.ItemWatchListRecyclerBinding
 import com.lefarmico.moviesfinder.private.ApiConstants
-import com.lefarmico.moviesfinder.utils.listen
+import com.lefarmico.moviesfinder.utils.RecyclerViewAdapterWithListener
 import com.squareup.picasso.Picasso
 
-class WatchListAdapter : RecyclerView.Adapter<WatchListAdapter.ViewHolder>() {
+class WatchListRecyclerViewAdapter : RecyclerViewAdapterWithListener<ItemHeader, WatchListRecyclerViewAdapter.ViewHolder>() {
 
-    private var items = mutableListOf<ItemHeader>()
+    override var items = mutableListOf<ItemHeader>()
 
-    private lateinit var onClickEvent: OnClickEvent
+    override var onClickEvent: OnClickEvent<ItemHeader>? = null
 
     class ViewHolder(itemBinding: ItemWatchListRecyclerBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
@@ -40,13 +40,13 @@ class WatchListAdapter : RecyclerView.Adapter<WatchListAdapter.ViewHolder>() {
                 .into(poster)
         }
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolderWithListener(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolder {
         val inlfater = LayoutInflater.from(parent.context)
         val binding = ItemWatchListRecyclerBinding.inflate(inlfater, parent, false)
-        return ViewHolder(binding).listen { position, _ ->
-            onClickCallback(items[position], onClickEvent)
-        }
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -56,7 +56,7 @@ class WatchListAdapter : RecyclerView.Adapter<WatchListAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = items.size
 
-    fun setItems(itemsList: List<ItemHeader>) {
+    fun setItemHeaders(itemsList: List<ItemHeader>) {
         items.addAll(itemsList)
         notifyDataSetChanged()
     }
@@ -76,25 +76,5 @@ class WatchListAdapter : RecyclerView.Adapter<WatchListAdapter.ViewHolder>() {
     fun removeItem(position: Int) {
         items.removeAt(position)
         notifyItemRemoved(items.size)
-    }
-
-    private fun onClickCallback(itemHeader: ItemHeader, event: OnClickEvent?) {
-        if (event != null) {
-            event.onClick(itemHeader)
-        } else {
-            return
-        }
-    }
-
-    fun setOnClickEvent(event: (ItemHeader) -> Unit) {
-        onClickEvent = object : OnClickEvent {
-            override fun onClick(itemHeader: ItemHeader) {
-                event(itemHeader)
-            }
-        }
-    }
-
-    interface OnClickEvent {
-        fun onClick(itemHeader: ItemHeader)
     }
 }

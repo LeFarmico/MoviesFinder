@@ -10,15 +10,12 @@ import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
 import com.lefarmico.moviesfinder.data.appEntity.SearchItem
 import com.lefarmico.moviesfinder.data.appEntity.SearchType
 import com.lefarmico.moviesfinder.databinding.ItemSearchBinding
-import com.lefarmico.moviesfinder.utils.IAdapterOnClickListener
-import com.lefarmico.moviesfinder.utils.IAdapterOnClickListener.*
-import com.lefarmico.moviesfinder.utils.listen
-import java.lang.IllegalArgumentException
+import com.lefarmico.moviesfinder.utils.RecyclerViewAdapterWithListener
 
-class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IAdapterOnClickListener {
+class SearchAdapter : RecyclerViewAdapterWithListener<SearchItem, RecyclerView.ViewHolder>() {
 
-    private var searchItems: List<SearchItem> = mutableListOf()
-    override var onClickEvent: OnClickEvent? = null
+    override var items: MutableList<SearchItem> = mutableListOf()
+    override var onClickEvent: OnClickEvent<SearchItem>? = null
 
     class RecentlySearchedViewHolder(itemSearchBinding: ItemSearchBinding) : RecyclerView.ViewHolder(itemSearchBinding.root) {
         private val genreText: TextView = itemSearchBinding.genreTextView
@@ -40,16 +37,18 @@ class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IAdapterO
             searchImage.setImageResource(searchIcon)
         }
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+
+    override fun onCreateViewHolderWithListener(
+        parent: ViewGroup,
+        viewType: Int
+    ): RecyclerView.ViewHolder {
         return when (viewType) {
             SearchType.RECENTLY_SEARCHED.typeNumber -> {
                 RecentlySearchedViewHolder(
                     ItemSearchBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
                     )
-                ).listen { position, _ ->
-                    onClickCallback(searchItems[position], onClickEvent)
-                }
+                )
             }
             SearchType.SEARCH.typeNumber -> {
                 SearchViewHolder(
@@ -65,22 +64,22 @@ class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IAdapterO
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (searchItems[position].viewType) {
+        when (items[position].viewType) {
             SearchType.RECENTLY_SEARCHED -> {
                 val viewHolder = holder as RecentlySearchedViewHolder
-                viewHolder.bind(searchItems[position].itemHeader)
+                viewHolder.bind(items[position].itemHeader)
             }
             SearchType.SEARCH -> {
                 val viewHolder = holder as SearchViewHolder
-                viewHolder.bind(searchItems[position].itemHeader)
+                viewHolder.bind(items[position].itemHeader)
             }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return searchItems[position].viewType.typeNumber
+        return items[position].viewType.typeNumber
     }
-    override fun getItemCount(): Int = searchItems.size
+    override fun getItemCount(): Int = items.size
 
     fun setSearchItems(list: List<ItemHeader>, searchType: SearchType) {
         val searchItemList = mutableListOf<SearchItem>()
@@ -88,7 +87,7 @@ class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IAdapterO
             val searchItem = SearchItem(searchType, itemHeader)
             searchItemList.add(searchItem)
         }
-        searchItems = searchItemList
+        items = searchItemList
         notifyDataSetChanged()
     }
 }

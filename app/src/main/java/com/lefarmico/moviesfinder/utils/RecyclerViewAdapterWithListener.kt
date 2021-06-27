@@ -3,16 +3,14 @@ package com.lefarmico.moviesfinder.utils
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class AdapterOnWithListener<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+abstract class RecyclerViewAdapterWithListener<T, VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<VH>() {
 
-    abstract fun onCreateViewHolderWithListener(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder
-//    abstract val listener: (position: Int, type: Int) -> Unit
+    abstract fun onCreateViewHolderWithListener(parent: ViewGroup, viewType: Int): VH
     abstract var items: MutableList<T>
     abstract var onClickEvent: OnClickEvent<T>?
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         return onCreateViewHolderWithListener(parent, viewType).listen { position, _ ->
-//            listener(position, type)
             onClickCallback(items[position], onClickEvent)
         }
     }

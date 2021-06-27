@@ -3,7 +3,6 @@ package com.lefarmico.moviesfinder.data.dao
 import androidx.room.*
 import com.lefarmico.moviesfinder.data.appEntity.*
 import com.lefarmico.moviesfinder.providers.CategoryProvider
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 
 @Dao
