@@ -9,7 +9,20 @@ apply from: "$project.rootDir/versions.gradle"
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
+    flavorDimensions "version"
 
+    productFlavors {
+        free {
+            dimension "version"
+            applicationIdSuffix ".basic"
+            versionNameSuffix "-basic"
+        }
+        paid {
+            dimension "version"
+            applicationIdSuffix ".paid"
+            versionNameSuffix "-paid"
+        }
+    }
 
     defaultConfig {
         applicationId "com.lefarmico.moviesfinder"
@@ -39,6 +52,18 @@ android {
     }
     buildFeatures {
         viewBinding true
+    }
+    sourceSets {
+        free {
+            java {
+                srcDirs 'src\\free\\java'
+            }
+        }
+        paid {
+            java {
+                srcDirs 'src\\paid\\java'
+            }
+        }
     }
 }
 
