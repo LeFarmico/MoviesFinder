@@ -13,7 +13,6 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/remote_module" />
-            <option value="$PROJECT_DIR$/spotify-app-remote-release-0.7.1" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
