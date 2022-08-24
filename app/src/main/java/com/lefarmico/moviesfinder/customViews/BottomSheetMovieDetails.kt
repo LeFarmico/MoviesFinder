@@ -84,7 +84,7 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     private fun concatGenres(genresList: List<String>): StringBuffer =
         StringBuffer().apply {
             genresList.forEachIndexed { index, string ->
-                append(string.capitalize(Locale.ROOT))
+                append(string.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() })
                 if (index != genresList.size - 1) { append(" / ") }
             }
         }
