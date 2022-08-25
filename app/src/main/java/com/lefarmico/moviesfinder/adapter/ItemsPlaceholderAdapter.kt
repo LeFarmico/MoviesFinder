@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.adapters
+package com.lefarmico.moviesfinder.adapter
 
 import android.os.Parcelable
 import android.util.Log
@@ -87,12 +87,14 @@ class ItemsPlaceholderAdapter(
 
     fun setItems(itemsList: MutableList<Header>) {
         this.itemsList = itemsList
+        // TODO Change it
         notifyDataSetChanged()
     }
 
     fun addItems(itemsList: MutableList<Header>) {
         val curItems = this.itemsList
         this.itemsList = (curItems + itemsList).toMutableList()
+        // TODO Change it
         notifyDataSetChanged()
     }
 

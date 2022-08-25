@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.adapters
+package com.lefarmico.moviesfinder.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -49,6 +49,7 @@ class ProviderAdapter : RecyclerView.Adapter<ProviderAdapter.ViewHolder>() {
             imageResources.add(it.logoPath)
         }
         items = imageResources
+        // TODO change it
         notifyDataSetChanged()
     }
 }

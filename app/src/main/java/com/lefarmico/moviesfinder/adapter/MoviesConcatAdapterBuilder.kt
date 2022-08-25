@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.adapters
+package com.lefarmico.moviesfinder.adapter
 
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.ConcatAdapter

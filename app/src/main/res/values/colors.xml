@@ -26,7 +26,7 @@
     <color name="gradient_start">#ffcc0000</color>
     <color name="gradient_end">#ffff8800</color>
 
-    <color name="main_contrast_color">#171722</color>
+    <color name="on_background_color">#171722</color>
 
     <color name="view_description_color">#BFBFBF</color>
     <color name="bottom_sheet_button_color">#BFBFBF</color>

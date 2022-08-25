@@ -1,5 +1,5 @@
 
-package com.lefarmico.moviesfinder.adapters
+package com.lefarmico.moviesfinder.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -40,6 +40,7 @@ class TitleGroupAdapter : RecyclerView.Adapter<TitleGroupAdapter.ViewHolder>() {
 
     fun setHeaderTitle(title: Int) {
         items.add(title)
+        // TODO change it
         notifyDataSetChanged()
     }
 }

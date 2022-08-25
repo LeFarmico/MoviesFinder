@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     id("kotlin-android")
     id("kotlin-kapt")
     id("kotlin-parcelize")
@@ -9,9 +9,6 @@ android {
     compileSdk = ConfigData.compileSdkVersion
 
     defaultConfig {
-        applicationId = "com.lefarmico.moviesfinder"
-        versionCode = ConfigData.versionCode
-        versionName = ConfigData.versionName
         minSdk = ConfigData.minSdkVersion
         targetSdk = ConfigData.compileSdkVersion
 
@@ -20,7 +17,6 @@ android {
 
     buildTypes {
         getByName("debug") {
-            applicationIdSuffix = ".debug"
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android.txt"),

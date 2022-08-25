@@ -8,16 +8,21 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.animation.doOnEnd
 
-class MaxLineAnimator(val textView: TextView, val duration: Long, val collapseAnimation: Boolean, val collapsedLines: Int, context: Context) {
+class TextViewCollapseLineAnimator(
+    private val textView: TextView,
+    duration: Long,
+    private val collapseAnimation: Boolean,
+    private val collapsedLines: Int,
+    context: Context
+) {
+    private var valueAnimator: ValueAnimator
+    private val expectedWidthOfTextView = context.resources.displayMetrics.widthPixels
+    private val originalMaxLines = textView.maxLines
 
-    var valueAnimator: ValueAnimator
-    val expectedWidthOfTextView = context.resources.displayMetrics.widthPixels
-    val originalMaxLines = textView.maxLines
+    private var measuredLineCount = textView.lineCount
+    private var measuredTargetHeight = textView.measuredHeight
 
-    var measuredLineCount = textView.lineCount
-    var measuredTargetHeight = textView.measuredHeight
-
-    var layoutParams: ViewGroup.LayoutParams
+    private var layoutParams: ViewGroup.LayoutParams
 
     init {
         if (originalMaxLines < 0 || originalMaxLines == Integer.MAX_VALUE) {
@@ -51,6 +56,7 @@ class MaxLineAnimator(val textView: TextView, val duration: Long, val collapseAn
             textView.requestLayout()
         }
     }
+
     fun start() {
         if (measuredLineCount <= originalMaxLines && collapseAnimation) {
             Log.d("AppLog", "fit in original maxLines")
@@ -60,12 +66,14 @@ class MaxLineAnimator(val textView: TextView, val duration: Long, val collapseAn
             open()
         }
     }
-    fun open() {
+
+    private fun open() {
         textView.maxLines = Integer.MAX_VALUE
         valueAnimator.start()
         layoutParams.height = textView.height
     }
-    fun collapse() {
+
+    private fun collapse() {
         if (measuredLineCount <= originalMaxLines) {
             Log.d("AppLog", "fit in original maxLines")
             valueAnimator.start()

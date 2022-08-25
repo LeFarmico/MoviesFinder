@@ -1,61 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginHorizontal="4dp"
+        android:layout_width="80dp"
+        android:layout_height="120dp"
         app:cardCornerRadius="4dp">
 
         <ImageView
             android:id="@+id/poster"
-            android:layout_width="80dp"
-            android:layout_height="120dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@drawable/poster_shape"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_foreground"
-            android:contentDescription="@string/movie_title"
-            />
+            android:contentDescription="@string/movie_title"/>
         <View
-            android:layout_width="80dp"
-            android:layout_height="120dp"
+            android:id="@+id/shade"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@drawable/item_shape"
             android:alpha="0.25"
             />
         <TextView
             android:id="@+id/person_name"
-            style="@style/TextStyle"
-            android:layout_width="80dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:paddingHorizontal="5dp"
             android:text="@string/movie_title"
-            android:textSize="12sp"
-            android:textColor="@color/white"
+            style="@style/TextStyle.Subtitle.Contrast"
             android:layout_gravity="bottom"/>
     </androidx.cardview.widget.CardView>
-
     <TextView
         android:id="@+id/character"
-        android:layout_width="80dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
-        style="@style/TextStyle"
+        style="@style/TextStyle.Subtitle"
         android:ellipsize="end"
         android:paddingHorizontal="5dp"
-        android:layout_marginHorizontal="4dp"
         android:text="@string/movie_title"
-        android:textColor="@color/main_contrast_color"
-        app:layout_constraintTop_toBottomOf="@+id/card_view"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:textColor="@color/on_background_color"/>
+</LinearLayout>
