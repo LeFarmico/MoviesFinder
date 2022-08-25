@@ -15,9 +15,9 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.adapters.CastAdapter
-import com.lefarmico.moviesfinder.adapters.SpinnerProviderAdapter
-import com.lefarmico.moviesfinder.animations.MaxLineAnimator
+import com.lefarmico.moviesfinder.adapter.CastAdapter
+import com.lefarmico.moviesfinder.adapter.SpinnerProviderAdapter
+import com.lefarmico.moviesfinder.animations.TextViewCollapseLineAnimator
 import com.lefarmico.moviesfinder.data.appEntity.Cast
 import com.lefarmico.moviesfinder.data.appEntity.MovieItem
 import com.lefarmico.moviesfinder.databinding.BottomSheetMovieDetailsBinding
@@ -99,9 +99,9 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
 
     private fun setCastAdapter(cast: List<Cast>) {
         if (actors.adapter == null) {
-            actors.adapter = CastAdapter().apply { setItems(cast) }
+            actors.adapter = CastAdapter().apply { submitList(cast) }
         } else {
-            (actors.adapter as CastAdapter).setItems(cast)
+            (actors.adapter as CastAdapter).submitList(cast)
         }
     }
 
@@ -111,7 +111,7 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
             maxLines = 5
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             setOnClickListener {
-                MaxLineAnimator(movieDescription, 500L, true, 5, context)
+                TextViewCollapseLineAnimator(movieDescription, 500L, true, 5, context)
                     .start()
             }
         }

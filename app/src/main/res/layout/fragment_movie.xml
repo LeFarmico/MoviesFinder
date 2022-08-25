@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/movie_fragment"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,4 +8,4 @@
     android:orientation="vertical"
     tools:context=".fragments.MovieFragment">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

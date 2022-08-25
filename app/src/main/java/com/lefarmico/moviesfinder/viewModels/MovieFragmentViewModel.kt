@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.ConcatAdapter
 import com.lefarmico.moviesfinder.App
-import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
-import com.lefarmico.moviesfinder.adapters.MoviesConcatAdapterBuilder
+import com.lefarmico.moviesfinder.adapter.ItemsPlaceholderAdapter
+import com.lefarmico.moviesfinder.adapter.MoviesConcatAdapterBuilder
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.utils.PaginationController
@@ -37,7 +37,7 @@ class MovieFragmentViewModel : ViewModel(), PaginationController {
         categoryType: List<CategoryProvider.Category>
     ): ConcatAdapter {
         val concatBuilder = MoviesConcatAdapterBuilder(this)
-        val types = categoryType.map { category ->
+        categoryType.map { category ->
             interactor.getCategoriesFromDb(category) { headersList ->
                 concatBuilder.addHeader(category.getResource())
                 concatBuilder.addMoviesByCategory(category, headersList)

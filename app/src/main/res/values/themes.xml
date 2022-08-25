@@ -10,7 +10,7 @@
         <item name="colorAccent">@color/active_color</item>
 
 
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <item name="android:statusBarColor" >?attr/colorPrimary</item>
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
         <item name="android:colorBackground">@color/main_color</item>
 

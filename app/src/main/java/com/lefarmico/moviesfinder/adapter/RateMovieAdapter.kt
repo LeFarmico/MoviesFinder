@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.adapters
+package com.lefarmico.moviesfinder.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -47,6 +47,7 @@ class RateMovieAdapter : RecyclerView.Adapter<RateMovieAdapter.ViewHolder>() {
             rateButtons[rate - 1] = true
         }
         Log.d("RateButton", "button $rate = ${rateButtons[rate - 1]}")
+        // TODO change it
         notifyDataSetChanged()
     }
 }

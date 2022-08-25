@@ -3,7 +3,7 @@ package com.lefarmico.moviesfinder.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.lefarmico.moviesfinder.App
-import com.lefarmico.moviesfinder.adapters.SearchAdapter
+import com.lefarmico.moviesfinder.adapter.SearchAdapter
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.data.appEntity.Header
 import com.lefarmico.moviesfinder.data.appEntity.SearchType

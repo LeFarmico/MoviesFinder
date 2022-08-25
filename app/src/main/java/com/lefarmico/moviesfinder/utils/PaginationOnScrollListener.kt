@@ -3,7 +3,7 @@ package com.lefarmico.moviesfinder.utils
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lefarmico.moviesfinder.adapters.ItemsPlaceholderAdapter
+import com.lefarmico.moviesfinder.adapter.ItemsPlaceholderAdapter
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -33,6 +33,7 @@ class PaginationOnScrollListener(
                     )
                     // Do pagination
                     pagination()
+                    // TODO change it!!!
                     GlobalScope.launch {
                         delay(1000L)
                         loading = true
