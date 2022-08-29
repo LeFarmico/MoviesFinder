@@ -45,7 +45,6 @@
             app:layout_constraintTop_toBottomOf="@+id/movies_watched_count"
             app:layout_constraintStart_toStartOf="@id/movies_watched_count"
             app:layout_constraintEnd_toEndOf="@id/movies_watched_count"
-            android:textColor="@color/view_description_color"
             android:text="@string/movies_watched"
             />
 
@@ -79,7 +78,6 @@
             app:layout_constraintTop_toBottomOf="@+id/watched_list_count"
             app:layout_constraintStart_toStartOf="@id/watched_list_count"
             app:layout_constraintEnd_toEndOf="@id/watched_list_count"
-            android:textColor="@color/view_description_color"
             android:text="@string/watchlist"
             />
     <TextView

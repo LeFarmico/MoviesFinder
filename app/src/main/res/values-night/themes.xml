@@ -1,22 +1,20 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <style name="DarkYellowTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/main_color</item>
-        <item name="colorPrimaryDark">@color/main_color_dark</item>
-        <item name="colorPrimaryVariant">@color/menu_background</item>
-        <item name="colorOnPrimary">@color/active_color</item>
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorOnPrimary">@color/on_background_color</item>
 
-        <!-- Fab color. -->
-        <item name="colorSecondary">@color/active_color</item>
-        <item name="colorAccent">@color/active_color</item>
+        <item name="colorSecondary">@color/secondary_color</item>
+        <item name="colorOnSecondary">@color/on_secondary_color</item>
 
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" >?attr/colorPrimary</item>
-        <item name="android:colorBackground">@color/menu_background</item>
-        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/primary_color</item>
 
-        <!-- Text settings. -->
-        <item name="android:textColor">@color/white</item>
+        <item name="backgroundColor">@color/background_color</item>
+        <item name="android:colorBackground">@color/background_color</item>
+        <item name="colorOnBackground">@color/on_background_color</item>
+
+        <item name="android:statusBarColor" >?attr/backgroundColor</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
     </style>
 
 </resources>

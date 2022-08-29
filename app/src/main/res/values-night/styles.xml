@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<!--    <style name="PrimaryColorElement">-->
-<!--        <item name="android:textColor">@color/color_of_passive_element</item>-->
-<!--        <item name="android:background">@color/primary_color</item>-->
-<!--    </style>-->
-
-    <style name="BackgroundColor" parent="DarkYellowTheme">
-        <item name="android:background">@color/menu_background</item>
-    </style>
 
 </resources>
