@@ -10,7 +10,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:src="@drawable/ic_baseline_star_24"
-        app:tint="@color/active_color"
+        app:tint="@color/primary_color"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/rating"
         app:layout_constraintBottom_toBottomOf="@+id/rating"
@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/TextStyle.SecondaryHeading"
-        android:textColor="@color/view_description_color"
+        android:alpha="0.5"
         android:text="@string/_10"
         app:layout_constraintStart_toEndOf="@+id/rating"
         app:layout_constraintBottom_toBottomOf="@+id/rating"/>
