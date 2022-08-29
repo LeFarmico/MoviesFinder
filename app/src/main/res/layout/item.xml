@@ -9,6 +9,7 @@
     app:cardCornerRadius="4dp"
     android:layout_marginStart="16dp"
     android:layout_marginVertical="8dp">
+    <!-- TODO: Delete margins    -->
 
     <ImageView
         android:id="@+id/poster"
@@ -22,7 +23,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/item_shape"
+        android:background="@drawable/shape_item_shade"
         />
     <TextView
         android:id="@+id/movie_title"
