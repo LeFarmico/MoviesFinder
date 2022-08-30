@@ -2,12 +2,12 @@
 <resources>
 
     <style name="BackgroundColor" parent="DarkYellowTheme">
-        <item name="android:background">@color/main_color</item>
+        <item name="android:background">@color/background_color</item>
     </style>
 
     <style name="ToolBarStyle" parent="DarkYellowTheme">
-        <item name="android:background">@color/main_color</item>
-        <item name="titleTextColor">@color/main_contrast_color</item>
+        <item name="android:background">@color/background_color</item>
+        <item name="titleTextColor">@color/on_background_color</item>
     </style>
 
     <style name="BottomNavigatorStyle">
@@ -21,6 +21,23 @@
         <item name="android:textSize">14sp</item>
         <item name="android:typeface">sans</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+    </style>
+
+    <style name="TextStyle.Body">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+
+    <style name="TextStyle.Subtitle">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="TextStyle.Subtitle.Contrast">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="TextStyle.Warning">
@@ -55,17 +72,5 @@
         <item name="android:layout_width">1dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">?android:attr/listDivider</item>
-    </style>
-
-    <style name="Neuromorphism">
-        <item name="neumorph_shadowColorLight">@color/menu_light_shadow</item>
-        <item name="neumorph_shadowColorDark">@color/menu_dark_shadow</item>
-    </style>
-
-    <style name="Neuromorphism.MovieItem">
-        <item name="neumorph_shadowColorLight">@color/menu_light_shadow</item>
-        <item name="neumorph_shadowColorDark">@color/menu_dark_shadow</item>
-        <item name="neumorph_cornerFamily">rounded</item>
-        <item name="neumorph_cornerSize">12dp</item>
     </style>
 </resources>

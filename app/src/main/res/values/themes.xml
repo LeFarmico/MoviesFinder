@@ -1,26 +1,21 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="DarkYellowTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/main_color</item>
-        <item name="colorPrimaryDark">@color/main_color_dark</item>
-        <item name="colorPrimaryVariant">@color/menu_background</item>
-        <item name="colorOnPrimary">@color/active_color</item>
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorOnPrimary">@color/on_background_color</item>
 
-        <item name="colorSecondary">@color/active_color</item>
-        <item name="colorAccent">@color/active_color</item>
+        <item name="colorSecondary">@color/secondary_color</item>
+        <item name="colorOnSecondary">@color/on_secondary_color</item>
+
+        <item name="colorAccent">@color/primary_color</item>
+
+        <item name="backgroundColor">@color/background_color</item>
+        <item name="android:colorBackground">@color/background_color</item>
+        <item name="colorOnBackground">@color/on_background_color</item>
 
 
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <item name="android:statusBarColor" >?attr/backgroundColor</item>
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
-        <item name="android:colorBackground">@color/main_color</item>
 
-        <!-- Customize your theme here. -->
-
-        <!-- Shadows. -->
-<!--        <item name="android:ambientShadowAlpha">0.15</item>-->
-<!--        <item name="android:spotShadowAlpha">0.3</item>-->
-
-        <!-- Text settings. -->
-        <item name="android:textColor">@color/black</item>
     </style>
 </resources>

@@ -1,29 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#000000</color>
-    <color name="white">#FFFFFF</color>
-
-    <!-- push elements colors -->
-    <color name="active_color">#FFD600</color>
-    <color name="passive_color">#F0F0F3</color>
-
-    <!-- menu colors -->
+    <!-- Dark theme colors -->
+    <!-- primary -->
+    <color name="primary_color">#FFCA28</color>
+    <color name="on_primary_color">#171722</color>
+    <!-- secondary -->
+    <color name="secondary_color">#171722</color>
+    <color name="on_secondary_color">#DEDEDE</color>
+    <!-- background -->
     <color name="menu_background">#171722</color>
-    <color name="menu_light_shadow">#222232</color>
-    <color name="menu_dark_shadow">#111119</color>
-    <color name="bottom_sheet_background">#34343f</color>
+    <color name="background_color">#171722</color>
+    <color name="on_background_color">#F1F0F5</color>
+    <!-- bottomSheet -->
     <color name="bottom_bar_color">#222232</color>
-
-    <!-- main colors-->
-    <color name="main_color">#171722</color>
-    <color name="main_color_dark">#0D0D13</color>
-
-    <color name="main_contrast_color">#F1F0F5</color>
-
-    <color name="bottom_sheet_button_color">#222232</color>
 </resources>

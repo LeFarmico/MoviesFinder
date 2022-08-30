@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.adapters
+package com.lefarmico.moviesfinder.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -88,6 +88,7 @@ class SearchAdapter : RecyclerViewAdapterWithListener<SearchItem, RecyclerView.V
             searchItemList.add(searchItem)
         }
         items = searchItemList
+        // TODO Change it
         notifyDataSetChanged()
     }
 }

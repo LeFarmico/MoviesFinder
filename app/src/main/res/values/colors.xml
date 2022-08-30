@@ -8,26 +8,17 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 
-    <!-- push elements colors -->
-    <color name="active_color">#FFCA28</color>
-    <color name="passive_color">#DEDEDE</color>
-
-    <!-- menu colors -->
+    <!-- Light theme colors -->
+    <!-- primary -->
+    <color name="primary_color">#FFCA28</color>
+    <color name="on_primary_color">#171722</color>
+    <!-- secondary -->
+    <color name="secondary_color">#DEDEDE</color>
+    <color name="on_secondary_color">#171722</color>
+    <!-- background -->
     <color name="menu_background">#171722</color>
-    <color name="menu_light_shadow">#FBFAFF</color>
-    <color name="menu_dark_shadow">#DEDEDE</color>
-    <color name="bottom_sheet_background">@color/white</color>
-    <color name="bottom_bar_color">@color/main_color</color>
-
-    <!-- main colors-->
-    <color name="main_color">#F1F0F5</color>
-    <color name="main_color_dark">#BFBFBF</color>
-
-    <color name="gradient_start">#ffcc0000</color>
-    <color name="gradient_end">#ffff8800</color>
-
-    <color name="main_contrast_color">#171722</color>
-
-    <color name="view_description_color">#BFBFBF</color>
-    <color name="bottom_sheet_button_color">#BFBFBF</color>
+    <color name="background_color">#F1F0F5</color>
+    <color name="on_background_color">#171722</color>
+    <!-- bottomSheet -->
+    <color name="bottom_bar_color">@color/background_color</color>
 </resources>
