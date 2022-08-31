@@ -13,14 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/shape_poster"
+        android:foreground="@drawable/shape_item_shade"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_launcher_foreground"
         android:contentDescription="@string/movie_title"
-        />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/shape_item_shade"
         />
     <TextView
         android:id="@+id/movie_title"

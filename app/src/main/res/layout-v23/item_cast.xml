@@ -3,29 +3,22 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
-
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="80dp"
         android:layout_height="120dp"
         app:cardCornerRadius="4dp">
-
         <ImageView
             android:id="@+id/poster"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/shape_poster"
+            android:foreground="@drawable/shape_item_shade"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_foreground"
-            android:contentDescription="@string/movie_title"
-            />
-        <View
-            android:id="@+id/shade"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/shape_item_shade"
-            />
+            android:contentDescription="@string/movie_title"/>
         <TextView
             android:id="@+id/person_name"
             android:layout_width="match_parent"
@@ -34,18 +27,15 @@
             android:paddingHorizontal="5dp"
             android:text="@string/movie_title"
             style="@style/TextStyle.Subtitle.Contrast"
-            android:layout_gravity="bottom"
-            />
+            android:layout_gravity="bottom"/>
     </androidx.cardview.widget.CardView>
-
     <TextView
         android:id="@+id/character"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/TextStyle.Subtitle"
+        android:textStyle="bold"
         android:ellipsize="end"
         android:paddingHorizontal="5dp"
-        android:text="@string/movie_title"
-        android:textColor="@color/on_background_color"
-        />
+        tools:text="@string/movie_title"/>
 </LinearLayout>

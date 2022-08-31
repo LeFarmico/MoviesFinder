@@ -1,35 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/star"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:src="@drawable/ic_baseline_star_24"
         app:tint="@color/primary_color"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/rating"
-        app:layout_constraintBottom_toBottomOf="@+id/rating"
-        android:contentDescription="@string/rating_star" />
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@string/rating_star"
+        />
 
     <TextView
         android:id="@+id/rating"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/TextStyle.PrimaryHeading"
+        android:layout_height="20dp"
+        style="@style/TextStyle.SecondaryHeading"
         android:text="@string/_0_0"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/star"/>
+        />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/TextStyle.SecondaryHeading"
+        style="@style/TextStyle.Warning"
         android:alpha="0.5"
         android:text="@string/_10"
-        app:layout_constraintStart_toEndOf="@+id/rating"
-        app:layout_constraintBottom_toBottomOf="@+id/rating"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginStart="2dp"
+        />
+</LinearLayout>

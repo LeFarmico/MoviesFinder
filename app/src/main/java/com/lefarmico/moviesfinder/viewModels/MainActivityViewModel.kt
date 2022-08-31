@@ -13,7 +13,6 @@ import javax.inject.Inject
 
 class MainActivityViewModel : ViewModel() {
 
-    private val TAG = this.javaClass.canonicalName
     @Inject lateinit var interactor: Interactor
     val movieDetails: BehaviorSubject<Movie>
 

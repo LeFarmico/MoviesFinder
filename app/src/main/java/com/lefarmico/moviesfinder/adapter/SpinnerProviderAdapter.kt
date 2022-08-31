@@ -19,7 +19,7 @@ class SpinnerProviderAdapter(
 ) : ArrayAdapter<Provider>(context, R.layout.item_provider_spinner_default, providers) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var view: View = convertView ?: LayoutInflater.from(context).inflate(R.layout.dropdown_item_provider_spinner, parent, false)
+        var view: View = convertView ?: LayoutInflater.from(context).inflate(R.layout.spinner_dropdown_item_provider, parent, false)
         if (position == 0) {
             view = LayoutInflater.from(context).inflate(R.layout.item_provider_spinner_default, parent, false)
         }
@@ -50,7 +50,7 @@ class SpinnerProviderAdapter(
                 root.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK))
             }
         } else {
-            view = LayoutInflater.from(context).inflate(R.layout.dropdown_item_provider_spinner, parent, false)
+            view = LayoutInflater.from(context).inflate(R.layout.spinner_dropdown_item_provider, parent, false)
 
             getItem(position)?.let { provider ->
                 setProviderItem(view, provider)

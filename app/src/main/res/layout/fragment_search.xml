@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingHorizontal="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.SearchFragment">
 
@@ -12,37 +14,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="8dp"
-        android:layout_marginHorizontal="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        />
 
     <TextView
         android:id="@+id/recently_searched_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
         android:layout_marginVertical="8dp"
-        android:layout_marginHorizontal="16dp"
         android:fontFamily="@font/roboto_black"
         style="@style/TextStyle.PrimaryHeading"
         android:text="@string/recently_searched"
-        app:layout_constraintTop_toBottomOf="@id/search_view_bar"
-        app:layout_constraintBottom_toTopOf="@id/request_recycler"
-        app:layout_constraintStart_toStartOf="parent"/>
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/request_recycler"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="6"
         android:layout_marginVertical="8dp"
         tools:listitem="@layout/item_search"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/recently_searched_text_view"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
