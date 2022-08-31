@@ -12,14 +12,16 @@ import com.squareup.picasso.Picasso
 
 class ProviderAdapter : RecyclerView.Adapter<ProviderAdapter.ViewHolder>() {
 
-    private var items = mutableListOf<String>()
+    private var items = listOf<Provider>()
 
     class ViewHolder(
         providerRecyclerBinding: ItemProviderBinding
     ) : RecyclerView.ViewHolder(providerRecyclerBinding.root) {
         private val imageView: ImageView = providerRecyclerBinding.providerImageView
+        private val providerNameTextView = providerRecyclerBinding.providerName
 
-        fun bind(imageResource: String) {
+        fun bind(imageResource: String, providerName: String) {
+            providerNameTextView.text = providerName
             Picasso
                 .get()
                 .load(ApiConstants.IMAGES_URL + "w92" + imageResource)
@@ -38,17 +40,14 @@ class ProviderAdapter : RecyclerView.Adapter<ProviderAdapter.ViewHolder>() {
         )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
+        val item = items[position]
+        holder.bind(item.logoPath, item.name)
     }
 
     override fun getItemCount(): Int = items.size
 
     fun setItems(providersList: List<Provider>) {
-        val imageResources = mutableListOf<String>()
-        providersList.forEach {
-            imageResources.add(it.logoPath)
-        }
-        items = imageResources
+        items = providersList
         // TODO change it
         notifyDataSetChanged()
     }

@@ -2,10 +2,8 @@ package com.lefarmico.moviesfinder.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
 import com.lefarmico.moviesfinder.data.appEntity.SearchItem
 import com.lefarmico.moviesfinder.data.appEntity.SearchType
@@ -19,22 +17,16 @@ class SearchAdapter : RecyclerViewAdapterWithListener<SearchItem, RecyclerView.V
 
     class RecentlySearchedViewHolder(itemSearchBinding: ItemSearchBinding) : RecyclerView.ViewHolder(itemSearchBinding.root) {
         private val genreText: TextView = itemSearchBinding.genreTextView
-        private val searchImage: ImageView = itemSearchBinding.searchImage
-        private val searchIcon = R.drawable.ic_baseline_youtube_searched_for_24
 
         fun bind(searchItem: ItemHeader) {
             genreText.text = searchItem.title
-            searchImage.setImageResource(searchIcon)
         }
     }
     class SearchViewHolder(itemSearchBinding: ItemSearchBinding) : RecyclerView.ViewHolder(itemSearchBinding.root) {
         private val genreText: TextView = itemSearchBinding.genreTextView
-        private val searchImage: ImageView = itemSearchBinding.searchImage
 
-        private val searchIcon = R.drawable.ic_baseline_search_24
         fun bind(searchItem: ItemHeader) {
             genreText.text = searchItem.title
-            searchImage.setImageResource(searchIcon)
         }
     }
 

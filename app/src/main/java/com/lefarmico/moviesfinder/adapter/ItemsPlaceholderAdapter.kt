@@ -31,7 +31,7 @@ class ItemsPlaceholderAdapter(
         placeholderBinding: ItemPlaceholderRecyclerBinding
     ) : RecyclerView.ViewHolder(placeholderBinding.root) {
 
-        var recyclerView: RecyclerView = placeholderBinding.itemsPlaceholderRecycler
+        var recyclerView: RecyclerView = placeholderBinding.root
 
         fun bind(adapter: ItemAdapter) {
             recyclerView.adapter = adapter

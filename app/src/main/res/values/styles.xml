@@ -53,6 +53,7 @@
     </style>
 
     <style name="TextStyle.PrimaryHeading">
+        <item name="fontFamily">@font/roboto_black</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">20sp</item>
     </style>
