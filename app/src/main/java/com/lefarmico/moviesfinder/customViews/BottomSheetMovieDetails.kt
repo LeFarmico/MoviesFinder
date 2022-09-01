@@ -18,8 +18,8 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.adapter.CastAdapter
 import com.lefarmico.moviesfinder.adapter.SpinnerProviderAdapter
 import com.lefarmico.moviesfinder.animations.TextViewCollapseLineAnimator
-import com.lefarmico.moviesfinder.data.appEntity.Cast
-import com.lefarmico.moviesfinder.data.appEntity.MovieItem
+import com.lefarmico.moviesfinder.data.entity.MovieCastData
+import com.lefarmico.moviesfinder.data.entity.MovieData
 import com.lefarmico.moviesfinder.databinding.BottomSheetMovieDetailsBinding
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.squareup.picasso.Picasso
@@ -44,12 +44,12 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     private val isWatchlist: ToggleButton = binding.favoriteToggleButton
 
     @SuppressLint("SetTextI18n")
-    fun setMovieItem(movieItem: MovieItem) {
+    fun setMovieItem(movieItem: MovieData) {
         genres.text = concatGenres(movieItem.genres)
         movieTitle.text = movieItem.title
         releaseDate.text = parseReleaseDate(movieItem.releaseDate)
         generalRating.setRatingValue(movieItem.rating)
-        providerSpinner.adapter = SpinnerProviderAdapter(context, movieItem.watchProviders)
+        providerSpinner.adapter = SpinnerProviderAdapter(context, movieItem.watchMovieProviderData)
         isWatchlist.isChecked = movieItem.isWatchlist
         movieLength.text = "Length: ${movieItem.length} min"
         setCastAdapter(movieItem.actors)
@@ -97,11 +97,11 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
             .into(poster)
     }
 
-    private fun setCastAdapter(cast: List<Cast>) {
+    private fun setCastAdapter(movieCastData: List<MovieCastData>) {
         if (actors.adapter == null) {
-            actors.adapter = CastAdapter().apply { submitList(cast) }
+            actors.adapter = CastAdapter().apply { submitList(movieCastData) }
         } else {
-            (actors.adapter as CastAdapter).submitList(cast)
+            (actors.adapter as CastAdapter).submitList(movieCastData)
         }
     }
 

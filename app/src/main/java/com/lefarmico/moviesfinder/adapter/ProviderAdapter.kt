@@ -3,16 +3,32 @@ package com.lefarmico.moviesfinder.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.data.appEntity.Provider
+import com.lefarmico.moviesfinder.data.entity.MovieProviderData
 import com.lefarmico.moviesfinder.databinding.ItemProviderBinding
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.squareup.picasso.Picasso
 
 class ProviderAdapter : RecyclerView.Adapter<ProviderAdapter.ViewHolder>() {
 
-    private var items = listOf<Provider>()
+    private var items: List<MovieProviderData> = emptyList()
+
+    class ProviderDiffUtil(
+        private val oldList: List<MovieProviderData>,
+        private val newList: List<MovieProviderData>
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            oldList[oldItemPosition] === newList[newItemPosition]
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            oldList[oldItemPosition] == newList[newItemPosition]
+    }
 
     class ViewHolder(
         providerRecyclerBinding: ItemProviderBinding
@@ -46,9 +62,11 @@ class ProviderAdapter : RecyclerView.Adapter<ProviderAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = items.size
 
-    fun setItems(providersList: List<Provider>) {
-        items = providersList
-        // TODO change it
-        notifyDataSetChanged()
+    fun setItems(items: List<MovieProviderData>) {
+        val oldField = this.items
+        this.items = items
+        val diffCallback = ProviderDiffUtil(oldField, items)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        diffResult.dispatchUpdatesTo(this)
     }
 }

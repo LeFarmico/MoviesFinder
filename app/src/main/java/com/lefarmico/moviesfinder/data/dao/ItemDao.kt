@@ -1,21 +1,18 @@
 package com.lefarmico.moviesfinder.data.dao
 
 import androidx.room.*
-import com.lefarmico.moviesfinder.data.appEntity.*
+import com.lefarmico.moviesfinder.data.entity.*
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import io.reactivex.rxjava3.core.Single
 
 @Dao
 interface ItemDao {
 
-    @Query("SELECT * FROM cached_item_header")
-    fun getCachedItemHeaders(): List<Header>
+    @Query("SELECT * FROM cached_movie_brief")
+    fun getCachedItemHeaders(): List<MovieBriefData>
 
-    @Query("SELECT * FROM category_db WHERE category_name = :category")
-    fun getCategoryDb(category: CategoryProvider.Category): CategoryDb
-
-    @Query("SELECT * FROM cached_item_header WHERE movie_id = :movieId")
-    fun getItemHeader(movieId: Int): Header
+    @Query("SELECT * FROM cached_movie_brief WHERE movie_id = :movieId")
+    fun getItemHeader(movieId: Int): MovieBriefData
 
     @Query(
         "SELECT " +
@@ -28,36 +25,33 @@ interface ItemDao {
             "movie.is_favorites, " +
             "movie.your_rate, " +
             "movie.release_date " +
-            "FROM cached_item_header movie " +
-            "INNER JOIN movies_by_category mbc ON mbc.movie_id = movie.movie_id " +
+            "FROM cached_movie_brief movie " +
+            "INNER JOIN movie_id_by_category mbc ON mbc.movie_id = movie.movie_id " +
             "WHERE mbc.category_type LIKE :category " +
             "ORDER BY movie.title "
     )
-    fun getCategory(category: CategoryProvider.Category): Single<List<Header>>
+    fun getCategory(category: CategoryProvider.Category): Single<List<MovieBriefData>>
 
-    @Query("SELECT * FROM cached_item_header WHERE is_favorites = 1")
-    fun getFavoritesMovies(): Single<List<Header>>
+    @Query("SELECT * FROM cached_movie_brief WHERE is_favorites = 1")
+    fun getFavoritesMovies(): Single<List<MovieBriefData>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAll(list: List<Header>)
+    fun insertAll(list: List<MovieBriefData>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMovie(movie: Movie)
+    fun insertMovie(movieData: MovieData)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMovieByCategory(moviesByCategoryDb: MoviesByCategoryDb)
+    fun insertMovieByCategory(movieIdByCategoryData: MovieIdByCategoryData)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCategoryDb(categoryDb: CategoryDb)
-
-    @Update(entity = Header::class)
-    fun updateMovieDetails(item: Header)
+    @Update(entity = MovieBriefData::class)
+    fun updateMovieDetails(item: MovieBriefData)
 
     @Delete
-    fun deleteMovie(movie: Movie)
+    fun deleteMovie(movieData: MovieData)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun putSearchHeader(searchRequestDb: SearchRequestDb)
+    fun putSearchHeader(searchRequestData: SearchRequestData)
 
     @Query("SELECT text_request FROM search_request")
     fun getLastSearchRequests(): Single<List<String>>

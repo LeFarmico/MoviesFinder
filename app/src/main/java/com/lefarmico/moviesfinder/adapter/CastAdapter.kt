@@ -7,13 +7,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.lefarmico.moviesfinder.data.appEntity.Cast
+import com.lefarmico.moviesfinder.data.entity.MovieCastData
 import com.lefarmico.moviesfinder.databinding.ItemCastBinding
 import com.lefarmico.moviesfinder.extension.loadWithThemeParams
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.squareup.picasso.Picasso
 
-class CastAdapter : ListAdapter<Cast, CastAdapter.ViewHolder>(
+class CastAdapter : ListAdapter<MovieCastData, CastAdapter.ViewHolder>(
     CastDuffUtilCallback()
 ) {
 
@@ -22,23 +22,23 @@ class CastAdapter : ListAdapter<Cast, CastAdapter.ViewHolder>(
         private val poster: ImageView = itemCastBinding.poster
         private val character: TextView = itemCastBinding.character
 
-        fun bind(cast: Cast) {
-            personName.text = cast.name
-            character.text = cast.character
+        fun bind(movieCastData: MovieCastData) {
+            personName.text = movieCastData.name
+            character.text = movieCastData.character
 
             Picasso
                 .get()
-                .loadWithThemeParams(ApiConstants.IMAGES_URL + "w342" + cast.profilePath)
+                .loadWithThemeParams(ApiConstants.IMAGES_URL + "w342" + movieCastData.profilePath)
                 .into(poster)
         }
     }
 
-    private class CastDuffUtilCallback : DiffUtil.ItemCallback<Cast>() {
-        override fun areItemsTheSame(oldItem: Cast, newItem: Cast): Boolean {
+    private class CastDuffUtilCallback : DiffUtil.ItemCallback<MovieCastData>() {
+        override fun areItemsTheSame(oldItem: MovieCastData, newItem: MovieCastData): Boolean {
             return oldItem.personId == newItem.personId
         }
 
-        override fun areContentsTheSame(oldItem: Cast, newItem: Cast): Boolean {
+        override fun areContentsTheSame(oldItem: MovieCastData, newItem: MovieCastData): Boolean {
             return oldItem == newItem
         }
     }

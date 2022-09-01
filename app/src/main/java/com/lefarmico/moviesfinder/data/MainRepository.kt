@@ -1,46 +1,44 @@
 package com.lefarmico.moviesfinder.data
 
-import com.lefarmico.moviesfinder.data.appEntity.*
 import com.lefarmico.moviesfinder.data.dao.ItemDao
+import com.lefarmico.moviesfinder.data.entity.*
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import io.reactivex.rxjava3.core.Single
 
 class MainRepository(private val itemDao: ItemDao) {
 
-    fun putItemHeadersToDb(headerList: List<Header>) = itemDao.insertAll(headerList)
+    fun putItemHeadersToDb(movieBriefDataList: List<MovieBriefData>) = itemDao.insertAll(movieBriefDataList)
 
-    fun putMovieToDb(movie: Movie) = itemDao.insertMovie(movie)
+    fun putMovieToDb(movieData: MovieData) = itemDao.insertMovie(movieData)
 
-    fun putCategoryToDb(categoryDb: CategoryDb) = itemDao.insertCategoryDb(categoryDb)
-
-    fun putMoviesByCategoryToDb(categoryDb: CategoryDb, headerList: List<Header>) {
-        headerList.forEach { header ->
+    fun putMoviesByCategoryToDb(movieCategoryData: MovieCategoryData, movieBriefDataList: List<MovieBriefData>) {
+        movieBriefDataList.forEach { header ->
             itemDao.insertMovieByCategory(
-                MoviesByCategoryDb(
-                    movieId = header.itemId, categoryType = categoryDb.categoryName
+                MovieIdByCategoryData(
+                    movieId = header.itemId, categoryType = movieCategoryData.categoryName
                 )
             )
         }
     }
 
-    fun getCategoryFromDB(categoryType: CategoryProvider.Category): Single<List<Header>> =
+    fun getCategoryFromDB(categoryType: CategoryProvider.Category): Single<List<MovieBriefData>> =
         itemDao.getCategory(categoryType)
 
-    fun updateItemHeader(itemHeader: ItemHeader) {
-        itemDao.updateMovieDetails(itemHeader as Header)
+    fun updateItemHeader(movieBriefData: MovieBriefData) {
+        itemDao.updateMovieDetails(movieBriefData)
     }
 
-    fun deleteMovieFromDB(movie: Movie) {
-        itemDao.deleteMovie(movie)
+    fun deleteMovieFromDB(movieData: MovieData) {
+        itemDao.deleteMovie(movieData)
     }
 
     fun putSearchRequestToDB(requestText: String) {
         itemDao.putSearchHeader(
-            SearchRequestDb(textRequest = requestText)
+            SearchRequestData(textRequest = requestText)
         )
     }
 
     fun getSearchRequests(): Single<List<String>> = itemDao.getLastSearchRequests()
 
-    fun getFavoriteMovies(): Single<List<Header>> = itemDao.getFavoritesMovies()
+    fun getFavoriteMovies(): Single<List<MovieBriefData>> = itemDao.getFavoritesMovies()
 }

@@ -3,8 +3,8 @@ package com.lefarmico.moviesfinder.utils
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.lefarmico.moviesfinder.data.appEntity.Cast
-import com.lefarmico.moviesfinder.data.appEntity.Provider
+import com.lefarmico.moviesfinder.data.entity.MovieCastData
+import com.lefarmico.moviesfinder.data.entity.MovieProviderData
 
 class ListOfStringsTypeConverters {
 
@@ -20,12 +20,12 @@ class ListOfStringsTypeConverters {
 class CastTypeConverter {
 
     @TypeConverter
-    fun fromCastToJson(cast: List<Cast>): String =
-        Gson().toJson(cast)
+    fun fromCastToJson(movieCastData: List<MovieCastData>): String =
+        Gson().toJson(movieCastData)
 
     @TypeConverter
-    fun fromJsonToCast(json: String): List<Cast> {
-        val type = object : TypeToken<List<Cast>>() {}.type
+    fun fromJsonToCast(json: String): List<MovieCastData> {
+        val type = object : TypeToken<List<MovieCastData>>() {}.type
         return Gson().fromJson(json, type)
     }
 }
@@ -33,12 +33,12 @@ class CastTypeConverter {
 class ProviderTypeConverter {
 
     @TypeConverter
-    fun fromProviderToJson(providerList: List<Provider>): String =
-        Gson().toJson(providerList)
+    fun fromProviderToJson(movieProviderDataList: List<MovieProviderData>): String =
+        Gson().toJson(movieProviderDataList)
 
     @TypeConverter
-    fun fromJsonToProvider(json: String): List<Provider> {
-        val type = object : TypeToken<List<Provider>>() {}.type
+    fun fromJsonToProvider(json: String): List<MovieProviderData> {
+        val type = object : TypeToken<List<MovieProviderData>>() {}.type
         return Gson().fromJson(json, type)
     }
 }

@@ -9,14 +9,14 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.data.appEntity.Provider
+import com.lefarmico.moviesfinder.data.entity.MovieProviderData
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.squareup.picasso.Picasso
 
 class SpinnerProviderAdapter(
     context: Context,
-    providers: List<Provider>
-) : ArrayAdapter<Provider>(context, R.layout.item_provider_spinner_default, providers) {
+    movieProviderData: List<MovieProviderData>
+) : ArrayAdapter<MovieProviderData>(context, R.layout.item_provider_spinner_default, movieProviderData) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view: View = convertView ?: LayoutInflater.from(context).inflate(R.layout.spinner_dropdown_item_provider, parent, false)
@@ -35,7 +35,7 @@ class SpinnerProviderAdapter(
         return super.getCount() + 1
     }
 
-    override fun getItem(position: Int): Provider? {
+    override fun getItem(position: Int): MovieProviderData? {
         if (position == 0) return null
         return super.getItem(position - 1)
     }
@@ -59,17 +59,17 @@ class SpinnerProviderAdapter(
         return view
     }
 
-    private fun setProviderItem(view: View, provider: Provider) {
+    private fun setProviderItem(view: View, movieProviderData: MovieProviderData) {
         val imageProvider = view.findViewById<ImageView>(R.id.provider_image_view)
         val textProvider = view.findViewById<TextView>(R.id.provider_title_text_view)
 
         Picasso
             .get()
-            .load(ApiConstants.IMAGES_URL + "w92" + provider.logoPath)
+            .load(ApiConstants.IMAGES_URL + "w92" + movieProviderData.logoPath)
             .fit()
             .error(R.drawable.ic_launcher_foreground)
             .placeholder(R.drawable.ic_launcher_foreground)
             .into(imageProvider)
-        textProvider.text = provider.name
+        textProvider.text = movieProviderData.name
     }
 }

@@ -1,4 +1,3 @@
-
 package com.lefarmico.moviesfinder.adapter
 
 import android.util.Log
@@ -9,25 +8,19 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.customViews.RatingView
 import com.lefarmico.moviesfinder.data.entity.MovieBriefData
-import com.lefarmico.moviesfinder.databinding.ItemBinding
+import com.lefarmico.moviesfinder.databinding.ItemWatchListRecyclerBinding
 import com.lefarmico.moviesfinder.private.ApiConstants
 import com.squareup.picasso.Picasso
 
-class ItemAdapter(
+class WatchListAdapter(
     private val onClick: (MovieBriefData) -> Unit
-) : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<WatchListAdapter.ViewHolder>() {
 
-    var items: List<MovieBriefData> = emptyList()
-        set(value) {
-            val oldField = field
-            field = value
-            val diffCallback = ItemDiffUtil(oldField, field)
-            val diffResult = DiffUtil.calculateDiff(diffCallback)
-            diffResult.dispatchUpdatesTo(this)
-        }
+    private var items: List<MovieBriefData> = emptyList()
 
-    class ItemDiffUtil(
+    class WatchListDiffUtil(
         private val oldList: List<MovieBriefData>,
         private val newList: List<MovieBriefData>
     ) : DiffUtil.Callback() {
@@ -42,12 +35,17 @@ class ItemAdapter(
             oldList[oldItemPosition] == newList[newItemPosition]
     }
 
-    class ViewHolder(itemBinding: ItemBinding) : RecyclerView.ViewHolder(itemBinding.root) {
+    class ViewHolder(itemBinding: ItemWatchListRecyclerBinding) :
+        RecyclerView.ViewHolder(itemBinding.root) {
         private val poster: ImageView = itemBinding.poster
-        val title: TextView = itemBinding.movieTitle
+        val title: TextView = itemBinding.title
+        val description: TextView = itemBinding.description
+        val rating: RatingView = itemBinding.movieRate
 
         fun bind(movieBriefData: MovieBriefData) {
             title.text = movieBriefData.title
+            description.text = movieBriefData.description
+            rating.setRatingValue(movieBriefData.rating)
             Picasso
                 .get()
                 .load(ApiConstants.IMAGES_URL + "w342" + movieBriefData.posterPath)
@@ -60,18 +58,27 @@ class ItemAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(
-            ItemBinding.inflate(
+            ItemWatchListRecyclerBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.d("TAG", "bind, position = $position")
-        holder.bind(items[position])
+        val item = items[position]
+        holder.bind(item)
         holder.itemView.setOnClickListener {
-            onClick(items[position])
+            onClick(item)
         }
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun setItems(items: List<MovieBriefData>) {
+        val oldField = this.items
+        this.items = items
+        val diffCallback = WatchListDiffUtil(oldField, items)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        diffResult.dispatchUpdatesTo(this)
+    }
 }

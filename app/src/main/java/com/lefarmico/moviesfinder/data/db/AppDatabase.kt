@@ -2,16 +2,15 @@ package com.lefarmico.moviesfinder.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.lefarmico.moviesfinder.data.appEntity.*
 import com.lefarmico.moviesfinder.data.dao.ItemDao
+import com.lefarmico.moviesfinder.data.entity.*
 
 @Database(
     entities = [
-        Header::class,
-        Movie::class,
-        CategoryDb::class,
-        MoviesByCategoryDb::class,
-        SearchRequestDb::class
+        MovieBriefData::class,
+        MovieData::class,
+        MovieIdByCategoryData::class,
+        SearchRequestData::class
     ],
     version = 1, exportSchema = false
 )

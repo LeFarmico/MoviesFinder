@@ -14,7 +14,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.customViews.BottomSheetMovieDetails
-import com.lefarmico.moviesfinder.data.appEntity.MovieItem
+import com.lefarmico.moviesfinder.data.entity.MovieData
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.viewModels.MainActivityViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
         bottomSheetBehaviour = BottomSheetBehavior.from(binding.bottomSheet)
 
-        viewModel.movieDetails
+        viewModel.movieDataDetails
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun launchItemDetails(movieItem: MovieItem) {
+    private fun launchItemDetails(movieItem: MovieData) {
         binding.bottomSheet.apply {
             setMovieItem(movieItem)
             watchListCallback(

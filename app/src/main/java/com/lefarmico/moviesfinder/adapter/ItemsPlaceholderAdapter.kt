@@ -1,40 +1,58 @@
 package com.lefarmico.moviesfinder.adapter
 
-import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.activities.MainActivity
-import com.lefarmico.moviesfinder.data.appEntity.Header
+import com.lefarmico.moviesfinder.data.entity.CategoryAndMovieBriefData
+import com.lefarmico.moviesfinder.data.entity.MovieBriefData
 import com.lefarmico.moviesfinder.databinding.ItemPlaceholderRecyclerBinding
-import com.lefarmico.moviesfinder.providers.CategoryProvider
-import com.lefarmico.moviesfinder.utils.PaginationController
-import com.lefarmico.moviesfinder.utils.PaginationOnScrollListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class ItemsPlaceholderAdapter(
-    private val paginationController: PaginationController
+    private val onMovieClick: (MovieBriefData) -> Unit
 ) : RecyclerView.Adapter<ItemsPlaceholderAdapter.ViewHolder>() {
 
-    var itemsList: MutableList<Header> = mutableListOf()
+    var itemsList: List<CategoryAndMovieBriefData> = emptyList()
+        set(value) {
+            val oldField = field
+            field = value
+            val diffCallback = ItemPlaceholderDiffUtil(oldField, field)
+            val diffResult = DiffUtil.calculateDiff(diffCallback)
+            diffResult.dispatchUpdatesTo(this)
+        }
 
-    private val scrollStates: MutableMap<Long, Parcelable?> = mutableMapOf()
-    lateinit var categoryType: CategoryProvider.Category
-    var page = 1
+    class ItemPlaceholderDiffUtil(
+        private val oldList: List<CategoryAndMovieBriefData>,
+        private val newList: List<CategoryAndMovieBriefData>,
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            oldList[oldItemPosition] === newList[newItemPosition]
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            oldList[oldItemPosition] == newList[newItemPosition]
+    }
 
     class ViewHolder(
         placeholderBinding: ItemPlaceholderRecyclerBinding
     ) : RecyclerView.ViewHolder(placeholderBinding.root) {
 
-        var recyclerView: RecyclerView = placeholderBinding.root
+        private val itemRecyclerView = placeholderBinding.itemsList
+        private val headerTitleTextView = placeholderBinding.headerTitle
 
-        fun bind(adapter: ItemAdapter) {
-            recyclerView.adapter = adapter
+        fun bind(
+            movieBriefDataList: List<MovieBriefData>,
+            categoryName: String,
+            onClick: (MovieBriefData) -> Unit
+        ) {
+            headerTitleTextView.text = categoryName
+            itemRecyclerView.adapter = ItemAdapter(onClick).apply {
+                items = movieBriefDataList
+            }
         }
     }
 
@@ -47,64 +65,37 @@ class ItemsPlaceholderAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.d("ItemsPlaceHolderAdapter", "${javaClass.name} bind")
-        // Для плавного горизонтального скролла
-        val viewPool = RecyclerView.RecycledViewPool()
-        val itemsLayoutManager = LinearLayoutManager(
-            holder.recyclerView.context, RecyclerView.HORIZONTAL, false
+
+        val item = itemsList[position]
+        val categoryName = holder.itemView.context.getString(item.categoryData.categoryResourceId)
+        holder.bind(
+            item.movieBriefDataList,
+            categoryName,
+            onMovieClick
         )
-
-        val key = getItemId(holder.layoutPosition)
-        val state = scrollStates[key]
-
-        holder.recyclerView.apply {
-            layoutManager = itemsLayoutManager
-            setRecycledViewPool(viewPool)
-            if (state != null) {
-                layoutManager?.onRestoreInstanceState(state)
-            } else {
-                layoutManager?.scrollToPosition(0)
-            }
-            val scope = CoroutineScope(Dispatchers.IO)
-            holder.bind(
-                ItemAdapter {
-                    scope.launch {
-                        (context as MainActivity).viewModel.onItemClick(it)
-                    }
-                }
-            )
-            (adapter as ItemAdapter).setItems(itemsList)
-            addOnScrollListener(
-                PaginationOnScrollListener(this.layoutManager!!) {
-                    scope.launch {
-                        paginationController.paginateItems(categoryType, ++page, this@ItemsPlaceholderAdapter)
-                    }
-                }
-            )
-        }
     }
 
-    override fun getItemCount(): Int = 1
+    override fun getItemCount(): Int = itemsList.size
 
-    fun setItems(itemsList: MutableList<Header>) {
-        this.itemsList = itemsList
-        // TODO Change it
-        notifyDataSetChanged()
-    }
+//    fun setItems(itemsList: MutableList<CategoryAndMovieBriefData>) {
+//        this.itemsList = itemsList
+//        notifyDataSetChanged()
+//    }
+//
+//    fun addItems(itemsList: MutableList<MovieBriefData>) {
+//        val curItems = this.itemsList
+//        this.itemsList = (curItems + itemsList).toMutableList()
+//        // TODO Change it
+//        notifyDataSetChanged()
+//    }
 
-    fun addItems(itemsList: MutableList<Header>) {
-        val curItems = this.itemsList
-        this.itemsList = (curItems + itemsList).toMutableList()
-        // TODO Change it
-        notifyDataSetChanged()
-    }
-
-    override fun onViewRecycled(holder: ViewHolder) {
-        super.onViewRecycled(holder)
-        val key = getItemId(holder.layoutPosition)
-        scrollStates[key] = holder
-            .itemView
-            .findViewById<RecyclerView>(R.id.items_placeholder_recycler)
-            .layoutManager
-            ?.onSaveInstanceState()
-    }
+//    override fun onViewRecycled(holder: ViewHolder) {
+//        super.onViewRecycled(holder)
+//        val key = getItemId(holder.layoutPosition)
+//        scrollStates[key] = holder
+//            .itemView
+//            .findViewById<RecyclerView>(R.id.items_placeholder_recycler)
+//            .layoutManager
+//            ?.onSaveInstanceState()
+//    }
 }

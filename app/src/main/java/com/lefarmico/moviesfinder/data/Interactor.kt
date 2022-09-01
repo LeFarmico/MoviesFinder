@@ -1,10 +1,8 @@
 package com.lefarmico.moviesfinder.data
 
 import android.util.Log
-import com.lefarmico.moviesfinder.data.appEntity.CategoryDb
-import com.lefarmico.moviesfinder.data.appEntity.Header
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
-import com.lefarmico.moviesfinder.data.appEntity.Movie
+import com.lefarmico.moviesfinder.data.entity.MovieBriefData
+import com.lefarmico.moviesfinder.data.entity.MovieData
 import com.lefarmico.moviesfinder.private.ApiConstants.API_KEY
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.providers.PreferenceProvider
@@ -24,48 +22,42 @@ class Interactor(
 ) {
 
     val loadingState: BehaviorSubject<Boolean> = BehaviorSubject.create()
-    val movieDetailsBehaviourSubject: BehaviorSubject<Movie> = BehaviorSubject.create()
+    val movieDataDetailsBehaviourSubject: BehaviorSubject<MovieData> = BehaviorSubject.create()
 
-    fun putToDbMovieCategoryFromApi(categoryType: CategoryProvider.Category, page: Int) {
+    fun getMovieBriefListFromApi(categoryType: CategoryProvider.Category, page: Int) {
         loadingState.onNext(true)
         retrofitService.getMovies(categoryType.categoryTitle, API_KEY, "en-US", page)
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .map {
+                // TODO: normal mapper
                 Converter.convertApiListToDTOList(it.tmdbMovie)
             }
-            .subscribeBy(
-                onError = {
-                    loadingState.onNext(false)
-                },
-                onNext = { itemList ->
-                    loadingState.onNext(false)
-                    val category = CategoryDb(categoryType, categoryType.getResource())
-                    repo.putCategoryToDb(category)
-                    repo.putItemHeadersToDb(itemList)
-                    repo.putMoviesByCategoryToDb(category, itemList)
-                }
-            )
+            .doOnNext { movieBriefList ->
+                loadingState.onNext(false)
+            }
+            .subscribe()
     }
 
-    fun putMovieFromApiToBehaviour(itemHeader: ItemHeader) {
-        retrofitService.getMovieDetails(itemHeader.itemId, API_KEY, "en-US", "watch/providers,credits")
+    fun putMovieFromApiToBehaviour(movieBriefData: MovieBriefData) {
+        retrofitService.getMovieDetails(movieBriefData.itemId, API_KEY, "en-US", "watch/providers,credits")
             .subscribeOn(Schedulers.io())
             .map {
                 Converter.convertApiMovieDetailsToDTOItem(
-                    itemHeader,
+                    movieBriefData,
                     preferenceProvider.getCurrentCountry(),
                     it
                 )
             }.subscribeBy(
                 onNext = { movie ->
-                    movieDetailsBehaviourSubject.onNext(movie)
+                    movieDataDetailsBehaviourSubject.onNext(movie)
                 },
                 onError = {
                     return@subscribeBy
                 }
             )
     }
-    fun updateMoviesFromApi(category: CategoryProvider.Category, page: Int, paginate: (MutableList<Header>) -> Unit) {
+    fun updateMoviesFromApi(category: CategoryProvider.Category, page: Int, paginate: (MutableList<MovieBriefData>) -> Unit) {
         retrofitService.getMovies(category.categoryTitle, API_KEY, "en-US", page)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -79,19 +71,19 @@ class Interactor(
             )
     }
 
-    fun putMovieDetailsToDb(movie: Movie) {
-        repo.putMovieToDb(movie)
+    fun putMovieDetailsToDb(movieData: MovieData) {
+        repo.putMovieToDb(movieData)
     }
 
-    fun deleteMovieDetailsFromDb(movie: Movie) {
-        repo.deleteMovieFromDB(movie)
+    fun deleteMovieDetailsFromDb(movieData: MovieData) {
+        repo.deleteMovieFromDB(movieData)
     }
 
-    fun updateItemHeaderInDb(itemHeader: ItemHeader) {
-        repo.updateItemHeader(itemHeader as Header)
+    fun updateItemHeaderInDb(movieBriefData: MovieBriefData) {
+        repo.updateItemHeader(movieBriefData)
     }
 
-    fun getCategoriesFromDb(categoryType: CategoryProvider.Category, action: (List<Header>) -> Unit) {
+    fun getCategoriesFromDb(categoryType: CategoryProvider.Category, action: (List<MovieBriefData>) -> Unit) {
         repo.getCategoryFromDB(categoryType)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -101,7 +93,7 @@ class Interactor(
             )
     }
 
-    fun getSearchResultFromApi(searchQuery: String): Observable<List<Header>> =
+    fun getSearchResultFromApi(searchQuery: String): Observable<List<MovieBriefData>> =
         retrofitService.getMovieFromSearch(API_KEY, "en-US", searchQuery, 1)
             .subscribeOn(Schedulers.io())
             .map { result ->
@@ -120,5 +112,5 @@ class Interactor(
             }
     }
 
-    fun getFavoriteMoviesFromDb(): Single<List<Header>> = repo.getFavoriteMovies()
+    fun getFavoriteMoviesFromDb(): Single<List<MovieBriefData>> = repo.getFavoriteMovies()
 }
