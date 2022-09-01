@@ -1,7 +1,7 @@
 package com.lefarmico.moviesfinder.utils
 
 import android.util.Log
-import com.lefarmico.moviesfinder.data.appEntity.*
+import com.lefarmico.moviesfinder.data.entity.*
 import com.lefarmico.remote_module.tmdbEntity.preferences.TmdbMovieDetailsResult
 import com.lefarmico.remote_module.tmdbEntity.preferences.TmdbMovieResult
 import com.lefarmico.remote_module.tmdbEntity.preferences.TmdbProvidersResult
@@ -10,32 +10,33 @@ import com.lefarmico.remote_module.tmdbEntity.preferences.credits.TmdbCrew
 import com.lefarmico.remote_module.tmdbEntity.preferences.details.TmdbGenre
 import java.lang.NullPointerException
 
+// TODO: change all mappers
 object Converter {
-    fun convertApiListToDTOList(list: List<TmdbMovieResult?>?): List<Header> {
-        val movieList = mutableListOf<Header>()
+    fun convertApiListToDTOList(list: List<TmdbMovieResult?>?): List<MovieBriefData> {
+        val movieList = mutableListOf<MovieBriefData>()
         list?.forEach {
             if (it?.id == null) {
                 throw NullPointerException("id parameter is Null")
             }
             movieList.add(
-                Header(
+                MovieBriefData(
                     itemId = it.id,
-                    posterPath = it.posterPath ?: "",
-                    title = it.title ?: "",
-                    rating = it.voteAverage ?: 0.0,
-                    description = it.overview ?: "",
-                    isWatchlist = false ?: false,
-                    yourRate = 0 ?: 0,
-                    releaseDate = it.releaseDate ?: "00.00.0000"
+                    posterPath = it.posterPath,
+                    title = it.title,
+                    rating = it.voteAverage,
+                    description = it.overview,
+                    isWatchlist = false,
+                    yourRate = 0,
+                    releaseDate = it.releaseDate
                 )
             )
         }
         return movieList
     }
 
-    fun convertApiToDTO(item: TmdbMovieResult): Header? {
+    fun convertApiToDTO(item: TmdbMovieResult): MovieBriefData? {
         return try {
-            Header(
+            MovieBriefData(
                 itemId = item.id,
                 posterPath = item.posterPath,
                 title = item.title,
@@ -52,26 +53,26 @@ object Converter {
     }
 
     fun convertApiMovieDetailsToDTOItem(
-        itemHeader: ItemHeader,
+        movieBriefData: MovieBriefData,
         country: String,
         tmdbItem: TmdbMovieDetailsResult
-    ): Movie {
-        return Movie(
-            id = itemHeader.id,
+    ): MovieData {
+        return MovieData(
+            id = movieBriefData.id,
             itemId = tmdbItem.id,
             posterPath = tmdbItem.poster_path ?: "",
             title = tmdbItem.title,
-            rating = tmdbItem.vote_average ?: 0.0,
-            description = tmdbItem.overview ?: "",
-            isWatchlist = itemHeader.isWatchlist ?: false,
+            rating = tmdbItem.vote_average,
+            description = tmdbItem.overview,
+            isWatchlist = movieBriefData.isWatchlist,
             genres = convertGenres(tmdbItem.genres),
             yourRate = 0,
             actors = convertCast(tmdbItem.credits.tmdbCast),
             directors = convertDirectors(tmdbItem.credits.tmdbCrew),
-            watchProviders = convertProviders(tmdbItem.providers, country),
+            watchMovieProviderData = convertProviders(tmdbItem.providers, country),
             length = tmdbItem.runtime,
             photosPath = listOf(),
-            releaseDate = tmdbItem.release_date ?: "00.00.0000"
+            releaseDate = tmdbItem.release_date
         )
     }
     private fun convertGenres(genresList: List<TmdbGenre>): List<String> {
@@ -81,13 +82,13 @@ object Converter {
         }
         return genres
     }
-    private fun convertCast(tmdbCastList: List<TmdbCast>?): List<Cast> {
-        val cast = mutableListOf<Cast>()
-        if (tmdbCastList == null) return cast
+    private fun convertCast(tmdbCastList: List<TmdbCast>?): List<MovieCastData> {
+        val movieCastData = mutableListOf<MovieCastData>()
+        if (tmdbCastList == null) return movieCastData
         tmdbCastList.forEach {
             if (it.order < 10) {
-                cast.add(
-                    Cast(
+                movieCastData.add(
+                    MovieCastData(
                         name = it.name,
                         profilePath = it.profile_path,
                         character = it.character,
@@ -96,19 +97,19 @@ object Converter {
                 )
             }
         }
-        return cast
+        return movieCastData
     }
-    private fun convertDirectors(tmdbCrewList: List<TmdbCrew>): List<Cast> {
-        val cast = mutableListOf<Cast>()
-        if (tmdbCrewList == null) return cast
+    private fun convertDirectors(tmdbCrewList: List<TmdbCrew>): List<MovieCastData> {
+        val movieCastData = mutableListOf<MovieCastData>()
+        if (tmdbCrewList == null) return movieCastData
         val count = if (tmdbCrewList.size >= 10) {
             10
         } else {
-            cast.size
+            movieCastData.size
         }
         for (i in 0 until count) {
-            cast.add(
-                Cast(
+            movieCastData.add(
+                MovieCastData(
                     name = tmdbCrewList[i].name,
                     profilePath = tmdbCrewList[i].profile_path,
                     character = tmdbCrewList[i].department,
@@ -116,16 +117,16 @@ object Converter {
                 )
             )
         }
-        return cast
+        return movieCastData
     }
 
-    private fun convertProviders(providers: TmdbProvidersResult, country: String): List<Provider> {
-        val providersList = mutableListOf<Provider>()
+    private fun convertProviders(providers: TmdbProvidersResult, country: String): List<MovieProviderData> {
+        val providersList = mutableListOf<MovieProviderData>()
         providers.results.getCountryProviderByName(country)?.apply {
             tmdbBuy?.forEach {
                 providersList.add(
-                    Provider(
-                        providerType = Provider.ProviderType.BUY,
+                    MovieProviderData(
+                        providerType = MovieProviderData.ProviderType.BUY,
                         name = it.provider_name,
                         providerId = it.provider_id,
                         logoPath = it.logo_path,
@@ -135,8 +136,8 @@ object Converter {
             }
             tmdbFlatrate?.forEach {
                 providersList.add(
-                    Provider(
-                        providerType = Provider.ProviderType.FLATRATE,
+                    MovieProviderData(
+                        providerType = MovieProviderData.ProviderType.FLATRATE,
                         name = it.provider_name,
                         providerId = it.provider_id,
                         logoPath = it.logo_path,
@@ -146,8 +147,8 @@ object Converter {
             }
             rent?.forEach {
                 providersList.add(
-                    Provider(
-                        providerType = Provider.ProviderType.RENT,
+                    MovieProviderData(
+                        providerType = MovieProviderData.ProviderType.RENT,
                         name = it.provider_name,
                         providerId = it.provider_id,
                         logoPath = it.logo_path,

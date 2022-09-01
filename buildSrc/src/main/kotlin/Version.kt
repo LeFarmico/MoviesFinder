@@ -18,6 +18,7 @@ object Version {
     const val recyclerView = "1.2.1"
     const val fragmentKtx = "1.5.2"
     const val material2 = "1.6.1"
+    const val coroutines = "1.6.4"
 
     // Tests
     const val junit = "4.13.2"

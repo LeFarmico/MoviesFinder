@@ -3,46 +3,66 @@ package com.lefarmico.moviesfinder.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
-import com.lefarmico.moviesfinder.data.appEntity.SearchItem
-import com.lefarmico.moviesfinder.data.appEntity.SearchType
+import com.lefarmico.moviesfinder.data.entity.MovieBriefData
+import com.lefarmico.moviesfinder.data.entity.SearchType
+import com.lefarmico.moviesfinder.data.entity.SearchedItemData
 import com.lefarmico.moviesfinder.databinding.ItemSearchBinding
-import com.lefarmico.moviesfinder.utils.RecyclerViewAdapterWithListener
 
-class SearchAdapter : RecyclerViewAdapterWithListener<SearchItem, RecyclerView.ViewHolder>() {
+class SearchAdapter(
+    private val onItemClick: (SearchedItemData) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override var items: MutableList<SearchItem> = mutableListOf()
-    override var onClickEvent: OnClickEvent<SearchItem>? = null
+    var items: List<SearchedItemData> = emptyList()
+        set(value) {
+            val oldField = field
+            field = value
+            val diffCallback = SearchDiffUtil(oldField, field)
+            val diffResult = DiffUtil.calculateDiff(diffCallback)
+            diffResult.dispatchUpdatesTo(this)
+        }
+
+    class SearchDiffUtil(
+        private val oldList: List<SearchedItemData>,
+        private val newList: List<SearchedItemData>,
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            oldList[oldItemPosition] === newList[newItemPosition]
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            oldList[oldItemPosition] == newList[newItemPosition]
+    }
 
     class RecentlySearchedViewHolder(itemSearchBinding: ItemSearchBinding) : RecyclerView.ViewHolder(itemSearchBinding.root) {
         private val genreText: TextView = itemSearchBinding.genreTextView
 
-        fun bind(searchItem: ItemHeader) {
+        fun bind(searchItem: MovieBriefData) {
             genreText.text = searchItem.title
         }
     }
     class SearchViewHolder(itemSearchBinding: ItemSearchBinding) : RecyclerView.ViewHolder(itemSearchBinding.root) {
         private val genreText: TextView = itemSearchBinding.genreTextView
 
-        fun bind(searchItem: ItemHeader) {
+        fun bind(searchItem: MovieBriefData) {
             genreText.text = searchItem.title
         }
     }
 
-    override fun onCreateViewHolderWithListener(
-        parent: ViewGroup,
-        viewType: Int
-    ): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            SearchType.RECENTLY_SEARCHED.typeNumber -> {
+            SearchType.RecentlySearch.typeNumber -> {
                 RecentlySearchedViewHolder(
                     ItemSearchBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
                     )
                 )
             }
-            SearchType.SEARCH.typeNumber -> {
+            SearchType.Search.typeNumber -> {
                 SearchViewHolder(
                     ItemSearchBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
@@ -57,13 +77,19 @@ class SearchAdapter : RecyclerViewAdapterWithListener<SearchItem, RecyclerView.V
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (items[position].viewType) {
-            SearchType.RECENTLY_SEARCHED -> {
+            SearchType.RecentlySearch -> {
                 val viewHolder = holder as RecentlySearchedViewHolder
-                viewHolder.bind(items[position].itemHeader)
+                viewHolder.bind(items[position].movieBriefData)
+                viewHolder.itemView.setOnClickListener {
+                    onItemClick(items[position])
+                }
             }
-            SearchType.SEARCH -> {
+            SearchType.Search -> {
                 val viewHolder = holder as SearchViewHolder
-                viewHolder.bind(items[position].itemHeader)
+                viewHolder.bind(items[position].movieBriefData)
+                viewHolder.itemView.setOnClickListener {
+                    onItemClick(items[position])
+                }
             }
         }
     }
@@ -72,15 +98,4 @@ class SearchAdapter : RecyclerViewAdapterWithListener<SearchItem, RecyclerView.V
         return items[position].viewType.typeNumber
     }
     override fun getItemCount(): Int = items.size
-
-    fun setSearchItems(list: List<ItemHeader>, searchType: SearchType) {
-        val searchItemList = mutableListOf<SearchItem>()
-        list.forEach { itemHeader ->
-            val searchItem = SearchItem(searchType, itemHeader)
-            searchItemList.add(searchItem)
-        }
-        items = searchItemList
-        // TODO Change it
-        notifyDataSetChanged()
-    }
 }

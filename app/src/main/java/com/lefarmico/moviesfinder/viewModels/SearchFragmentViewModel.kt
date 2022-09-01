@@ -5,8 +5,9 @@ import androidx.lifecycle.ViewModel
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.adapter.SearchAdapter
 import com.lefarmico.moviesfinder.data.Interactor
-import com.lefarmico.moviesfinder.data.appEntity.Header
-import com.lefarmico.moviesfinder.data.appEntity.SearchType
+import com.lefarmico.moviesfinder.data.entity.MovieBriefData
+import com.lefarmico.moviesfinder.data.entity.SearchType
+import com.lefarmico.moviesfinder.data.entity.SearchedItemData
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -33,7 +34,7 @@ class SearchFragmentViewModel : ViewModel() {
         }
     }
 
-    private fun getSearchRequestResults(searchRequest: String): Observable<List<Header>> =
+    private fun getSearchRequestResults(searchRequest: String): Observable<List<MovieBriefData>> =
         interactor.getSearchResultFromApi(searchRequest)
 
     fun putSearchRequest(requestText: String) {
@@ -41,7 +42,7 @@ class SearchFragmentViewModel : ViewModel() {
     }
 
     private fun result() {
-        Observable.create<String> { input ->
+        Observable.create { input ->
             searchSubject.subscribe {
                 input.onNext(it)
             }
@@ -57,8 +58,12 @@ class SearchFragmentViewModel : ViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { list ->
-                val adapter = SearchAdapter()
-                adapter.setSearchItems(list, SearchType.SEARCH)
+                val adapter = SearchAdapter {
+                }.apply {
+                    items = list.map {
+                        SearchedItemData(SearchType.Search, it)
+                    }
+                }
                 searchAdapterLiveData.postValue(adapter)
             }
     }

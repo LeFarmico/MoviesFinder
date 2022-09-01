@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.ConcatAdapter
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.adapter.ItemsPlaceholderAdapter
-import com.lefarmico.moviesfinder.adapter.MoviesConcatAdapterBuilder
 import com.lefarmico.moviesfinder.data.Interactor
 import com.lefarmico.moviesfinder.providers.CategoryProvider
 import com.lefarmico.moviesfinder.utils.PaginationController
@@ -29,27 +28,27 @@ class MovieFragmentViewModel : ViewModel(), PaginationController {
     init {
         App.appComponent.inject(this)
         putMoviesToDbFromAPI(categoryList)
-        setConcatAdapterByCategory(categoryList)
+//        setConcatAdapterByCategory(categoryList)
         progressBarStateObserver()
     }
 
-    private fun setConcatAdapterByCategory(
-        categoryType: List<CategoryProvider.Category>
-    ): ConcatAdapter {
-        val concatBuilder = MoviesConcatAdapterBuilder(this)
-        categoryType.map { category ->
-            interactor.getCategoriesFromDb(category) { headersList ->
-                concatBuilder.addHeader(category.getResource())
-                concatBuilder.addMoviesByCategory(category, headersList)
-                concatAdapterLiveData.postValue(concatBuilder.build())
-            }
-        }
-        return concatBuilder.build()
-    }
+//    private fun setConcatAdapterByCategory(
+//        categoryType: List<CategoryProvider.Category>
+//    ): ConcatAdapter {
+//        val concatBuilder = MoviesConcatAdapterBuilder(this)
+//        categoryType.map { category ->
+//            interactor.getCategoriesFromDb(category) { headersList ->
+//                concatBuilder.addHeader(category.getResource())
+//                concatBuilder.addMoviesByCategory(category, headersList)
+//                concatAdapterLiveData.postValue(concatBuilder.build())
+//            }
+//        }
+//        return concatBuilder.build()
+//    }
 
     private fun putMoviesToDbFromAPI(categoryList: List<CategoryProvider.Category>) {
         categoryList.forEach {
-            interactor.putToDbMovieCategoryFromApi(it, 1)
+            interactor.getMovieBriefListFromApi(it, 1)
         }
     }
 
@@ -59,7 +58,7 @@ class MovieFragmentViewModel : ViewModel(), PaginationController {
         paginationReceiver: ItemsPlaceholderAdapter
     ) {
         interactor.updateMoviesFromApi(category, page) { items ->
-            paginationReceiver.addItems(items)
+//            paginationReceiver.addItems(items)
         }
     }
 

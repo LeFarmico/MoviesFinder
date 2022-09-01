@@ -132,6 +132,10 @@ dependencies {
     implementation(Dependency.rxjavaKotlin)
     implementation(Dependency.rxjavaRetrofitAdapter)
 
+    // Coroutines
+    implementation(Dependency.coroutinesCore)
+    implementation(Dependency.coroutinesAndroid)
+
     // CircleImageView
     implementation("de.hdodenhof:circleimageview:3.1.0")
 

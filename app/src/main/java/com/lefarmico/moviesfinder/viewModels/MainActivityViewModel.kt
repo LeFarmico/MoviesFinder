@@ -3,9 +3,8 @@ package com.lefarmico.moviesfinder.viewModels
 import androidx.lifecycle.ViewModel
 import com.lefarmico.moviesfinder.App
 import com.lefarmico.moviesfinder.data.Interactor
-import com.lefarmico.moviesfinder.data.appEntity.ItemHeader
-import com.lefarmico.moviesfinder.data.appEntity.Movie
-import com.lefarmico.moviesfinder.data.appEntity.MovieItem
+import com.lefarmico.moviesfinder.data.entity.MovieBriefData
+import com.lefarmico.moviesfinder.data.entity.MovieData
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -14,30 +13,30 @@ import javax.inject.Inject
 class MainActivityViewModel : ViewModel() {
 
     @Inject lateinit var interactor: Interactor
-    val movieDetails: BehaviorSubject<Movie>
+    val movieDataDetails: BehaviorSubject<MovieData>
 
     init {
         App.appComponent.inject(this)
-        movieDetails = interactor.movieDetailsBehaviourSubject
+        movieDataDetails = interactor.movieDataDetailsBehaviourSubject
     }
 
-    fun onItemClick(itemHeader: ItemHeader) {
-        interactor.putMovieFromApiToBehaviour(itemHeader)
+    fun onItemClick(movieBriefData: MovieBriefData) {
+        interactor.putMovieFromApiToBehaviour(movieBriefData)
     }
 
-    fun watchlistHandler(item: MovieItem, watchlistToggle: Boolean) {
+    fun watchlistHandler(item: MovieData, watchlistToggle: Boolean) {
         Single.create<Boolean> {
             it.onSuccess(watchlistToggle)
         }
             .subscribeOn(Schedulers.io())
             .subscribe { isInWatchlist ->
-                val updatedMovie = (item as Movie).copy(isWatchlist = isInWatchlist)
-                val updatedHeader = updatedMovie.toItemHeaderImpl()
-                interactor.updateItemHeaderInDb(updatedHeader as ItemHeader)
+                val updatedMovieData = (item).copy(isWatchlist = isInWatchlist)
+                val updatedHeader = updatedMovieData.toItemHeaderImpl()
+                interactor.updateItemHeaderInDb(updatedHeader)
                 if (watchlistToggle) {
-                    interactor.putMovieDetailsToDb(updatedMovie)
+                    interactor.putMovieDetailsToDb(updatedMovieData)
                 } else {
-                    interactor.deleteMovieDetailsFromDb(updatedMovie)
+                    interactor.deleteMovieDetailsFromDb(updatedMovieData)
                 }
             }
     }

@@ -7,11 +7,11 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.activities.MainActivity
-import com.lefarmico.moviesfinder.data.appEntity.MovieItem
+import com.lefarmico.moviesfinder.data.entity.MovieData
 import com.lefarmico.moviesfinder.notifications.NotificationConstants.CHANNEL_ID
 
 object NotificationHelper {
-    fun createNotification(context: Context, movieItem: MovieItem) {
+    fun createNotification(context: Context, movieItem: MovieData) {
         val mIntent = Intent(context, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(context, 0, mIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         val builder = NotificationCompat.Builder(context, CHANNEL_ID).apply {

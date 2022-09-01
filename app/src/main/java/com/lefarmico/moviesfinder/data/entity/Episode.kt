@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.data.appEntity
+package com.lefarmico.moviesfinder.data.entity
 
 data class Episode(
     val id: Int,
