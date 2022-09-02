@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.MainActivity">
+    tools:context=".ui.main.MainActivity">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
         android:layout_marginEnd="16dp"
         android:contentDescription="@string/search" />
 
-    <com.lefarmico.moviesfinder.customViews.BottomSheetMovieDetails
+    <com.lefarmico.moviesfinder.ui.common.widget.BottomSheetMovieDetails
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

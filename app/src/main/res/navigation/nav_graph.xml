@@ -7,16 +7,16 @@
 
     <fragment
         android:id="@+id/movies_menu"
-        android:name="com.lefarmico.moviesfinder.fragments.MovieFragment"
+        android:name="com.lefarmico.moviesfinder.ui.home.HomeFragment"
         android:label="fragment_movie"
         tools:layout="@layout/fragment_movie" />
     <fragment
         android:id="@+id/favorites_menu"
-        android:name="com.lefarmico.moviesfinder.fragments.ProfileFragment"
+        android:name="com.lefarmico.moviesfinder.ui.profile.ProfileFragment"
         android:label="ProfileFragment" />
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.lefarmico.moviesfinder.fragments.SearchFragment"
+        android:name="com.lefarmico.moviesfinder.ui.search.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
 </navigation>
