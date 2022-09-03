@@ -60,4 +60,6 @@
     <string name="for_you">For you</string>
     <string name="watched">Watched</string>
     <string name="watchlist">Watchlist</string>
+    <string name="cancel">Cancel</string>
+    <string name="okay">OK</string>
 </resources>

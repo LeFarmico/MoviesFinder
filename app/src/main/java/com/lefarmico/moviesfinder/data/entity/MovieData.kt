@@ -2,9 +2,9 @@ package com.lefarmico.moviesfinder.data.entity
 
 import android.os.Parcelable
 import androidx.room.*
-import com.lefarmico.moviesfinder.utils.CastTypeConverter
-import com.lefarmico.moviesfinder.utils.ListOfStringsTypeConverters
-import com.lefarmico.moviesfinder.utils.ProviderTypeConverter
+import com.lefarmico.moviesfinder.utils.mapper.CastTypeConverter
+import com.lefarmico.moviesfinder.utils.mapper.ListOfStringsTypeConverters
+import com.lefarmico.moviesfinder.utils.mapper.ProviderTypeConverter
 import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "saved_movie", indices = [Index(value = ["movie_id"], unique = true)])

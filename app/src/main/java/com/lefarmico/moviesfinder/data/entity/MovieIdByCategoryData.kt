@@ -1,7 +1,7 @@
 package com.lefarmico.moviesfinder.data.entity
 
 import androidx.room.*
-import com.lefarmico.moviesfinder.providers.CategoryProvider
+import com.lefarmico.moviesfinder.ui.common.provider.CategoryProvider
 
 @Entity(
     tableName = "movie_id_by_category",
