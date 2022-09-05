@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieBriefData
 import com.lefarmico.moviesfinder.databinding.ItemBinding
-import com.lefarmico.moviesfinder.private.ApiConstants
+import com.lefarmico.moviesfinder.private.Private
 import com.squareup.picasso.Picasso
 
 class ItemAdapter(
@@ -50,7 +50,7 @@ class ItemAdapter(
             title.text = movieBriefData.title
             Picasso
                 .get()
-                .load(ApiConstants.IMAGES_URL + "w342" + movieBriefData.posterPath)
+                .load(Private.IMAGES_URL + "w342" + movieBriefData.posterPath)
                 .fit()
                 .error(R.drawable.ic_launcher_foreground)
                 .placeholder(R.drawable.ic_launcher_foreground)

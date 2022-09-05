@@ -2,72 +2,71 @@ package com.lefarmico.moviesfinder.ui.home
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.ConcatAdapter
-import com.lefarmico.moviesfinder.data.manager.Interactor
-import com.lefarmico.moviesfinder.ui.App
-import com.lefarmico.moviesfinder.ui.common.adapter.ItemsPlaceholderAdapter
-import com.lefarmico.moviesfinder.ui.common.provider.CategoryProvider
-import com.lefarmico.moviesfinder.utils.pagination.PaginationController
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
+import androidx.lifecycle.viewModelScope
+import com.lefarmico.moviesfinder.data.entity.MenuItem
+import com.lefarmico.moviesfinder.data.http.response.State
+import com.lefarmico.moviesfinder.data.manager.useCase.GetNowPlayingMovieBriefList
+import com.lefarmico.moviesfinder.data.manager.useCase.GetPopularMovieBriefList
+import com.lefarmico.moviesfinder.data.manager.useCase.GetTopRatedMovieBriefList
+import com.lefarmico.moviesfinder.data.manager.useCase.GetUpcomingMovieBriefList
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class HomeViewModel : ViewModel(), PaginationController {
-    var concatAdapterLiveData = MutableLiveData<ConcatAdapter>()
-    val progressBarState = MutableLiveData<Boolean>()
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val getPopularMovies: GetPopularMovieBriefList,
+    private val getUpcomingMovies: GetUpcomingMovieBriefList,
+    private val getNowPlayingMovies: GetNowPlayingMovieBriefList,
+    private val getTopRatedMovies: GetTopRatedMovieBriefList,
+) : ViewModel() {
 
-    @Inject lateinit var interactor: Interactor
-
-    private val categoryList = listOf(
-        CategoryProvider.Category.POPULAR_CATEGORY,
-        CategoryProvider.Category.UPCOMING_CATEGORY,
-        CategoryProvider.Category.TOP_RATED_CATEGORY,
-        CategoryProvider.Category.NOW_PLAYING_CATEGORY
+    val state = MutableLiveData(
+        HomeState(isLoading = true)
     )
 
     init {
-        App.appComponent.inject(this)
-        putMoviesToDbFromAPI(categoryList)
-//        setConcatAdapterByCategory(categoryList)
-        progressBarStateObserver()
+        loadMoviesCategories()
     }
 
-//    private fun setConcatAdapterByCategory(
-//        categoryType: List<CategoryProvider.Category>
-//    ): ConcatAdapter {
-//        val concatBuilder = MoviesConcatAdapterBuilder(this)
-//        categoryType.map { category ->
-//            interactor.getCategoriesFromDb(category) { headersList ->
-//                concatBuilder.addHeader(category.getResource())
-//                concatBuilder.addMoviesByCategory(category, headersList)
-//                concatAdapterLiveData.postValue(concatBuilder.build())
-//            }
-//        }
-//        return concatBuilder.build()
-//    }
-
-    private fun putMoviesToDbFromAPI(categoryList: List<CategoryProvider.Category>) {
-        categoryList.forEach {
-            interactor.getMovieBriefListFromApi(it, 1)
-        }
-    }
-
-    override fun paginateItems(
-        category: CategoryProvider.Category,
-        page: Int,
-        paginationReceiver: ItemsPlaceholderAdapter
-    ) {
-        interactor.updateMoviesFromApi(category, page) { items ->
-//            paginationReceiver.addItems(items)
-        }
-    }
-
-    private fun progressBarStateObserver() {
-        interactor.loadingState
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                progressBarState.postValue(it)
+    private fun loadMoviesCategories() {
+        viewModelScope.launch {
+            val popularCategory = async {
+                getPopularMovies.byPage(1)
             }
+            val upcomingCategory = async {
+                getUpcomingMovies.byPage(1)
+            }
+            val nowPlayingCategory = async {
+                getNowPlayingMovies.byPage(1)
+            }
+            val topRatedCategory = async {
+                getTopRatedMovies.byPage(1)
+            }
+            val menuItemList: MutableList<MenuItem> = mutableListOf()
+            awaitAll(
+                popularCategory,
+                upcomingCategory,
+                nowPlayingCategory,
+                topRatedCategory
+            ).merge().collect { dataState ->
+                when (dataState) {
+                    is State.Error -> {}
+                    State.Loading -> {
+                        state.value = state.value?.copy(isLoading = true)
+                    }
+                    is State.Success -> {
+                        menuItemList.add(dataState.data)
+                    }
+                }
+            }
+            state.value = state.value?.copy(
+                isLoading = false,
+                menuItemList = menuItemList
+            )
+        }
     }
 }

@@ -1,14 +1,14 @@
 package com.lefarmico.moviesfinder.data.manager
 
-import com.lefarmico.moviesfinder.data.entity.MovieData
+import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
 
 interface MovieDataDbRepository {
 
-    fun insertMovieDataToDb(movieData: MovieData)
+    fun insertMovieDataToDb(movieDetailedData: MovieDetailedData)
 
     fun getMovieDataFromDb(movieDataId: Int)
 
-    fun updateMovieDataToDb(movieData: MovieData)
+    fun updateMovieDataToDb(movieDetailedData: MovieDetailedData)
 
-    fun deleteMovieDataFromDb(movieData: MovieData)
+    fun deleteMovieDataFromDb(movieDetailedData: MovieDetailedData)
 }

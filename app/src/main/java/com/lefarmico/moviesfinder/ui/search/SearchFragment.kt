@@ -1,34 +1,26 @@
 package com.lefarmico.moviesfinder.ui.search
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.lefarmico.moviesfinder.databinding.FragmentSearchBinding
+import com.lefarmico.moviesfinder.ui.base.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 
-class SearchFragment : Fragment() {
+@AndroidEntryPoint
+class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>() {
 
-    private val TAG = this.javaClass.canonicalName
-    private var _binding: FragmentSearchBinding? = null
-    private val binding get() = _binding!!
-    val viewModel: SearchViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate")
+    override fun getInjectViewModel(): SearchViewModel {
+        val viewModel: SearchViewModel by viewModels()
+        return viewModel
     }
 
-    override fun onCreateView(
+    override fun getViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
+    ): FragmentSearchBinding = FragmentSearchBinding.inflate(inflater, container, false)
 
 //    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 //        super.onViewCreated(view, savedInstanceState)

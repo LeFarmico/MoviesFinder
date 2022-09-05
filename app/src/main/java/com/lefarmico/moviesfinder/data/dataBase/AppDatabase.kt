@@ -8,8 +8,7 @@ import com.lefarmico.moviesfinder.data.entity.*
 @Database(
     entities = [
         MovieBriefData::class,
-        MovieData::class,
-        MovieIdByCategoryData::class,
+        MovieDetailedData::class,
         SearchRequestData::class
     ],
     version = 1, exportSchema = false

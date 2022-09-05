@@ -26,6 +26,7 @@ abstract class BaseActivity <VM : ViewModel, VB : ViewBinding> : AppCompatActivi
         super.onCreate(savedInstanceState)
         binding = getViewBinding()
         viewModel = getInjectViewModel()
+        setContentView(binding.root)
     }
 
     override fun onDestroy() {

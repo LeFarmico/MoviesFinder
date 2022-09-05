@@ -2,8 +2,12 @@ package com.lefarmico.moviesfinder.ui.common.provider
 
 import android.content.Context
 import androidx.core.content.edit
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class PreferenceProvider(context: Context) {
+class PreferenceProvider @Inject constructor(
+    @ApplicationContext context: Context
+) {
 
     private val appContext = context.applicationContext
 

@@ -2,12 +2,12 @@ package com.lefarmico.moviesfinder.utils.mapper
 
 import android.util.Log
 import com.lefarmico.moviesfinder.data.entity.*
-import com.lefarmico.remote_module.tmdbEntity.preferences.TmdbMovieDetailsResult
-import com.lefarmico.remote_module.tmdbEntity.preferences.TmdbMovieResult
-import com.lefarmico.remote_module.tmdbEntity.preferences.TmdbProvidersResult
-import com.lefarmico.remote_module.tmdbEntity.preferences.credits.TmdbCast
-import com.lefarmico.remote_module.tmdbEntity.preferences.credits.TmdbCrew
-import com.lefarmico.remote_module.tmdbEntity.preferences.details.TmdbGenre
+import com.lefarmico.moviesfinder.data.http.response.TmdbMovieDetailsResult
+import com.lefarmico.moviesfinder.data.http.response.TmdbMovieResult
+import com.lefarmico.moviesfinder.data.http.response.TmdbProvidersResult
+import com.lefarmico.moviesfinder.data.http.response.credits.TmdbCast
+import com.lefarmico.moviesfinder.data.http.response.credits.TmdbCrew
+import com.lefarmico.moviesfinder.data.http.response.details.TmdbGenre
 import java.lang.NullPointerException
 
 // TODO: change all mappers
@@ -56,8 +56,8 @@ object Converter {
         movieBriefData: MovieBriefData,
         country: String,
         tmdbItem: TmdbMovieDetailsResult
-    ): MovieData {
-        return MovieData(
+    ): MovieDetailedData {
+        return MovieDetailedData(
             id = movieBriefData.id,
             itemId = tmdbItem.id,
             posterPath = tmdbItem.poster_path ?: "",
@@ -101,7 +101,6 @@ object Converter {
     }
     private fun convertDirectors(tmdbCrewList: List<TmdbCrew>): List<MovieCastData> {
         val movieCastData = mutableListOf<MovieCastData>()
-        if (tmdbCrewList == null) return movieCastData
         val count = if (tmdbCrewList.size >= 10) {
             10
         } else {

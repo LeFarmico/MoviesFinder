@@ -16,9 +16,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieCastData
-import com.lefarmico.moviesfinder.data.entity.MovieData
+import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
 import com.lefarmico.moviesfinder.databinding.BottomSheetMovieDetailsBinding
-import com.lefarmico.moviesfinder.private.ApiConstants
+import com.lefarmico.moviesfinder.private.Private
 import com.lefarmico.moviesfinder.ui.common.adapter.CastAdapter
 import com.lefarmico.moviesfinder.ui.common.adapter.SpinnerProviderAdapter
 import com.lefarmico.moviesfinder.ui.common.animation.TextViewCollapseLineAnimator
@@ -44,7 +44,7 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     private val isWatchlist: ToggleButton = binding.favoriteToggleButton
 
     @SuppressLint("SetTextI18n")
-    fun setMovieItem(movieItem: MovieData) {
+    fun setMovieItem(movieItem: MovieDetailedData) {
         genres.text = concatGenres(movieItem.genres)
         movieTitle.text = movieItem.title
         releaseDate.text = parseReleaseDate(movieItem.releaseDate)
@@ -72,7 +72,7 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     private fun setBackground(posterPath: String?) {
         backgroundPoster.visibility = View.VISIBLE
         Picasso.get()
-            .load(ApiConstants.IMAGES_URL + "w500" + posterPath)
+            .load(Private.IMAGES_URL + "w500" + posterPath)
             .error(R.drawable.ic_launcher_foreground)
             .placeholder(R.drawable.ic_launcher_foreground)
             .into(backgroundPoster)
@@ -91,7 +91,7 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
 
     private fun setPoster(posterPath: String?) {
         Picasso.get()
-            .load(ApiConstants.IMAGES_URL + "w342" + posterPath)
+            .load(Private.IMAGES_URL + "w342" + posterPath)
             .error(R.drawable.ic_launcher_foreground)
             .placeholder(R.drawable.ic_launcher_foreground)
             .into(poster)

@@ -1,50 +1,7 @@
 package com.lefarmico.moviesfinder.ui
 
-import android.app.Application
-import android.util.Log
-import com.lefarmico.moviesfinder.injection.*
-import com.lefarmico.moviesfinder.injection.component.AppComponent
-import com.lefarmico.moviesfinder.injection.component.DaggerAppComponent
-import com.lefarmico.moviesfinder.injection.module.DataBaseModule
-import com.lefarmico.moviesfinder.injection.module.DomainModule
-import com.lefarmico.remote_module.DaggerRemoteComponent
+import com.lefarmico.moviesfinder.ui.base.BaseApp
+import dagger.hilt.android.HiltAndroidApp
 
-class App : Application() {
-
-//    private val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-
-    companion object {
-        lateinit var appComponent: AppComponent
-        lateinit var instance: App
-            private set
-    }
-    override fun onCreate() {
-        super.onCreate()
-
-        instance = this
-
-        val tag = this.javaClass.canonicalName
-        Log.d(tag, "on Create")
-
-        val remoteProvider = DaggerRemoteComponent.create()
-
-        appComponent = DaggerAppComponent.builder()
-            .remoteProvider(remoteProvider)
-            .dataBaseModule(DataBaseModule())
-            .domainModule(DomainModule(this))
-            .build()
-
-//        createNotificationChannel()
-    }
-
-//    private fun createNotificationChannel() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val name = "WatchLaterChannel"
-//            val descriptionText = "FilmsSearch notification Channel"
-//            val importance = NotificationManager.IMPORTANCE_DEFAULT
-//            val mChannel = NotificationChannel(CHANNEL_ID, name, importance)
-//            mChannel.description = descriptionText
-//            notificationManager.createNotificationChannel(mChannel)
-//        }
-//    }
-}
+@HiltAndroidApp
+class App : BaseApp()

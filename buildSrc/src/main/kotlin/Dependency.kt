@@ -6,6 +6,11 @@ object Dependency {
     const val daggerAndroidProcessor = "com.google.dagger:dagger-android-processor:${Version.dagger}"
     const val daggerCompiler = "com.google.dagger:dagger-compiler:${Version.dagger}"
 
+    // Hilt
+    const val daggerHilt = "com.google.dagger:hilt-android:${Version.dagger}"
+    const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:${Version.dagger}"
+    const val hiltCompiler = "androidx.hilt:hilt-compiler:1.0.0"
+
     // Picasso
     const val picasso = "com.squareup.picasso:picasso:${Version.picasso}"
 

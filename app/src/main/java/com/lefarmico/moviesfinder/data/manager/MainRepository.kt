@@ -2,34 +2,24 @@ package com.lefarmico.moviesfinder.data.manager
 
 import com.lefarmico.moviesfinder.data.dataBase.dao.ItemDao
 import com.lefarmico.moviesfinder.data.entity.*
-import com.lefarmico.moviesfinder.ui.common.provider.CategoryProvider
-import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class MainRepository(private val itemDao: ItemDao) {
+class MainRepository @Inject constructor(private val itemDao: ItemDao) {
 
     fun putItemHeadersToDb(movieBriefDataList: List<MovieBriefData>) = itemDao.insertAll(movieBriefDataList)
 
-    fun putMovieToDb(movieData: MovieData) = itemDao.insertMovie(movieData)
+    fun putMovieToDb(movieDetailedData: MovieDetailedData) = itemDao.insertMovie(movieDetailedData)
 
-    fun putMoviesByCategoryToDb(movieCategoryData: MovieCategoryData, movieBriefDataList: List<MovieBriefData>) {
-        movieBriefDataList.forEach { header ->
-            itemDao.insertMovieByCategory(
-                MovieIdByCategoryData(
-                    movieId = header.itemId, categoryType = movieCategoryData.categoryName
-                )
-            )
-        }
-    }
-
-    fun getCategoryFromDB(categoryType: CategoryProvider.Category): Single<List<MovieBriefData>> =
-        itemDao.getCategory(categoryType)
+//    fun getCategoryFromDB(categoryData: CategoryData): Flow<List<MovieBriefData>> =
+//        itemDao.getCategory(categoryData)
 
     fun updateItemHeader(movieBriefData: MovieBriefData) {
         itemDao.updateMovieDetails(movieBriefData)
     }
 
-    fun deleteMovieFromDB(movieData: MovieData) {
-        itemDao.deleteMovie(movieData)
+    fun deleteMovieFromDB(movieDetailedData: MovieDetailedData) {
+        itemDao.deleteMovie(movieDetailedData)
     }
 
     fun putSearchRequestToDB(requestText: String) {
@@ -38,7 +28,7 @@ class MainRepository(private val itemDao: ItemDao) {
         )
     }
 
-    fun getSearchRequests(): Single<List<String>> = itemDao.getLastSearchRequests()
+    fun getSearchRequests(): Flow<List<String>> = itemDao.getLastSearchRequests()
 
-    fun getFavoriteMovies(): Single<List<MovieBriefData>> = itemDao.getFavoritesMovies()
+    fun getFavoriteMovies(): Flow<List<MovieBriefData>> = itemDao.getFavoritesMovies()
 }

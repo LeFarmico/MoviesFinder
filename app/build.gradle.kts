@@ -3,6 +3,7 @@ plugins {
     id("kotlin-android")
     id("kotlin-kapt")
     id("kotlin-parcelize")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -103,6 +104,11 @@ dependencies {
     kapt(Dependency.daggerAndroidProcessor)
     kapt(Dependency.daggerCompiler)
 
+    // Hilt
+    implementation(Dependency.daggerHilt)
+    kapt(Dependency.hiltCompiler)
+    kapt(Dependency.hiltAndroidCompiler)
+
     // Navigation Components
     implementation(Dependency.navigationFragment)
     implementation(Dependency.navigationUI)
@@ -143,5 +149,4 @@ dependencies {
     implementation("com.github.fornewid:neumorphism:0.3.0")
 
     // Modules
-    implementation(project(":remote_module"))
 }
