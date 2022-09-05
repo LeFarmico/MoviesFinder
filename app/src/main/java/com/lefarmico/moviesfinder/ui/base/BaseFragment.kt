@@ -22,7 +22,11 @@ abstract class BaseFragment<VM : ViewModel, VB : ViewBinding> : Fragment() {
     private val coroutineScope = CoroutineScope(Dispatchers.Main + job)
 
     abstract fun getInjectViewModel(): VM
-    abstract fun getViewBinding(): VB
+    abstract fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): VB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,13 +39,34 @@ abstract class BaseFragment<VM : ViewModel, VB : ViewBinding> : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = getViewBinding()
+        binding = getViewBinding(inflater, container, savedInstanceState)
         debugLog { "onCreateView()" }
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        debugLog { "onViewCreated()" }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        debugLog { "onStart()" }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        debugLog { "onPause()" }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        debugLog { "onStop()" }
+    }
+
     override fun onDetach() {
         super.onDetach()
+        debugLog { "onDetach()" }
         coroutineScope.coroutineContext.cancelChildren()
     }
 

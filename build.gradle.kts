@@ -9,6 +9,8 @@ buildscript {
         classpath(Plugins.kotlinGradle)
         classpath(Plugins.kotlinAndroidExt)
         classpath(Plugins.ktlint)
+        classpath(Plugins.daggerHilt)
+        classpath("com.android.tools.build:gradle:7.2.2")
     }
 }
 

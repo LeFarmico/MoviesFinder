@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieProviderData
 import com.lefarmico.moviesfinder.databinding.ItemProviderBinding
-import com.lefarmico.moviesfinder.private.ApiConstants
+import com.lefarmico.moviesfinder.private.Private
 import com.squareup.picasso.Picasso
 
 class ProviderAdapter : RecyclerView.Adapter<ProviderAdapter.ViewHolder>() {
@@ -40,7 +40,7 @@ class ProviderAdapter : RecyclerView.Adapter<ProviderAdapter.ViewHolder>() {
             providerNameTextView.text = providerName
             Picasso
                 .get()
-                .load(ApiConstants.IMAGES_URL + "w92" + imageResource)
+                .load(Private.IMAGES_URL + "w92" + imageResource)
                 .fit()
                 .error(R.drawable.ic_launcher_foreground)
                 .placeholder(R.drawable.ic_launcher_foreground)

@@ -7,14 +7,18 @@ import com.lefarmico.moviesfinder.data.dataBase.dao.ItemDao
 import com.lefarmico.moviesfinder.data.manager.MainRepository
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 class DataBaseModule {
 
     @Provides
     @Singleton
-    fun provideItemHeaderDao(context: Context) =
+    fun provideItemHeaderDao(@ApplicationContext context: Context) =
         Room.databaseBuilder(
             context,
             AppDatabase::class.java,

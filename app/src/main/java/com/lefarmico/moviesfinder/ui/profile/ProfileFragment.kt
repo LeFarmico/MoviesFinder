@@ -5,27 +5,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.lefarmico.moviesfinder.databinding.FragmentProfileBinding
+import com.lefarmico.moviesfinder.ui.base.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 
-class ProfileFragment : Fragment() {
+@AndroidEntryPoint
+class ProfileFragment : BaseFragment<ProfileViewModel, FragmentProfileBinding>() {
 
-    private var _binding: FragmentProfileBinding? = null
-    private val binding get() = _binding!!
-
-    val viewModel: ProfileViewModel by viewModels()
     private val TAG = this.javaClass.canonicalName
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        Log.d(TAG, "onCreateView")
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,6 +30,17 @@ class ProfileFragment : Fragment() {
 //            binding.watchlistRecyclerView.adapter = adapter
         }
     }
+
+    override fun getInjectViewModel(): ProfileViewModel {
+        val viewModel: ProfileViewModel by viewModels()
+        return viewModel
+    }
+
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): FragmentProfileBinding = FragmentProfileBinding.inflate(inflater, container, false)
 
 //    private fun setStatsParameters(watchListCount: Int = 0, watchedCount: Int = 0) {
 //        binding.watchedListCount.text = watchListCount.toString()

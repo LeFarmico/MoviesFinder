@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.data.entity.MovieCastData
 import com.lefarmico.moviesfinder.databinding.ItemCastBinding
-import com.lefarmico.moviesfinder.private.ApiConstants
+import com.lefarmico.moviesfinder.private.Private
 import com.lefarmico.moviesfinder.utils.extension.loadWithThemeParams
 import com.squareup.picasso.Picasso
 
@@ -28,7 +28,7 @@ class CastAdapter : ListAdapter<MovieCastData, CastAdapter.ViewHolder>(
 
             Picasso
                 .get()
-                .loadWithThemeParams(ApiConstants.IMAGES_URL + "w342" + movieCastData.profilePath)
+                .loadWithThemeParams(Private.IMAGES_URL + "w342" + movieCastData.profilePath)
                 .into(poster)
         }
     }

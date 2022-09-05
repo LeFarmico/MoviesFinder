@@ -10,7 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieProviderData
-import com.lefarmico.moviesfinder.private.ApiConstants
+import com.lefarmico.moviesfinder.private.Private
 import com.squareup.picasso.Picasso
 
 class SpinnerProviderAdapter(
@@ -65,7 +65,7 @@ class SpinnerProviderAdapter(
 
         Picasso
             .get()
-            .load(ApiConstants.IMAGES_URL + "w92" + movieProviderData.logoPath)
+            .load(Private.IMAGES_URL + "w92" + movieProviderData.logoPath)
             .fit()
             .error(R.drawable.ic_launcher_foreground)
             .placeholder(R.drawable.ic_launcher_foreground)

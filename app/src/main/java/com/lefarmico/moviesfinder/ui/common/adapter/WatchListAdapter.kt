@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieBriefData
 import com.lefarmico.moviesfinder.databinding.ItemWatchListRecyclerBinding
-import com.lefarmico.moviesfinder.private.ApiConstants
+import com.lefarmico.moviesfinder.private.Private
 import com.lefarmico.moviesfinder.ui.common.widget.RatingView
 import com.squareup.picasso.Picasso
 
@@ -48,7 +48,7 @@ class WatchListAdapter(
             rating.setRatingValue(movieBriefData.rating)
             Picasso
                 .get()
-                .load(ApiConstants.IMAGES_URL + "w342" + movieBriefData.posterPath)
+                .load(Private.IMAGES_URL + "w342" + movieBriefData.posterPath)
                 .fit()
                 .error(R.drawable.ic_launcher_foreground)
                 .placeholder(R.drawable.ic_launcher_foreground)
