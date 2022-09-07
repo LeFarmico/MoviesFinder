@@ -45,18 +45,10 @@ class HomeViewModel @Inject constructor(
 
     private fun loadMoviesCategories() {
         viewModelScope.launch {
-            val popularCategory = async {
-                getPopularMovies.byPage(1)
-            }
-            val upcomingCategory = async {
-                getUpcomingMovies.byPage(1)
-            }
-            val nowPlayingCategory = async {
-                getNowPlayingMovies.byPage(1)
-            }
-            val topRatedCategory = async {
-                getTopRatedMovies.byPage(1)
-            }
+            val popularCategory = async { getPopularMovies(1) }
+            val upcomingCategory = async { getUpcomingMovies(1) }
+            val nowPlayingCategory = async { getNowPlayingMovies(1) }
+            val topRatedCategory = async { getTopRatedMovies(1) }
             val menuItemList: MutableList<MenuItem> = mutableListOf()
             awaitAll(
                 popularCategory,

@@ -11,11 +11,12 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.awaitResponse
 import javax.inject.Inject
 
-class MainRepository @Inject constructor(
+class MovieDetailedRepository @Inject constructor(
     private val itemDao: ItemDao,
     private val tmdbApi: TmdbApi
 ) {
 
+    // TODO: encapsulate the request
     suspend fun getMovieDetailedData(movieId: Int): State<MovieDetailedData> {
         val response = tmdbApi.getMovieDetails(
             movieId = movieId,
@@ -35,7 +36,7 @@ class MainRepository @Inject constructor(
             )
         }
     }
-    fun saveMovieDetailed(movieDetailedData: MovieDetailedData): Flow<State<Int>> = flow {
+    suspend fun saveMovieDetailed(movieDetailedData: MovieDetailedData): Flow<State<Int>> = flow {
         emit(State.Loading)
         try {
             val movieId = itemDao.insertMovieDetailed(movieDetailedData)
@@ -45,7 +46,7 @@ class MainRepository @Inject constructor(
         }
     }
 
-    fun deleteMovieDetailed(movieDetailedData: MovieDetailedData): Flow<State<Int>> = flow {
+    suspend fun deleteMovieDetailed(movieDetailedData: MovieDetailedData): Flow<State<Int>> = flow {
         emit(State.Loading)
         try {
             val movieId = itemDao.deleteMovie(movieDetailedData)

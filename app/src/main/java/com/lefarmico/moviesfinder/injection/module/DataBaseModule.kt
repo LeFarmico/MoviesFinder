@@ -5,7 +5,8 @@ import androidx.room.Room
 import com.lefarmico.moviesfinder.data.dataBase.AppDatabase
 import com.lefarmico.moviesfinder.data.dataBase.dao.ItemDao
 import com.lefarmico.moviesfinder.data.http.request.TmdbApi
-import com.lefarmico.moviesfinder.data.manager.MainRepository
+import com.lefarmico.moviesfinder.data.manager.MovieBriefListRepository
+import com.lefarmico.moviesfinder.data.manager.MovieDetailedRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,5 +29,14 @@ class DataBaseModule {
 
     @Provides
     @Singleton
-    fun provideRepository(itemDao: ItemDao, tmdbApi: TmdbApi): MainRepository = MainRepository(itemDao, tmdbApi)
+    fun provideMovieDetailedRepository(
+        itemDao: ItemDao,
+        tmdbApi: TmdbApi
+    ): MovieDetailedRepository = MovieDetailedRepository(itemDao, tmdbApi)
+
+    @Provides
+    @Singleton
+    fun provideMovieBriefListRepository(
+        tmdbApi: TmdbApi
+    ): MovieBriefListRepository = MovieBriefListRepository(tmdbApi)
 }
