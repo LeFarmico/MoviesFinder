@@ -20,7 +20,8 @@ class MainRepository @Inject constructor(
         val response = tmdbApi.getMovieDetails(
             movieId = movieId,
             apiKey = API_KEY,
-            lang = "en-US"
+            lang = "en-US",
+            append = "watch/providers,credits"
         ).awaitResponse()
         return if (response.isSuccessful) {
             State.Success(
