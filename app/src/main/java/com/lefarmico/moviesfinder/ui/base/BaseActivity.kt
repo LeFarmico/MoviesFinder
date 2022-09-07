@@ -17,7 +17,7 @@ abstract class BaseActivity <VM : ViewModel, VB : ViewBinding> : AppCompatActivi
     lateinit var binding: VB
 
     private val job = Job()
-    private val coroutineScope = CoroutineScope(Dispatchers.Main + job)
+    internal val activityScope = CoroutineScope(Dispatchers.Main + job)
 
     abstract fun getViewBinding(): VB
     abstract fun getInjectViewModel(): VM
@@ -31,7 +31,7 @@ abstract class BaseActivity <VM : ViewModel, VB : ViewBinding> : AppCompatActivi
 
     override fun onDestroy() {
         super.onDestroy()
-        coroutineScope.coroutineContext.cancelChildren()
+        activityScope.coroutineContext.cancelChildren()
     }
 
     fun showAlert(

@@ -1,35 +1,29 @@
 package com.lefarmico.moviesfinder.ui.main
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
 import com.lefarmico.moviesfinder.data.manager.Interactor
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    val interactor: Interactor
+    val interactor: Interactor,
+//    val saveMovieDetailedToDBUseCase: SaveMovieDetailedToDBUseCase,
+//    val detailedToDBUseCase: SaveMovieDetailedToDBUseCase
 ) : ViewModel() {
 
-//    val movieDataDetails: BehaviorSubject<MovieData> = interactor.movieDataDetailsBehaviourSubject
-//
-//    fun onItemClick(movieBriefData: MovieBriefData) {
-//        interactor.putMovieFromApiToBehaviour(movieBriefData)
-//    }
-//
-//    fun watchlistHandler(item: MovieData, watchlistToggle: Boolean) {
-//        Single.create<Boolean> {
-//            it.onSuccess(watchlistToggle)
-//        }
-//            .subscribeOn(Schedulers.io())
-//            .subscribe { isInWatchlist ->
-//                val updatedMovieData = (item).copy(isWatchlist = isInWatchlist)
-//                val updatedHeader = updatedMovieData.toItemHeaderImpl()
-//                interactor.updateItemHeaderInDb(updatedHeader)
-//                if (watchlistToggle) {
-//                    interactor.putMovieDetailsToDb(updatedMovieData)
-//                } else {
-//                    interactor.deleteMovieDetailsFromDb(updatedMovieData)
-//                }
-//            }
-//    }
+    private var _shownMovie = MutableLiveData<MovieDetailedData>()
+    val shownMovieLiveData get() = _shownMovie
+
+    fun startObserveMovieDetailedFromChannel() {
+        viewModelScope.launch {
+            interactor.actionOnMovieDetailedInvoked {
+                _shownMovie.value = it
+            }
+        }
+    }
 }

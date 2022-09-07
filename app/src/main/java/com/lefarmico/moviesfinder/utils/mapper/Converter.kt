@@ -53,23 +53,21 @@ object Converter {
     }
 
     fun convertApiMovieDetailsToDTOItem(
-        movieBriefData: MovieBriefData,
-        country: String,
         tmdbItem: TmdbMovieDetailsResult
     ): MovieDetailedData {
         return MovieDetailedData(
-            id = movieBriefData.id,
+            id = tmdbItem.id,
             itemId = tmdbItem.id,
             posterPath = tmdbItem.poster_path ?: "",
             title = tmdbItem.title,
             rating = tmdbItem.vote_average,
             description = tmdbItem.overview,
-            isWatchlist = movieBriefData.isWatchlist,
+            isWatchlist = false, // TODO: убрать
             genres = convertGenres(tmdbItem.genres),
             yourRate = 0,
-            actors = convertCast(tmdbItem.credits.tmdbCast),
-            directors = convertDirectors(tmdbItem.credits.tmdbCrew),
-            watchMovieProviderData = convertProviders(tmdbItem.providers, country),
+            actors = convertCast(tmdbItem.credits?.tmdbCast) ?: emptyList(),
+            directors = convertDirectors(tmdbItem.credits?.tmdbCrew) ?: emptyList(),
+            watchMovieProviderData = convertProviders(tmdbItem?.providers, "US"), // TODO add country
             length = tmdbItem.runtime,
             photosPath = listOf(),
             releaseDate = tmdbItem.release_date
@@ -99,8 +97,9 @@ object Converter {
         }
         return movieCastData
     }
-    private fun convertDirectors(tmdbCrewList: List<TmdbCrew>): List<MovieCastData> {
+    private fun convertDirectors(tmdbCrewList: List<TmdbCrew>?): List<MovieCastData> {
         val movieCastData = mutableListOf<MovieCastData>()
+        if (tmdbCrewList == null) return movieCastData
         val count = if (tmdbCrewList.size >= 10) {
             10
         } else {
@@ -119,8 +118,9 @@ object Converter {
         return movieCastData
     }
 
-    private fun convertProviders(providers: TmdbProvidersResult, country: String): List<MovieProviderData> {
+    private fun convertProviders(providers: TmdbProvidersResult?, country: String): List<MovieProviderData> {
         val providersList = mutableListOf<MovieProviderData>()
+        if (providers == null) return providersList
         providers.results.getCountryProviderByName(country)?.apply {
             tmdbBuy?.forEach {
                 providersList.add(

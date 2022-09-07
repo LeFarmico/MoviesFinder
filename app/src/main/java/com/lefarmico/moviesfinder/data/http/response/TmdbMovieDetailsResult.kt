@@ -58,7 +58,7 @@ data class TmdbMovieDetailsResult(
     @SerializedName("vote_count")
     val vote_count: Int,
     @SerializedName("watch/providers")
-    val providers: TmdbProvidersResult,
+    val providers: TmdbProvidersResult?,
     @SerializedName("credits")
-    val credits: TmdbCreditsResult
+    val credits: TmdbCreditsResult?
 )
