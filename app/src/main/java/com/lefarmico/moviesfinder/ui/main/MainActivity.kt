@@ -11,6 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.ui.base.BaseActivity
 import com.lefarmico.moviesfinder.ui.common.widget.BottomSheetMovieDetails
@@ -37,7 +38,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate")
         setSupportActionBar(binding.toolbar)
-
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
@@ -49,18 +49,19 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
 
         bottomSheetBehaviour = BottomSheetBehavior.from(binding.bottomSheet)
 
-//        viewModel.movieDataDetails
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe {
-//                launchItemDetails(it)
-//            }
+        viewModel.shownMovieLiveData.observe(this) {
+            launchItemDetails(it)
+        }
 
         applyBottomSheetStateCallbacks()
         binding.searchFab.setOnClickListener {
             navController.navigate(R.id.searchFragment)
-//            Toast.makeText(this, "Update to pro", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.startObserveMovieDetailedFromChannel()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -115,15 +116,11 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
             })
         }
     }
-//
-//    private fun launchItemDetails(movieItem: MovieData) {
-//        binding.bottomSheet.apply {
-//            setMovieItem(movieItem)
-//            watchListCallback(
-//                { viewModel.watchlistHandler(movieItem, true) },
-//                { viewModel.watchlistHandler(movieItem, false) }
-//            )
-//        }
-//        bottomSheetBehaviour.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-//    }
+
+    private fun launchItemDetails(movieDetailedData: MovieDetailedData) {
+        binding.bottomSheet.apply {
+            setMovieItem(movieDetailedData)
+        }
+        bottomSheetBehaviour.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+    }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.lefarmico.moviesfinder.data.dataBase.AppDatabase
 import com.lefarmico.moviesfinder.data.dataBase.dao.ItemDao
+import com.lefarmico.moviesfinder.data.http.request.TmdbApi
 import com.lefarmico.moviesfinder.data.manager.MainRepository
 import dagger.Module
 import dagger.Provides
@@ -27,5 +28,5 @@ class DataBaseModule {
 
     @Provides
     @Singleton
-    fun provideRepository(itemDao: ItemDao): MainRepository = MainRepository(itemDao)
+    fun provideRepository(itemDao: ItemDao, tmdbApi: TmdbApi): MainRepository = MainRepository(itemDao, tmdbApi)
 }

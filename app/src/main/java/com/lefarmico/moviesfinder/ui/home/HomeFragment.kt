@@ -17,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<HomeViewModel, FragmentMovieBinding>() {
 
-    private val itemAdapter = MenuItemAdapter {}
+    private lateinit var itemAdapter: MenuItemAdapter
     private lateinit var paddingDecorator: PaddingItemDecoration
 
     override fun getInjectViewModel(): HomeViewModel {
@@ -31,17 +31,12 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentMovieBinding>() {
         savedInstanceState: Bundle?
     ): FragmentMovieBinding = FragmentMovieBinding.inflate(inflater, container, false)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        itemAdapter = MenuItemAdapter {
+            viewModel.showMovieDetail(it.itemId)
+        }
         paddingDecorator = PaddingItemDecoration(
             topPd = requireContext().resources.getDimension(R.dimen.stnd_margin).toInt()
         )

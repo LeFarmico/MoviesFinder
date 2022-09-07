@@ -4,10 +4,8 @@ import com.lefarmico.moviesfinder.data.entity.CategoryData
 import com.lefarmico.moviesfinder.data.entity.MenuItem
 import com.lefarmico.moviesfinder.data.http.request.TmdbApi
 import com.lefarmico.moviesfinder.data.http.response.State
-import com.lefarmico.moviesfinder.data.manager.useCase.GetNowPlayingMovieBriefList
-import com.lefarmico.moviesfinder.data.manager.useCase.GetPopularMovieBriefList
-import com.lefarmico.moviesfinder.data.manager.useCase.GetTopRatedMovieBriefList
-import com.lefarmico.moviesfinder.data.manager.useCase.GetUpcomingMovieBriefList
+import com.lefarmico.moviesfinder.data.manager.MainRepository
+import com.lefarmico.moviesfinder.data.manager.useCase.*
 import com.lefarmico.moviesfinder.private.Private.API_KEY
 import com.lefarmico.moviesfinder.utils.mapper.Converter
 import dagger.Module
@@ -168,4 +166,9 @@ class UseCaseModule {
                 }
             }
         }
+
+    @Provides
+    @Singleton
+    fun provideGetMovieDetailedApiUseCase(mainRepository: MainRepository) =
+        GetMovieDetailedApiUseCase(mainRepository::getMovieDetailedData)
 }

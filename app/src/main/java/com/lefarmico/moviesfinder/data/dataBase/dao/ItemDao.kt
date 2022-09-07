@@ -38,13 +38,13 @@ interface ItemDao {
     fun insertAll(list: List<MovieBriefData>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMovie(movieDetailedData: MovieDetailedData)
+    fun insertMovieDetailed(movieDetailedData: MovieDetailedData): Long
 
     @Update(entity = MovieBriefData::class)
     fun updateMovieDetails(item: MovieBriefData)
 
     @Delete
-    fun deleteMovie(movieDetailedData: MovieDetailedData)
+    fun deleteMovie(movieDetailedData: MovieDetailedData): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun putSearchHeader(searchRequestData: SearchRequestData)

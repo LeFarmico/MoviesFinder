@@ -20,7 +20,7 @@ interface TmdbApi {
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") lang: String,
-        @Query("append_to_response") append: String
+        @Query("append_to_response") append: String? = null
     ): Call<TmdbMovieDetailsResult>
 
     @GET("3/search/movie")
