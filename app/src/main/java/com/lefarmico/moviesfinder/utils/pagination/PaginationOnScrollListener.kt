@@ -3,16 +3,14 @@ package com.lefarmico.moviesfinder.utils.pagination
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class PaginationOnScrollListener(
     private val layoutManager: RecyclerView.LayoutManager,
     private val pagination: () -> Unit
 ) : RecyclerView.OnScrollListener() {
 
-    var loading = true
+    private var loading = true
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
@@ -32,7 +30,7 @@ class PaginationOnScrollListener(
                     // Do pagination
                     pagination()
                     // TODO change it!!!
-                    GlobalScope.launch {
+                    CoroutineScope(Dispatchers.Default).launch {
                         delay(1000L)
                         loading = true
                     }

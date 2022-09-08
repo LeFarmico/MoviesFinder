@@ -1,6 +1,7 @@
 package com.lefarmico.moviesfinder.injection.module
 
 import com.lefarmico.moviesfinder.data.http.request.TmdbApi
+import com.lefarmico.moviesfinder.data.http.response.callAdapter.NetworkCallAdapterFactory
 import com.lefarmico.moviesfinder.private.Private
 import dagger.Module
 import dagger.Provides
@@ -33,7 +34,7 @@ class RemoteModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
         .baseUrl(Private.BASE_URL)
-//        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+        .addCallAdapterFactory(NetworkCallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()

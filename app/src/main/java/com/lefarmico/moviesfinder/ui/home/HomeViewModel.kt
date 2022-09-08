@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lefarmico.moviesfinder.data.entity.MenuItem
-import com.lefarmico.moviesfinder.data.http.response.State
+import com.lefarmico.moviesfinder.data.http.response.entity.State
 import com.lefarmico.moviesfinder.data.manager.Interactor
 import com.lefarmico.moviesfinder.data.manager.useCase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
