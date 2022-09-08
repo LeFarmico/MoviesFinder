@@ -2,12 +2,12 @@ package com.lefarmico.moviesfinder.utils.mapper
 
 import android.util.Log
 import com.lefarmico.moviesfinder.data.entity.*
-import com.lefarmico.moviesfinder.data.http.response.TmdbMovieDetailsResult
-import com.lefarmico.moviesfinder.data.http.response.TmdbMovieResult
-import com.lefarmico.moviesfinder.data.http.response.TmdbProvidersResult
-import com.lefarmico.moviesfinder.data.http.response.credits.TmdbCast
-import com.lefarmico.moviesfinder.data.http.response.credits.TmdbCrew
-import com.lefarmico.moviesfinder.data.http.response.details.TmdbGenre
+import com.lefarmico.moviesfinder.data.http.response.entity.TmdbMovieDetailsResult
+import com.lefarmico.moviesfinder.data.http.response.entity.TmdbMovieResult
+import com.lefarmico.moviesfinder.data.http.response.entity.TmdbProvidersResult
+import com.lefarmico.moviesfinder.data.http.response.entity.credits.TmdbCast
+import com.lefarmico.moviesfinder.data.http.response.entity.credits.TmdbCrew
+import com.lefarmico.moviesfinder.data.http.response.entity.details.TmdbGenre
 import java.lang.NullPointerException
 
 // TODO: change all mappers
@@ -65,8 +65,8 @@ object Converter {
             isWatchlist = false, // TODO: убрать
             genres = convertGenres(tmdbItem.genres),
             yourRate = 0,
-            actors = convertCast(tmdbItem.credits?.tmdbCast) ?: emptyList(),
-            directors = convertDirectors(tmdbItem.credits?.tmdbCrew) ?: emptyList(),
+            actors = convertCast(tmdbItem.credits?.tmdbCast),
+            directors = convertDirectors(tmdbItem.credits?.tmdbCrew),
             watchMovieProviderData = convertProviders(tmdbItem?.providers, "US"), // TODO add country
             length = tmdbItem.runtime,
             photosPath = listOf(),

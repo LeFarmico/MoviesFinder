@@ -1,10 +1,10 @@
-package com.lefarmico.moviesfinder.data.http.response
+package com.lefarmico.moviesfinder.data.http.response.entity
 
 import com.google.gson.annotations.SerializedName
-import com.lefarmico.moviesfinder.data.http.response.details.TmdbGenre
-import com.lefarmico.moviesfinder.data.http.response.details.TmdbProductionCompany
-import com.lefarmico.moviesfinder.data.http.response.details.TmdbProductionCountry
-import com.lefarmico.moviesfinder.data.http.response.details.TmdbSpokenLanguage
+import com.lefarmico.moviesfinder.data.http.response.entity.details.TmdbGenre
+import com.lefarmico.moviesfinder.data.http.response.entity.details.TmdbProductionCompany
+import com.lefarmico.moviesfinder.data.http.response.entity.details.TmdbProductionCountry
+import com.lefarmico.moviesfinder.data.http.response.entity.details.TmdbSpokenLanguage
 
 data class TmdbMovieDetailsResult(
     @SerializedName("adult")

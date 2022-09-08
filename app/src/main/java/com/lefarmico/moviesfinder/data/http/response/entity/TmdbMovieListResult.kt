@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.data.http.response
+package com.lefarmico.moviesfinder.data.http.response.entity
 import com.google.gson.annotations.SerializedName
 
 data class TmdbMovieListResult(

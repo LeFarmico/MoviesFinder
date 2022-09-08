@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.data.http.response.details
+package com.lefarmico.moviesfinder.data.http.response.entity.details
 
 import com.google.gson.annotations.SerializedName
 

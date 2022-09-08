@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.data.http.response
+package com.lefarmico.moviesfinder.data.http.response.entity
 
 sealed class State<out T> {
     object Loading : State<Nothing>()
