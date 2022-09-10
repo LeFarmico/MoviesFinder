@@ -34,9 +34,12 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentMovieBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        itemAdapter = MenuItemAdapter {
+        itemAdapter = MenuItemAdapter(
+            coroutineScope = fragmentScope
+        ) {
             viewModel.showMovieDetail(it.itemId)
         }
+        lifecycle.addObserver(itemAdapter)
         paddingDecorator = PaddingItemDecoration(
             topPd = requireContext().resources.getDimension(R.dimen.stnd_margin).toInt()
         )
