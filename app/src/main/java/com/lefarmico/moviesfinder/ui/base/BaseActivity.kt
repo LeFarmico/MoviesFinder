@@ -46,13 +46,13 @@ abstract class BaseActivity <VM : ViewModel, VB : ViewBinding> : AppCompatActivi
             builder1.setMessage(message)
             builder1.setTitle(getString(R.string.app_name))
             builder1.setCancelable(isCancellable)
-            builder1.setPositiveButton(actionButtonTitle) { dialog, id ->
+            builder1.setPositiveButton(actionButtonTitle) { _, _ ->
                 onSuccess()
             }
             if (showCancel) {
                 builder1.setNegativeButton(
                     getString(R.string.cancel)
-                ) { dialog, id ->
+                ) { dialog, _ ->
                     dialog.cancel()
                 }
             }

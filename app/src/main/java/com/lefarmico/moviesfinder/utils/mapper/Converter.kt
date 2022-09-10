@@ -67,7 +67,7 @@ object Converter {
             yourRate = 0,
             actors = convertCast(tmdbItem.credits?.tmdbCast),
             directors = convertDirectors(tmdbItem.credits?.tmdbCrew),
-            watchMovieProviderData = convertProviders(tmdbItem?.providers, "US"), // TODO add country
+            watchMovieProviderData = convertProviders(tmdbItem.providers, "US"), // TODO add country
             length = tmdbItem.runtime,
             photosPath = listOf(),
             releaseDate = tmdbItem.release_date

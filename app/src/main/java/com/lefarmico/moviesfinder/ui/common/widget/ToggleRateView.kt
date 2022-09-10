@@ -188,7 +188,6 @@ class ToggleRateView @JvmOverloads constructor(
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        val cX = event.action
         return super.onKeyDown(keyCode, event)
     }
 

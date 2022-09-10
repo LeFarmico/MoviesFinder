@@ -23,7 +23,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, FragmentProfileBinding>()
         viewModel.watchlistStatsLiveData.observe(viewLifecycleOwner) {
 //            setStatsParameters(it)
         }
-        viewModel.itemsLiveData.observe(viewLifecycleOwner) { adapter ->
+        viewModel.itemsLiveData.observe(viewLifecycleOwner) { _ ->
 //            adapter.setOnClickEvent { header ->
 //                (requireContext() as MainActivity).viewModel.onItemClick(header)
 //            }
