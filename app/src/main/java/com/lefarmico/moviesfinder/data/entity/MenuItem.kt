@@ -1,9 +1,11 @@
 package com.lefarmico.moviesfinder.data.entity
 
+import androidx.paging.PagingData
+
 sealed class MenuItem(val menuItemType: MenuItemType) {
     data class Movies(
         val movieCategoryData: CategoryData,
-        val movieBriefDataList: List<MovieBriefData>,
+        val movieBriefDataList: PagingData<MovieBriefData>,
     ) : MenuItem(MenuItemType.Movies)
 }
 

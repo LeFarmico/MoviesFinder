@@ -4,13 +4,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lefarmico.moviesfinder.data.entity.MenuItem
-import com.lefarmico.moviesfinder.data.http.response.State
+import com.lefarmico.moviesfinder.data.http.response.entity.State
 import com.lefarmico.moviesfinder.data.manager.Interactor
 import com.lefarmico.moviesfinder.data.manager.useCase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.lang.IllegalStateException
 import javax.inject.Inject
@@ -45,17 +45,17 @@ class HomeViewModel @Inject constructor(
 
     private fun loadMoviesCategories() {
         viewModelScope.launch {
-            val popularCategory = async { getPopularMovies(1) }
-            val upcomingCategory = async { getUpcomingMovies(1) }
-            val nowPlayingCategory = async { getNowPlayingMovies(1) }
-            val topRatedCategory = async { getTopRatedMovies(1) }
+            val popularCategory = async { getPopularMovies() }
+            val upcomingCategory = async { getUpcomingMovies() }
+            val nowPlayingCategory = async { getNowPlayingMovies() }
+            val topRatedCategory = async { getTopRatedMovies() }
             val menuItemList: MutableList<MenuItem> = mutableListOf()
             awaitAll(
                 popularCategory,
                 upcomingCategory,
                 nowPlayingCategory,
                 topRatedCategory
-            ).merge().collect { dataState ->
+            ).merge().collectLatest { dataState ->
                 when (dataState) {
                     is State.Error -> {}
                     State.Loading -> {
@@ -63,13 +63,13 @@ class HomeViewModel @Inject constructor(
                     }
                     is State.Success -> {
                         menuItemList.add(dataState.data)
+                        state.value = state.value?.copy(
+                            isLoading = false,
+                            menuItemList = menuItemList
+                        )
                     }
                 }
             }
-            state.value = state.value?.copy(
-                isLoading = false,
-                menuItemList = menuItemList
-            )
         }
     }
 }

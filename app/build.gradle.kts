@@ -82,8 +82,6 @@ android {
 dependencies {
 
     // Android
-    implementation(Dependency.androidCore)
-    implementation(Dependency.appCompat)
     implementation(Dependency.constraintLayout)
     implementation(Dependency.cardView)
     implementation(Dependency.recyclerView)
@@ -92,17 +90,12 @@ dependencies {
 
     // Tests
     testImplementation(Dependency.junit)
+    testImplementation(Dependency.jetpackPagingTest)
     androidTestImplementation(Dependency.junitExt)
     androidTestImplementation(Dependency.espresso)
 
     // Picasso
     implementation(Dependency.picasso)
-
-    // Dagger 2
-    implementation(Dependency.dagger)
-    implementation(Dependency.daggerAndroidSupport)
-    kapt(Dependency.daggerAndroidProcessor)
-    kapt(Dependency.daggerCompiler)
 
     // Hilt
     implementation(Dependency.daggerHilt)
@@ -132,21 +125,13 @@ dependencies {
     implementation(Dependency.roomKtx)
     implementation(Dependency.roomRx)
 
-    // RXJava
-    implementation(Dependency.rxjava3Android)
-    implementation(Dependency.rxjava3)
-    implementation(Dependency.rxjavaKotlin)
-    implementation(Dependency.rxjavaRetrofitAdapter)
-
     // Coroutines
     implementation(Dependency.coroutinesCore)
     implementation(Dependency.coroutinesAndroid)
 
+    // Jetpack
+    implementation(Dependency.jetpackPaging)
+
     // CircleImageView
     implementation("de.hdodenhof:circleimageview:3.1.0")
-
-    // Neumorphism
-    implementation("com.github.fornewid:neumorphism:0.3.0")
-
-    // Modules
 }

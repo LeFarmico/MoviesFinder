@@ -1,33 +1,33 @@
 package com.lefarmico.moviesfinder.data.http.request
-import com.lefarmico.moviesfinder.data.http.response.TmdbMovieDetailsResult
-import com.lefarmico.moviesfinder.data.http.response.TmdbMovieListResult
-import retrofit2.Call
+import com.lefarmico.moviesfinder.data.http.response.NetworkResponse
+import com.lefarmico.moviesfinder.data.http.response.entity.TmdbMovieDetailsResult
+import com.lefarmico.moviesfinder.data.http.response.entity.TmdbMovieListResult
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TmdbApi {
     @GET("3/movie/{category}")
-    fun getMovies(
+    suspend fun getMovies(
         @Path("category") category: String,
         @Query("api_key") apiKey: String,
         @Query("language") lang: String,
         @Query("page") page: Int
-    ): Call<TmdbMovieListResult>
+    ): NetworkResponse<TmdbMovieListResult>
 
     @GET("3/movie/{movie_id}")
-    fun getMovieDetails(
+    suspend fun getMovieDetails(
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") lang: String,
         @Query("append_to_response") append: String? = null
-    ): Call<TmdbMovieDetailsResult>
+    ): NetworkResponse<TmdbMovieDetailsResult>
 
     @GET("3/search/movie")
-    fun getMovieFromSearch(
+    suspend fun getMovieFromSearch(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("query") query: String,
         @Query("page") page: Int
-    ): Call<TmdbMovieListResult>
+    ): NetworkResponse<TmdbMovieListResult>
 }

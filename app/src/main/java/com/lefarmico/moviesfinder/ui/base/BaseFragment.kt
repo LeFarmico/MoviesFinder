@@ -19,7 +19,7 @@ abstract class BaseFragment<VM : ViewModel, VB : ViewBinding> : Fragment() {
     lateinit var binding: VB
 
     private val job = Job()
-    private val coroutineScope = CoroutineScope(Dispatchers.Main + job)
+    internal val fragmentScope = CoroutineScope(Dispatchers.Main + job)
 
     abstract fun getInjectViewModel(): VM
     abstract fun getViewBinding(
@@ -67,7 +67,7 @@ abstract class BaseFragment<VM : ViewModel, VB : ViewBinding> : Fragment() {
     override fun onDetach() {
         super.onDetach()
         debugLog { "onDetach()" }
-        coroutineScope.coroutineContext.cancelChildren()
+        fragmentScope.coroutineContext.cancelChildren()
     }
 
     private inline fun debugLog(logText: () -> String) {

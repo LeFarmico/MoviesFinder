@@ -13,7 +13,7 @@ import kotlinx.parcelize.Parcelize
 data class MovieBriefData(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val id: Int = 0,
     @ColumnInfo(name = "movie_id") val itemId: Int = 0,
-    @ColumnInfo(name = "poster_path") val posterPath: String = "",
+    @ColumnInfo(name = "poster_path") val posterPath: String? = "",
     @ColumnInfo(name = "title") val title: String = "",
     @ColumnInfo(name = "rating") val rating: Double = 0.0,
     @ColumnInfo(name = "overview") val description: String = "",

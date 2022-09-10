@@ -1,7 +1,10 @@
 package com.lefarmico.moviesfinder.ui.home.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,12 +13,28 @@ import com.lefarmico.moviesfinder.data.entity.MenuItem
 import com.lefarmico.moviesfinder.data.entity.MenuItemType
 import com.lefarmico.moviesfinder.data.entity.MovieBriefData
 import com.lefarmico.moviesfinder.databinding.ItemMenuMoviesBinding
-import com.lefarmico.moviesfinder.ui.common.adapter.ItemAdapter
+import com.lefarmico.moviesfinder.ui.common.adapter.ItemPagingAdapter
 import com.lefarmico.moviesfinder.ui.common.decorator.PaddingItemDecoration
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class MenuItemAdapter(
     private val onMovieClick: (MovieBriefData) -> Unit
-) : ListAdapter<MenuItem, RecyclerView.ViewHolder>(MenuItemDiffUtil()) {
+) : ListAdapter<MenuItem, RecyclerView.ViewHolder>(MenuItemDiffUtil()), DefaultLifecycleObserver {
+
+    private val job = Job().apply {
+        invokeOnCompletion {
+            Log.d("Coooroutine", "LifeCycle onStop")
+        }
+    }
+    val scope = CoroutineScope(Dispatchers.Default + Job())
+
+    override fun onStop(owner: LifecycleOwner) {
+        super.onStop(owner)
+        job.complete()
+    }
 
     class MoviesViewHolder(
         menuMoviesBinding: ItemMenuMoviesBinding
@@ -33,11 +52,13 @@ class MenuItemAdapter(
             )
         }
 
-        fun bind(movies: MenuItem.Movies, onItemClick: (MovieBriefData) -> Unit) {
+        fun bind(coroutineScope: CoroutineScope, movies: MenuItem.Movies, onItemClick: (MovieBriefData) -> Unit) {
             val headerText = itemView.context.getString(movies.movieCategoryData.categoryResource)
             header.text = headerText
-            moviesListRecycler.adapter = ItemAdapter(onItemClick).apply {
-                items = movies.movieBriefDataList
+            moviesListRecycler.adapter = ItemPagingAdapter(onItemClick).apply {
+                coroutineScope.launch {
+                    submitData(movies.movieBriefDataList)
+                }
             }
         }
     }
@@ -68,7 +89,7 @@ class MenuItemAdapter(
             MenuItemType.Movies.typeNumber -> {
                 val viewHolder = holder as MoviesViewHolder
                 val item = getItem(position) as MenuItem.Movies
-                viewHolder.bind(item, onMovieClick)
+                viewHolder.bind(scope, item, onMovieClick)
             }
             else -> {
                 throw IllegalArgumentException("Incorrect viewType: $viewType")

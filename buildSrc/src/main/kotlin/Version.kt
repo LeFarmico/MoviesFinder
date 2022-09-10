@@ -24,4 +24,7 @@ object Version {
     const val junit = "4.13.2"
     const val junitExt = "1.1.3"
     const val espresso = "3.4.0"
+
+    // Jetpack
+    const val pagingVersion = "3.1.1"
 }

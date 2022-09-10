@@ -37,12 +37,6 @@ object Dependency {
     const val roomKtx = "androidx.room:room-ktx:${Version.room}"
     const val roomRx = "androidx.room:room-rxjava3:${Version.room}"
 
-    // RXJava
-    const val rxjava3Android = "io.reactivex.rxjava3:rxandroid:${Version.rxJava}"
-    const val rxjava3 = "io.reactivex.rxjava3:rxjava:${Version.rxJava}"
-    const val rxjavaKotlin = "io.reactivex.rxjava3:rxkotlin:${Version.rxJava}"
-    const val rxjavaRetrofitAdapter = "com.github.akarnokd:rxjava3-retrofit-adapter:${Version.rxJava}"
-
     // Android
     const val androidCore = "androidx.core:core-ktx:1.8.0"
     const val appCompat = "androidx.appcompat:appcompat:1.5.0"
@@ -56,8 +50,12 @@ object Dependency {
     const val junit = "junit:junit:4.13.2"
     const val junitExt = "androidx.test.ext:junit:1.1.3"
     const val espresso = "androidx.test.espresso:espresso-core:3.4.0"
+    const val jetpackPagingTest = "androidx.paging:paging-common:${Version.pagingVersion}"
 
     // Coroutines
     const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.coroutines}"
     const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Version.coroutines}"
+
+    // Jetpack
+    const val jetpackPaging = "androidx.paging:paging-runtime:${Version.pagingVersion}"
 }

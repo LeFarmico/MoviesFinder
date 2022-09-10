@@ -1,14 +1,14 @@
 package com.lefarmico.moviesfinder.data.manager
 
 import com.lefarmico.moviesfinder.data.dataBase.dao.ItemDao
-import com.lefarmico.moviesfinder.data.entity.*
+import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
 import com.lefarmico.moviesfinder.data.http.request.TmdbApi
-import com.lefarmico.moviesfinder.data.http.response.State
+import com.lefarmico.moviesfinder.data.http.response.NetworkResponse
+import com.lefarmico.moviesfinder.data.http.response.entity.State
 import com.lefarmico.moviesfinder.private.Private.API_KEY
 import com.lefarmico.moviesfinder.utils.mapper.Converter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.awaitResponse
 import javax.inject.Inject
 
 class MovieDetailedRepository @Inject constructor(
@@ -23,15 +23,14 @@ class MovieDetailedRepository @Inject constructor(
             apiKey = API_KEY,
             lang = "en-US",
             append = "watch/providers,credits"
-        ).awaitResponse()
-        return if (response.isSuccessful) {
-            State.Success(
-                Converter.convertApiMovieDetailsToDTOItem(
-                    response.body()!!
-                )
+        )
+        return when (response) {
+            is NetworkResponse.Success -> State.Success(
+                Converter.convertApiMovieDetailsToDTOItem(response.data)
             )
-        } else {
-            State.Error(
+            is NetworkResponse.Exception -> State.Error(response.throwable)
+            is NetworkResponse.Error -> State.Error(
+                // TODO add http state error
                 RuntimeException()
             )
         }
