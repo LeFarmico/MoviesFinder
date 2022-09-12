@@ -74,4 +74,8 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">?android:attr/listDivider</item>
     </style>
+
+    <style name="AppBarOverlay">
+
+    </style>
 </resources>

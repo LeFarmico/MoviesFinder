@@ -15,9 +15,9 @@ import com.lefarmico.moviesfinder.databinding.ItemBinding
 import com.lefarmico.moviesfinder.private.Private
 import com.squareup.picasso.Picasso
 
-class ItemPagingAdapter(
+class MovieBriefPagingAdapter(
     private val onClick: (MovieBriefData) -> Unit
-) : PagingDataAdapter<MovieBriefData, ItemPagingAdapter.ViewHolder>(ItemDiffUtil()) {
+) : PagingDataAdapter<MovieBriefData, MovieBriefPagingAdapter.ViewHolder>(ItemDiffUtil()) {
 
     class ItemDiffUtil : DiffUtil.ItemCallback<MovieBriefData>() {
         override fun areItemsTheSame(oldItem: MovieBriefData, newItem: MovieBriefData): Boolean =

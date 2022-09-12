@@ -13,6 +13,8 @@ import android.widget.ToggleButton
 import androidx.annotation.Nullable
 import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieCastData
@@ -22,15 +24,16 @@ import com.lefarmico.moviesfinder.private.Private
 import com.lefarmico.moviesfinder.ui.common.adapter.CastAdapter
 import com.lefarmico.moviesfinder.ui.common.adapter.SpinnerProviderAdapter
 import com.lefarmico.moviesfinder.ui.common.animation.TextViewCollapseLineAnimator
+import com.lefarmico.moviesfinder.ui.common.decorator.PaddingItemDecoration
 import com.squareup.picasso.Picasso
 import java.util.*
 
-class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: AttributeSet) : ConstraintLayout(context, attributeSet) {
+class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: AttributeSet) : ConstraintLayout(context, attributeSet), DefaultLifecycleObserver {
 
     private var binding: BottomSheetMovieDetailsBinding =
         BottomSheetMovieDetailsBinding.inflate(LayoutInflater.from(context), this, true)
 
-    val backgroundPoster: ImageView = binding.posterBackgroundImageView
+    private val backgroundPoster: ImageView = binding.posterBackgroundImageView
     val backButton: AppCompatButton = binding.backButton.apply { alpha = 0f }
     private val poster: ImageView = binding.posterImageView
     private val movieTitle: TextView = binding.movieTitle
@@ -42,6 +45,18 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     private val genres: TextView = binding.genresTextView
     private val actors: RecyclerView = binding.actorsRecyclerView
     private val isWatchlist: ToggleButton = binding.favoriteToggleButton
+
+    override fun onStart(owner: LifecycleOwner) {
+        super.onStart(owner)
+        actors.addItemDecoration(
+            PaddingItemDecoration(
+                horizontalPd = context.resources.getDimensionPixelOffset(
+                    R.dimen.stnd_very_small_margin
+                )
+            ),
+            0
+        )
+    }
 
     @SuppressLint("SetTextI18n")
     fun setMovieItem(movieItem: MovieDetailedData) {

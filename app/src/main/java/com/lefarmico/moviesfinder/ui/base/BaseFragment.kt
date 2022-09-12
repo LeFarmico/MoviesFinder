@@ -18,7 +18,7 @@ abstract class BaseFragment<VM : ViewModel, VB : ViewBinding> : Fragment() {
     lateinit var viewModel: VM
     lateinit var binding: VB
 
-    private val job = Job()
+    internal val job = Job()
     internal val fragmentScope = CoroutineScope(Dispatchers.Main + job)
 
     abstract fun getInjectViewModel(): VM

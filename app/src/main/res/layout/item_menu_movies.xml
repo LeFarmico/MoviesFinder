@@ -11,7 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/TextStyle.PrimaryHeading"
-        android:paddingHorizontal="@dimen/stnd_big_margin"
+        android:paddingHorizontal="@dimen/stnd_margin"
+        android:layout_marginTop="@dimen/stnd_margin"
+        android:layout_marginBottom="@dimen/stnd_small_margin"
         android:text="@string/movie_container_name" />
 
     <androidx.recyclerview.widget.RecyclerView
