@@ -1,10 +1,8 @@
-package com.lefarmico.moviesfinder.ui.home.adapter
+package com.lefarmico.moviesfinder.ui.common.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +11,6 @@ import com.lefarmico.moviesfinder.data.entity.MenuItem
 import com.lefarmico.moviesfinder.data.entity.MenuItemType
 import com.lefarmico.moviesfinder.data.entity.MovieBriefData
 import com.lefarmico.moviesfinder.databinding.ItemMenuMoviesBinding
-import com.lefarmico.moviesfinder.ui.common.adapter.ItemPagingAdapter
 import com.lefarmico.moviesfinder.ui.common.decorator.PaddingItemDecoration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,20 +18,17 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class MenuItemAdapter(
+    parentJob: Job,
     private val onMovieClick: (MovieBriefData) -> Unit
-) : ListAdapter<MenuItem, RecyclerView.ViewHolder>(MenuItemDiffUtil()), DefaultLifecycleObserver {
+) : ListAdapter<MenuItem, RecyclerView.ViewHolder>(MenuItemDiffUtil()) {
 
-    private val job = Job().apply {
+    private val job = Job(parentJob).apply {
         invokeOnCompletion {
-            Log.d("Coooroutine", "LifeCycle onStop")
+            Log.d(TAG, "the Job have been completed.")
         }
     }
-    val scope = CoroutineScope(Dispatchers.Default + Job())
 
-    override fun onStop(owner: LifecycleOwner) {
-        super.onStop(owner)
-        job.complete()
-    }
+    private val scope = CoroutineScope(Dispatchers.Default + job)
 
     class MoviesViewHolder(
         menuMoviesBinding: ItemMenuMoviesBinding
@@ -55,7 +49,7 @@ class MenuItemAdapter(
         fun bind(coroutineScope: CoroutineScope, movies: MenuItem.Movies, onItemClick: (MovieBriefData) -> Unit) {
             val headerText = itemView.context.getString(movies.movieCategoryData.categoryResource)
             header.text = headerText
-            moviesListRecycler.adapter = ItemPagingAdapter(onItemClick).apply {
+            moviesListRecycler.adapter = MovieBriefPagingAdapter(onItemClick).apply {
                 coroutineScope.launch {
                     submitData(movies.movieBriefDataList)
                 }
@@ -98,4 +92,8 @@ class MenuItemAdapter(
     }
 
     override fun getItemViewType(position: Int): Int = getItem(position).menuItemType.typeNumber
+
+    companion object {
+        const val TAG = "MenuItemAdapter"
+    }
 }

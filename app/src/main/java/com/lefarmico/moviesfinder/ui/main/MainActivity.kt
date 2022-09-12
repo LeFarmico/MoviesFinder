@@ -48,6 +48,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         setupActionBarWithNavController(navController, appBarConfig)
 
         bottomSheetBehaviour = BottomSheetBehavior.from(binding.bottomSheet)
+        lifecycle.addObserver(binding.bottomSheet)
 
         viewModel.shownMovieLiveData.observe(this) {
             launchItemDetails(it)

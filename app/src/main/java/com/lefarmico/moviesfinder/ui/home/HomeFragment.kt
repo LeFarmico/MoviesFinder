@@ -10,8 +10,8 @@ import androidx.fragment.app.viewModels
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
 import com.lefarmico.moviesfinder.ui.base.BaseFragment
+import com.lefarmico.moviesfinder.ui.common.adapter.MenuItemAdapter
 import com.lefarmico.moviesfinder.ui.common.decorator.PaddingItemDecoration
-import com.lefarmico.moviesfinder.ui.home.adapter.MenuItemAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,13 +35,12 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentMovieBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         itemAdapter = MenuItemAdapter(
-            coroutineScope = fragmentScope
+            parentJob = job
         ) {
             viewModel.showMovieDetail(it.itemId)
         }
-        lifecycle.addObserver(itemAdapter)
         paddingDecorator = PaddingItemDecoration(
-            topPd = requireContext().resources.getDimension(R.dimen.stnd_margin).toInt()
+            topPd = requireContext().resources.getDimension(R.dimen.stnd_small_margin).toInt()
         )
         binding.recyclerParent.apply {
             adapter = itemAdapter
