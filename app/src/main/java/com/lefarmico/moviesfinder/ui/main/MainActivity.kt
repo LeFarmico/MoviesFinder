@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -14,7 +15,6 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.ui.base.BaseActivity
-import com.lefarmico.moviesfinder.ui.common.widget.BottomSheetMovieDetails
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,7 +30,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     private lateinit var navController: NavController
     private lateinit var appBarConfig: AppBarConfiguration
 
-    private lateinit var bottomSheetBehaviour: BottomSheetBehavior<BottomSheetMovieDetails>
+    private lateinit var bottomSheetBehaviour: BottomSheetBehavior<CoordinatorLayout>
 
     private val TAG = this.javaClass.canonicalName
 
@@ -88,6 +88,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                                 isDraggable = true
                                 blackBackgroundFrameLayout.isClickable = false
                                 bottomNavigationBarView.visibility = View.VISIBLE
+                                binding.bottomSheet.disableScroll()
                             }
                         }
                         BottomSheetBehavior.STATE_HALF_EXPANDED -> {
@@ -98,17 +99,19 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                                     it.isClickable = false
                                     state = BottomSheetBehavior.STATE_HIDDEN
                                 }
+                                binding.bottomSheet.disableScroll()
                             }
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
-                            isDraggable = false
-                            binding.bottomSheet.backButton.apply {
-                                isClickable = true
-                                setOnClickListener { state = BottomSheetBehavior.STATE_HIDDEN }
+//                            isDraggable = false
+                            binding.bottomSheet.enableScroll()
+                            binding.bottomSheet.onNavigateUpPressed {
+                                state = BottomSheetBehavior.STATE_HIDDEN
                             }
                         }
                         BottomSheetBehavior.STATE_DRAGGING -> {
-                            binding.bottomSheet.backButton.isClickable = false
+                            binding.bottomSheet.enableScroll()
+//                            binding.bottomSheet.backButton.isClickable = false
                         }
                         BottomSheetBehavior.STATE_COLLAPSED -> {}
                         BottomSheetBehavior.STATE_SETTLING -> {}

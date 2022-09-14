@@ -132,6 +132,6 @@ dependencies {
     // Jetpack
     implementation(Dependency.jetpackPaging)
 
-    // CircleImageView
-    implementation("de.hdodenhof:circleimageview:3.1.0")
+    // Views
+    implementation(Dependency.circleImageView)
 }

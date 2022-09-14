@@ -38,8 +38,6 @@ object Dependency {
     const val roomRx = "androidx.room:room-rxjava3:${Version.room}"
 
     // Android
-    const val androidCore = "androidx.core:core-ktx:1.8.0"
-    const val appCompat = "androidx.appcompat:appcompat:1.5.0"
     const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.1.4"
     const val cardView = "androidx.cardview:cardview:1.0.0"
     const val recyclerView = "androidx.recyclerview:recyclerview:1.2.1"
@@ -58,4 +56,7 @@ object Dependency {
 
     // Jetpack
     const val jetpackPaging = "androidx.paging:paging-runtime:${Version.pagingVersion}"
+
+    // Views
+    const val circleImageView = "de.hdodenhof:circleimageview:3.1.0"
 }
