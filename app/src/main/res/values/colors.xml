@@ -21,4 +21,6 @@
     <color name="on_background_color">#171722</color>
     <!-- bottomSheet -->
     <color name="bottom_bar_color">@color/background_color</color>
+
+    <color name="transparent_color">#00000000</color>
 </resources>

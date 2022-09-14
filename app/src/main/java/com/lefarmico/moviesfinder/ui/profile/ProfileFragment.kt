@@ -18,7 +18,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, FragmentMovieDetailsBindi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated")
-
+        binding.toolbar.title = "Dragon Ball Super: Super Hero"
 //        setStatsParameters()
         viewModel.watchlistStatsLiveData.observe(viewLifecycleOwner) {
 //            setStatsParameters(it)
