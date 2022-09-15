@@ -103,7 +103,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                             }
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
-//                            isDraggable = false
+                            isDraggable = false
                             binding.bottomSheet.enableScroll()
                             binding.bottomSheet.onNavigateUpPressed {
                                 state = BottomSheetBehavior.STATE_HIDDEN
@@ -111,7 +111,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                         }
                         BottomSheetBehavior.STATE_DRAGGING -> {
                             binding.bottomSheet.enableScroll()
-//                            binding.bottomSheet.backButton.isClickable = false
                         }
                         BottomSheetBehavior.STATE_COLLAPSED -> {}
                         BottomSheetBehavior.STATE_SETTLING -> {}
@@ -122,9 +121,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     }
 
     private fun launchItemDetails(movieDetailedData: MovieDetailedData) {
-        binding.bottomSheet.apply {
-            setMovieItem(movieDetailedData)
-        }
+        binding.bottomSheet.setMovieItem(movieDetailedData)
         bottomSheetBehaviour.state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
 }

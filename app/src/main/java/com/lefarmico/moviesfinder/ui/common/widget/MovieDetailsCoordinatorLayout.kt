@@ -17,6 +17,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieCastData
 import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
@@ -53,6 +54,8 @@ class MovieDetailsCoordinatorLayout(
 
     private var isScrollEnabled = true
 
+    lateinit var bottomSheetBehavior: BottomSheetBehavior<MovieDetailsCoordinatorLayout>
+
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
         actors.addItemDecoration(
@@ -71,6 +74,34 @@ class MovieDetailsCoordinatorLayout(
                 override fun canDrag(appBarLayout: AppBarLayout): Boolean = isScrollEnabled
             })
         }
+    }
+
+    fun bindBottomSheetBehaviour(bottomSheetBehavior: BottomSheetBehavior<MovieDetailsCoordinatorLayout>) {
+        this.bottomSheetBehavior = bottomSheetBehavior
+    }
+
+    fun onHidden(action: () -> Unit) = apply {
+        action()
+    }
+
+    fun onHalfExpanded(action: () -> Unit) = apply {
+        action()
+    }
+
+    fun onExpanded(action: () -> Unit) = apply {
+        action()
+    }
+
+    fun onDragging(action: () -> Unit) = apply {
+        action()
+    }
+
+    fun onCollapsed(action: () -> Unit) = apply {
+        action()
+    }
+
+    fun onSettling(action: () -> Unit) = apply {
+        action()
     }
 
     fun enableScroll() {
@@ -111,6 +142,7 @@ class MovieDetailsCoordinatorLayout(
         setPoster(movieItem.posterPath)
         setBackground(movieItem.posterPath)
         setDescription(movieItem.description)
+        binding.actorsRecyclerView.isNestedScrollingEnabled = false
     }
 
     fun watchListCallback(onChecked: () -> Unit, notChecked: () -> Unit) {
