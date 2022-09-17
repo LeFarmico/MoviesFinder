@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -30,33 +29,27 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     private lateinit var navController: NavController
     private lateinit var appBarConfig: AppBarConfiguration
 
-    private lateinit var bottomSheetBehaviour: BottomSheetBehavior<CoordinatorLayout>
-
     private val TAG = this.javaClass.canonicalName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate")
         setSupportActionBar(binding.toolbar)
+
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-
         binding.bottomNavigationBarView.setupWithNavController(navController)
         appBarConfig = AppBarConfiguration(
-            setOf(R.id.movies_menu, R.id.favorites_menu),
+            setOf(R.id.movies_menu, R.id.favorites_menu)
         )
         setupActionBarWithNavController(navController, appBarConfig)
 
-        bottomSheetBehaviour = BottomSheetBehavior.from(binding.bottomSheet)
+        binding.bottomSheet.bindBottomSheetBehaviour()
+        applyBottomSheetStateCallbacks()
         lifecycle.addObserver(binding.bottomSheet)
 
         viewModel.shownMovieLiveData.observe(this) {
             launchItemDetails(it)
-        }
-
-        applyBottomSheetStateCallbacks()
-        binding.searchFab.setOnClickListener {
-            navController.navigate(R.id.searchFragment)
         }
     }
 
@@ -70,58 +63,44 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     }
 
     private fun applyBottomSheetStateCallbacks() {
-        bottomSheetBehaviour.apply {
-            skipCollapsed = true
-            state = BottomSheetBehavior.STATE_HIDDEN
-
-            addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-                override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    binding.blackBackgroundFrameLayout.alpha = 0 + slideOffset
-                    if (slideOffset >= 0.5) {
-                        binding.bottomSheet.setAlphaParamsListener(slideOffset - 0.5f)
+        binding.bottomSheet.apply {
+            onSlide = { slideOffset ->
+                binding.blackBackgroundFrameLayout.alpha = slideOffset
+            }
+            onHidden = {
+                binding.apply {
+                    blackBackgroundFrameLayout.isClickable = false
+                    bottomNavigationBarView.visibility = View.VISIBLE
+                    disableScroll()
+                    disableDragging()
+                }
+            }
+            onHalfExpanded = { behavior ->
+                binding.apply {
+                    bottomNavigationBarView.visibility = View.INVISIBLE
+                    blackBackgroundFrameLayout.isClickable = true
+                    blackBackgroundFrameLayout.setOnClickListener { view ->
+                        view.isClickable = false
+                        behavior.state = BottomSheetBehavior.STATE_HIDDEN
                     }
                 }
-                override fun onStateChanged(bottomSheet: View, newState: Int) {
-                    when (newState) {
-                        BottomSheetBehavior.STATE_HIDDEN -> {
-                            binding.apply {
-                                isDraggable = true
-                                blackBackgroundFrameLayout.isClickable = false
-                                bottomNavigationBarView.visibility = View.VISIBLE
-                                binding.bottomSheet.disableScroll()
-                            }
-                        }
-                        BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                            binding.apply {
-                                bottomNavigationBarView.visibility = View.INVISIBLE
-                                blackBackgroundFrameLayout.isClickable = true
-                                blackBackgroundFrameLayout.setOnClickListener {
-                                    it.isClickable = false
-                                    state = BottomSheetBehavior.STATE_HIDDEN
-                                }
-                                binding.bottomSheet.disableScroll()
-                            }
-                        }
-                        BottomSheetBehavior.STATE_EXPANDED -> {
-                            isDraggable = false
-                            binding.bottomSheet.enableScroll()
-                            binding.bottomSheet.onNavigateUpPressed {
-                                state = BottomSheetBehavior.STATE_HIDDEN
-                            }
-                        }
-                        BottomSheetBehavior.STATE_DRAGGING -> {
-                            binding.bottomSheet.enableScroll()
-                        }
-                        BottomSheetBehavior.STATE_COLLAPSED -> {}
-                        BottomSheetBehavior.STATE_SETTLING -> {}
-                    }
+                disableScroll()
+            }
+            onExpanded = {
+                disableDragging()
+                enableScroll()
+                onNavigateUpPressed {
+                    it.state = BottomSheetBehavior.STATE_HIDDEN
                 }
-            })
+            }
+            onDragging = {
+                enableScroll()
+            }
         }
     }
 
     private fun launchItemDetails(movieDetailedData: MovieDetailedData) {
         binding.bottomSheet.setMovieItem(movieDetailedData)
-        bottomSheetBehaviour.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        binding.bottomSheet.getBehavior().state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
 }

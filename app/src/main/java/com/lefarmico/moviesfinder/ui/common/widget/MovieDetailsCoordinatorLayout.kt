@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.ToggleButton
+import androidx.annotation.DimenRes
 import androidx.annotation.Nullable
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -53,55 +54,98 @@ class MovieDetailsCoordinatorLayout(
     private val isWatchlist: ToggleButton = binding.favoriteToggleButton
 
     private var isScrollEnabled = true
+    private var isDraggingEnabled = true
 
-    lateinit var bottomSheetBehavior: BottomSheetBehavior<MovieDetailsCoordinatorLayout>
+    var onHidden: (BottomSheetBehavior<*>) -> Unit = {}
+    var onHalfExpanded: (BottomSheetBehavior<*>) -> Unit = {}
+    var onExpanded: (BottomSheetBehavior<*>) -> Unit = {}
+    var onDragging: (BottomSheetBehavior<*>) -> Unit = {}
+    var onCollapsed: (BottomSheetBehavior<*>) -> Unit = {}
+    var onSettling: (BottomSheetBehavior<*>) -> Unit = {}
+    var onSlide: (slideOffset: Float) -> Unit = {}
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
-        actors.addItemDecoration(
+        setDecorationCastRecycler(
             PaddingItemDecoration(
-                horizontalPd = context.resources.getDimensionPixelOffset(
-                    R.dimen.stnd_very_small_margin
-                )
-            ),
-            0
+                horizontalPd = getPixelOffsetResource(R.dimen.stnd_very_small_margin)
+            )
         )
-        (binding.appBar.layoutParams as LayoutParams).apply {
-            if (behavior == null)
-                behavior = AppBarLayout.Behavior()
-            val behavior = behavior as AppBarLayout.Behavior
-            behavior.setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
-                override fun canDrag(appBarLayout: AppBarLayout): Boolean = isScrollEnabled
+        setAppBarBehavior()
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
+        super.onDestroy(owner)
+        actors.invalidateItemDecorations()
+    }
+
+    private fun setDecorationCastRecycler(vararg decorators: RecyclerView.ItemDecoration) {
+        for (i in decorators.indices) {
+            actors.addItemDecoration(decorators[i], i)
+        }
+    }
+
+    private fun setAppBarBehavior() {
+        val layoutParams = binding.appBar.layoutParams
+        if (layoutParams is LayoutParams) {
+            layoutParams.apply {
+                if (behavior == null)
+                    behavior = AppBarLayout.Behavior()
+                val behavior = behavior as AppBarLayout.Behavior
+                behavior.setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
+                    override fun canDrag(appBarLayout: AppBarLayout): Boolean = isScrollEnabled
+                })
+            }
+        }
+    }
+
+    private fun getPixelOffsetResource(@DimenRes resId: Int): Int {
+        return try {
+            context.resources.getDimensionPixelOffset(resId)
+        } catch (e: RuntimeException) {
+            throw e
+        }
+    }
+
+    fun bindBottomSheetBehaviour() {
+        (this.layoutParams as LayoutParams).behavior = BottomSheetBehavior.from(this).apply {
+            isDraggable = isDraggingEnabled
+
+            addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    onSlide(slideOffset)
+                    backgroundPosterAlphaBehaviour(slideOffset)
+                }
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN -> onHidden(this@apply)
+                        BottomSheetBehavior.STATE_HALF_EXPANDED -> onHalfExpanded(this@apply)
+                        BottomSheetBehavior.STATE_EXPANDED -> onExpanded(this@apply)
+                        BottomSheetBehavior.STATE_DRAGGING -> onDragging(this@apply)
+                        BottomSheetBehavior.STATE_COLLAPSED -> onCollapsed(this@apply)
+                        BottomSheetBehavior.STATE_SETTLING -> onSettling(this@apply)
+                    }
+                }
             })
         }
     }
 
-    fun bindBottomSheetBehaviour(bottomSheetBehavior: BottomSheetBehavior<MovieDetailsCoordinatorLayout>) {
-        this.bottomSheetBehavior = bottomSheetBehavior
+    private fun isBottomSheet(): Boolean {
+        return if (this.layoutParams is LayoutParams) {
+            return (this.layoutParams as LayoutParams).behavior is BottomSheetBehavior<*>
+        } else {
+            false
+        }
     }
 
-    fun onHidden(action: () -> Unit) = apply {
-        action()
-    }
-
-    fun onHalfExpanded(action: () -> Unit) = apply {
-        action()
-    }
-
-    fun onExpanded(action: () -> Unit) = apply {
-        action()
-    }
-
-    fun onDragging(action: () -> Unit) = apply {
-        action()
-    }
-
-    fun onCollapsed(action: () -> Unit) = apply {
-        action()
-    }
-
-    fun onSettling(action: () -> Unit) = apply {
-        action()
+    fun getBehavior(): BottomSheetBehavior<*> {
+        return if (isBottomSheet()) {
+            (this.layoutParams as LayoutParams).behavior as BottomSheetBehavior<*>
+        } else {
+            throw NullPointerException(
+                "BottomSheetBehavior is not initialized"
+            )
+        }
     }
 
     fun enableScroll() {
@@ -112,6 +156,14 @@ class MovieDetailsCoordinatorLayout(
     fun disableScroll() {
         isScrollEnabled = false
         binding.nestedScroll.isNestedScrollingEnabled = false
+    }
+
+    fun enableDragging() {
+        isDraggingEnabled = true
+    }
+
+    fun disableDragging() {
+        isDraggingEnabled = false
     }
 
     fun onNavigateUpPressed(action: () -> Unit) {
@@ -151,9 +203,14 @@ class MovieDetailsCoordinatorLayout(
         }
     }
 
-    fun setAlphaParamsListener(alpha: Float) {
-//        backButton.alpha = alpha
-        backgroundPoster.alpha = alpha
+    private fun backgroundPosterAlphaBehaviour(alpha: Float) {
+        if (isBottomSheet()) {
+            if (alpha >= 0.5f) {
+                backgroundPoster.alpha = alpha
+            }
+        } else {
+            backgroundPoster.alpha = 1f
+        }
     }
 
     private fun setBackground(posterPath: String?) {
@@ -168,6 +225,7 @@ class MovieDetailsCoordinatorLayout(
     private fun parseReleaseDate(dateStringFormat: String): String =
         "Release: ${dateStringFormat.split("-")[0]}"
 
+    // TODO delete logic
     private fun concatGenres(genresList: List<String>): StringBuffer =
         StringBuffer().apply {
             genresList.forEachIndexed { index, string ->
@@ -192,6 +250,7 @@ class MovieDetailsCoordinatorLayout(
         }
     }
 
+    // TODO add collapse on hidden
     private fun setDescription(description: String) {
         movieDescription.apply {
             text = description
