@@ -54,7 +54,7 @@ data class TmdbMovieDetailsResult(
     @SerializedName("video")
     val video: Boolean,
     @SerializedName("vote_average")
-    val vote_average: Double,
+    val vote_average: Float,
     @SerializedName("vote_count")
     val vote_count: Int,
     @SerializedName("watch/providers")

@@ -3,7 +3,7 @@ package com.lefarmico.moviesfinder.injection.module
 import android.content.Context
 import androidx.room.Room
 import com.lefarmico.moviesfinder.data.dataBase.AppDatabase
-import com.lefarmico.moviesfinder.data.dataBase.dao.ItemDao
+import com.lefarmico.moviesfinder.data.dataBase.dao.SavedMoviesDao
 import com.lefarmico.moviesfinder.data.http.request.TmdbApi
 import com.lefarmico.moviesfinder.data.manager.MovieBriefListRepository
 import com.lefarmico.moviesfinder.data.manager.MovieDetailedRepository
@@ -24,19 +24,20 @@ class DataBaseModule {
         Room.databaseBuilder(
             context,
             AppDatabase::class.java,
-            "cached_item_header"
+            "movie_db"
         ).build().itemDao()
 
     @Provides
     @Singleton
     fun provideMovieDetailedRepository(
-        itemDao: ItemDao,
+        savedMoviesDao: SavedMoviesDao,
         tmdbApi: TmdbApi
-    ): MovieDetailedRepository = MovieDetailedRepository(itemDao, tmdbApi)
+    ): MovieDetailedRepository = MovieDetailedRepository(savedMoviesDao, tmdbApi)
 
     @Provides
     @Singleton
     fun provideMovieBriefListRepository(
-        tmdbApi: TmdbApi
-    ): MovieBriefListRepository = MovieBriefListRepository(tmdbApi)
+        tmdbApi: TmdbApi,
+        savedMoviesDao: SavedMoviesDao
+    ): MovieBriefListRepository = MovieBriefListRepository(tmdbApi, savedMoviesDao)
 }

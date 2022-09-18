@@ -5,5 +5,20 @@
     <dimen name="stnd_margin">16dp</dimen>
     <dimen name="stnd_large_margin">32dp</dimen>
 
+    <dimen name="stnd_between_line_space">16dp</dimen>
+
+    <dimen name="stnd_big_border_radius">8dp</dimen>
+    <dimen name="stnd_small_border_radius">4dp</dimen>
+
     <dimen name="abbbar_height">200dp</dimen>
+    <dimen name="right_side_from_poster">160dp</dimen>
+
+
+    <dimen name="big_card_height">180dp</dimen>
+    <dimen name="big_card_width">128dp</dimen>
+
+    <dimen name="small_card_height">128dp</dimen>
+    <dimen name="small_card_width">90dp</dimen>
+
+    <dimen name="half_big_card_height">90dp</dimen>
 </resources>

@@ -22,7 +22,6 @@ import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
 import com.lefarmico.moviesfinder.databinding.BottomSheetMovieDetailsBinding
 import com.lefarmico.moviesfinder.private.Private
 import com.lefarmico.moviesfinder.ui.common.adapter.CastAdapter
-import com.lefarmico.moviesfinder.ui.common.adapter.SpinnerProviderAdapter
 import com.lefarmico.moviesfinder.ui.common.animation.TextViewCollapseLineAnimator
 import com.lefarmico.moviesfinder.ui.common.decorator.PaddingItemDecoration
 import com.squareup.picasso.Picasso
@@ -64,10 +63,10 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
         movieTitle.text = movieItem.title
         releaseDate.text = parseReleaseDate(movieItem.releaseDate)
         generalRating.setRatingValue(movieItem.rating)
-        providerSpinner.adapter = SpinnerProviderAdapter(context, movieItem.watchMovieProviderData)
+//        providerSpinner.adapter = SpinnerProviderAdapter(context, movieItem.watchMovieProviderData)
         isWatchlist.isChecked = movieItem.isWatchlist
         movieLength.text = "Length: ${movieItem.length} min"
-        setCastAdapter(movieItem.actors)
+//        setCastAdapter(movieItem.actors)
         setPoster(movieItem.posterPath)
         setBackground(movieItem.posterPath)
         setDescription(movieItem.description)

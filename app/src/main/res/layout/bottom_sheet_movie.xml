@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="@color/secondary_color"
-            app:expandedTitleMarginStart="150dp"
+            app:expandedTitleMarginStart="@dimen/right_side_from_poster"
             app:expandedTitleTextAppearance="@style/TextStyle.PrimaryHeading.WhiteTitle"
             app:maxLines="3"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
@@ -47,43 +47,43 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <LinearLayout
                 android:id="@+id/descriptions"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:orientation="vertical"
-                android:gravity="end"
-                android:layout_marginHorizontal="16dp">
+                android:layout_height="90dp"
+                android:layout_marginStart="@dimen/right_side_from_poster"
+                android:layout_marginEnd="16dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/genres_text_view"
+                    style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textSize="12sp"
-                    style="@style/TextStyle"
+                    android:orientation="horizontal"
                     android:text="@string/genres"
                     android:textColor="@color/on_background_color"
-                    android:orientation="horizontal"
-                    />
+                    android:textSize="12sp" />
+
                 <TextView
                     android:id="@+id/length"
+                    style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/on_background_color"
-                    android:textSize="12sp"
-                    style="@style/TextStyle"
                     android:text="@string/duration"
-                    />
+                    android:textColor="@color/on_background_color"
+                    android:textSize="12sp" />
+
                 <TextView
                     android:id="@+id/release_date"
-                    android:textSize="12sp"
                     style="@style/TextStyle"
-                    android:textColor="@color/on_background_color"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/release_date"
-                    />
+                    android:textColor="@color/on_background_color"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -91,7 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginHorizontal="@dimen/stnd_margin"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="@dimen/stnd_between_line_space">
 
                 <com.lefarmico.moviesfinder.ui.common.widget.RatingView
                     android:id="@+id/movie_rate"
@@ -191,7 +191,7 @@
                 android:id="@+id/provider_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="@dimen/stnd_margin"
+                android:layout_marginTop="@dimen/stnd_between_line_space"
                 android:background="@drawable/buttons_shape"
                 android:popupBackground="@drawable/buttons_shape"
                 android:spinnerMode="dropdown"
@@ -202,39 +202,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/TextStyle.SecondaryHeading"
-                android:layout_marginTop="@dimen/stnd_margin"
+                android:layout_marginTop="@dimen/stnd_between_line_space"
                 android:layout_marginStart="@dimen/stnd_margin"
-                android:layout_marginBottom="@dimen/stnd_small_margin"
                 android:text="@string/storyline"
                 />
 
             <TextView
                 android:id="@+id/movie_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 style="@style/TextStyle.Description"
                 tools:text="@tools:sample/lorem/random"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="@dimen/stnd_margin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 />
 
-            <View style="@style/Divider"
+            <View
                 android:id="@+id/divider_2"
+                style="@style/Divider"
                 android:layout_marginHorizontal="@dimen/stnd_margin"
-                />
+                android:layout_marginTop="@dimen/stnd_between_line_space"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/actors_text_view"
                 style="@style/TextStyle.SecondaryHeading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/stnd_margin"
+                android:layout_marginTop="@dimen/stnd_between_line_space"
                 android:layout_marginBottom="@dimen/stnd_small_margin"
                 android:layout_marginStart="@dimen/stnd_margin"
                 android:text="@string/cast"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/actors_recycler_view"
@@ -256,11 +255,11 @@
         android:layout_marginStart="@dimen/stnd_margin"
         app:layout_behavior="com.lefarmico.moviesfinder.ui.common.layoutBehavior.DisappearingViewBehavior"
         android:clickable="false"
-        app:cardCornerRadius="5dp">
+        app:cardCornerRadius="@dimen/stnd_big_border_radius">
         <ImageView
             android:id="@+id/poster_image_view"
-            android:layout_width="128dp"
-            android:layout_height="184dp"
+            android:layout_width="@dimen/big_card_width"
+            android:layout_height="@dimen/big_card_height"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_foreground"
             android:clickable="false"

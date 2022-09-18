@@ -4,6 +4,7 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lefarmico.moviesfinder.data.entity.MovieCastData
+import com.lefarmico.moviesfinder.data.entity.MovieCrewData
 import com.lefarmico.moviesfinder.data.entity.MovieProviderData
 
 class ListOfStringsTypeConverters {
@@ -26,6 +27,19 @@ class CastTypeConverter {
     @TypeConverter
     fun fromJsonToCast(json: String): List<MovieCastData> {
         val type = object : TypeToken<List<MovieCastData>>() {}.type
+        return Gson().fromJson(json, type)
+    }
+}
+
+class CrewTypeConverter {
+
+    @TypeConverter
+    fun fromCastToJson(movieCrewData: List<MovieCrewData>): String =
+        Gson().toJson(movieCrewData)
+
+    @TypeConverter
+    fun fromJsonToCrew(json: String): List<MovieCrewData> {
+        val type = object : TypeToken<List<MovieCrewData>>() {}.type
         return Gson().fromJson(json, type)
     }
 }

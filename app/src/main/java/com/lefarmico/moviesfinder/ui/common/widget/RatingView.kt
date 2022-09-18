@@ -15,7 +15,7 @@ class RatingView(context: Context, @Nullable attributeSet: AttributeSet) : Const
 
     private val ratingValue: TextView = binding.rating
 
-    fun setRatingValue(value: Double) {
+    fun setRatingValue(value: Float) {
         if (value > 0.0 && value <= 10.0) {
             ratingValue.text = value.toString()
         } else {
