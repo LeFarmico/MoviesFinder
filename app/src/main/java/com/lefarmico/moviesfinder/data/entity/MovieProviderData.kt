@@ -5,7 +5,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class MovieProviderData(
-    val providerType: ProviderType? = null,
     val name: String,
     val providerId: Int,
     val logoPath: String,

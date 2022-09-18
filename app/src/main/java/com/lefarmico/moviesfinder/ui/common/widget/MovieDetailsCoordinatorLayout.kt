@@ -22,7 +22,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieCastData
 import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
-import com.lefarmico.moviesfinder.databinding.FragmentMovieDetailsBinding
+import com.lefarmico.moviesfinder.data.entity.MovieProviderData
+import com.lefarmico.moviesfinder.databinding.BottomSheetMovieBinding
 import com.lefarmico.moviesfinder.private.Private
 import com.lefarmico.moviesfinder.ui.common.adapter.CastAdapter
 import com.lefarmico.moviesfinder.ui.common.adapter.SpinnerProviderAdapter
@@ -36,8 +37,8 @@ class MovieDetailsCoordinatorLayout(
     @Nullable attributeSet: AttributeSet
 ) : CoordinatorLayout(context, attributeSet), DefaultLifecycleObserver {
 
-    private var binding: FragmentMovieDetailsBinding =
-        FragmentMovieDetailsBinding.inflate(
+    private var binding: BottomSheetMovieBinding =
+        BottomSheetMovieBinding.inflate(
             LayoutInflater.from(context), this, true
         )
 
@@ -109,7 +110,7 @@ class MovieDetailsCoordinatorLayout(
 
     fun bindBottomSheetBehaviour() {
         (this.layoutParams as LayoutParams).behavior = BottomSheetBehavior.from(this).apply {
-            isDraggable = isDraggingEnabled
+            this.isDraggable = isDraggingEnabled
 
             addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -160,9 +161,11 @@ class MovieDetailsCoordinatorLayout(
 
     fun enableDragging() {
         isDraggingEnabled = true
+        getBehavior().isDraggable = true
     }
 
     fun disableDragging() {
+        getBehavior().isDraggable = false
         isDraggingEnabled = false
     }
 
@@ -186,10 +189,10 @@ class MovieDetailsCoordinatorLayout(
         genres.text = concatGenres(movieItem.genres)
         movieTitleToolbar.title = movieItem.title
         releaseDate.text = parseReleaseDate(movieItem.releaseDate)
-        generalRating.setRatingValue(movieItem.rating)
-        providerSpinner.adapter = SpinnerProviderAdapter(context, movieItem.watchMovieProviderData)
         isWatchlist.isChecked = movieItem.isWatchlist
         movieLength.text = "Length: ${movieItem.length} min"
+        generalRating.setRatingValue(movieItem.rating)
+        setWhereToWatchSpinner(context, movieItem.watchMovieProviderData)
         setCast(movieItem.actors)
         setPoster(movieItem.posterPath)
         setBackground(movieItem.posterPath)
@@ -203,16 +206,31 @@ class MovieDetailsCoordinatorLayout(
         }
     }
 
+    fun onSetRateCallback(rate: (currentRate: Int?) -> Int) {
+        // TODO: Not implemented
+    }
+
+    private fun setWhereToWatchSpinner(context: Context, watchMovieProviderData: List<MovieProviderData>?) {
+        if (watchMovieProviderData == null || watchMovieProviderData.isEmpty()) {
+            providerSpinner.visibility = View.GONE
+        } else {
+            providerSpinner.visibility = View.VISIBLE
+            providerSpinner.adapter = SpinnerProviderAdapter(context, watchMovieProviderData)
+        }
+    }
+
+    // TODO handle different way
     private fun backgroundPosterAlphaBehaviour(alpha: Float) {
         if (isBottomSheet()) {
             if (alpha >= 0.5f) {
-                backgroundPoster.alpha = alpha
+                backgroundPoster.alpha = alpha - 0.5f
             }
         } else {
             backgroundPoster.alpha = 1f
         }
     }
 
+    // TODO move sizes to another class
     private fun setBackground(posterPath: String?) {
         backgroundPoster.visibility = View.VISIBLE
         Picasso.get()
@@ -242,11 +260,17 @@ class MovieDetailsCoordinatorLayout(
             .into(poster)
     }
 
-    private fun setCast(movieCastData: List<MovieCastData>) {
-        if (actors.adapter == null) {
-            actors.adapter = CastAdapter().apply { submitList(movieCastData) }
+    private fun setCast(movieCastData: List<MovieCastData>?) {
+        if (movieCastData == null || movieCastData.isEmpty()) {
+            actors.adapter = null
+            actors.visibility = View.GONE
         } else {
-            (actors.adapter as CastAdapter).submitList(movieCastData)
+            actors.visibility = View.VISIBLE
+            if (actors.adapter == null) {
+                actors.adapter = CastAdapter().apply { submitList(movieCastData) }
+            } else {
+                (actors.adapter as CastAdapter).submitList(movieCastData)
+            }
         }
     }
 

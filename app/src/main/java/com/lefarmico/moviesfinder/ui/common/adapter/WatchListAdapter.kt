@@ -45,7 +45,7 @@ class WatchListAdapter(
         fun bind(movieBriefData: MovieBriefData) {
             title.text = movieBriefData.title
             description.text = movieBriefData.description
-            rating.setRatingValue(movieBriefData.rating)
+            rating.setRatingValue(movieBriefData.rating ?: 50.0f)
             Picasso
                 .get()
                 .load(Private.IMAGES_URL + "w342" + movieBriefData.posterPath)

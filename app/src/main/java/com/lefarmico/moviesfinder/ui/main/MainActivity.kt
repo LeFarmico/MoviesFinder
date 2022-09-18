@@ -3,6 +3,7 @@ package com.lefarmico.moviesfinder.ui.main
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -51,6 +52,10 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         viewModel.shownMovieLiveData.observe(this) {
             launchItemDetails(it)
         }
+
+        viewModel.toastLiveData.observe(this) {
+            it?.let { showToast(it) }
+        }
     }
 
     override fun onStart() {
@@ -64,6 +69,16 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
 
     private fun applyBottomSheetStateCallbacks() {
         binding.bottomSheet.apply {
+
+            watchListCallback(
+                onChecked = {
+                    viewModel.tryToSaveMovieToWatchlist()
+                },
+                notChecked = {
+                    viewModel.tryToRemoveMovieFromWatchlist()
+                }
+            )
+
             onSlide = { slideOffset ->
                 binding.blackBackgroundFrameLayout.alpha = slideOffset
             }
@@ -72,7 +87,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                     blackBackgroundFrameLayout.isClickable = false
                     bottomNavigationBarView.visibility = View.VISIBLE
                     disableScroll()
-                    disableDragging()
+                    enableDragging()
                 }
             }
             onHalfExpanded = { behavior ->
@@ -93,14 +108,17 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                     it.state = BottomSheetBehavior.STATE_HIDDEN
                 }
             }
-            onDragging = {
-                enableScroll()
-            }
         }
     }
 
     private fun launchItemDetails(movieDetailedData: MovieDetailedData) {
         binding.bottomSheet.setMovieItem(movieDetailedData)
         binding.bottomSheet.getBehavior().state = BottomSheetBehavior.STATE_HALF_EXPANDED
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show().also {
+            viewModel.cleanToast()
+        }
     }
 }

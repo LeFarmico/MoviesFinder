@@ -6,12 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.lefarmico.moviesfinder.databinding.FragmentMovieDetailsBinding
+import com.lefarmico.moviesfinder.databinding.BottomSheetMovieBinding
 import com.lefarmico.moviesfinder.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProfileFragment : BaseFragment<ProfileViewModel, FragmentMovieDetailsBinding>() {
+class ProfileFragment : BaseFragment<ProfileViewModel, BottomSheetMovieBinding>() {
 
     private val TAG = this.javaClass.canonicalName
 
@@ -40,7 +40,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, FragmentMovieDetailsBindi
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): FragmentMovieDetailsBinding = FragmentMovieDetailsBinding.inflate(inflater, container, false)
+    ): BottomSheetMovieBinding = BottomSheetMovieBinding.inflate(inflater, container, false)
 
 //    private fun setStatsParameters(watchListCount: Int = 0, watchedCount: Int = 0) {
 //        binding.watchedListCount.text = watchListCount.toString()

@@ -7,9 +7,9 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
-        android:layout_width="80dp"
-        android:layout_height="120dp"
-        app:cardCornerRadius="4dp">
+        android:layout_width="@dimen/small_card_width"
+        android:layout_height="@dimen/small_card_height"
+        app:cardCornerRadius="@dimen/stnd_small_border_radius">
 
         <ImageView
             android:id="@+id/poster"

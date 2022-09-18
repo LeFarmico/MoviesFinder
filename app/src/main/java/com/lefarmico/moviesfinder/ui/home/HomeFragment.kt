@@ -37,7 +37,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentMovieBinding>() {
         itemAdapter = MenuItemAdapter(
             parentJob = job
         ) {
-            viewModel.showMovieDetail(it.itemId)
+            viewModel.showMovieDetail(it.movieId)
         }
         paddingDecorator = PaddingItemDecoration(
             topPd = requireContext().resources.getDimension(R.dimen.stnd_small_margin).toInt()
