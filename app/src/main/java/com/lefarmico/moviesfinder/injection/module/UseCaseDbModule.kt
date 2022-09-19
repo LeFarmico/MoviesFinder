@@ -2,6 +2,7 @@ package com.lefarmico.moviesfinder.injection.module
 
 import com.lefarmico.moviesfinder.data.manager.MovieDetailedRepository
 import com.lefarmico.moviesfinder.data.manager.useCase.DeleteMovieDetailedFromDBUseCase
+import com.lefarmico.moviesfinder.data.manager.useCase.GetWatchListMovieDetailedFromDBUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.SaveMovieDetailedToDBUseCase
 import dagger.Module
 import dagger.Provides
@@ -22,4 +23,9 @@ class UseCaseDbModule {
     @Singleton
     fun provideDeleteMovieDetailedFromDBUseCase(movieDetailedRepository: MovieDetailedRepository) =
         DeleteMovieDetailedFromDBUseCase(movieDetailedRepository::deleteMovieDetailed)
+
+    @Provides
+    @Singleton
+    fun provideGetWatchListMovieFromDBUseCase(movieDetailedRepository: MovieDetailedRepository) =
+        GetWatchListMovieDetailedFromDBUseCase(movieDetailedRepository::getWatchListMovieDetailed)
 }

@@ -6,28 +6,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.lefarmico.moviesfinder.databinding.BottomSheetMovieBinding
+import com.lefarmico.moviesfinder.databinding.FragmentProfileBinding
 import com.lefarmico.moviesfinder.ui.base.BaseFragment
+import com.lefarmico.moviesfinder.ui.common.adapter.WatchListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProfileFragment : BaseFragment<ProfileViewModel, BottomSheetMovieBinding>() {
+class ProfileFragment : BaseFragment<ProfileViewModel, FragmentProfileBinding>() {
 
     private val TAG = this.javaClass.canonicalName
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated")
-        binding.toolbar.title = "Dragon Ball Super: Super Hero"
-//        setStatsParameters()
-        viewModel.watchlistStatsLiveData.observe(viewLifecycleOwner) {
-//            setStatsParameters(it)
-        }
-        viewModel.itemsLiveData.observe(viewLifecycleOwner) { _ ->
-//            adapter.setOnClickEvent { header ->
-//                (requireContext() as MainActivity).viewModel.onItemClick(header)
-//            }
-//            binding.watchlistRecyclerView.adapter = adapter
+
+        viewModel.getWatchlistMovies()
+
+        val adapter = WatchListAdapter {}
+        binding.watchlistRecyclerView.adapter = adapter
+        viewModel.state.observe(viewLifecycleOwner) {
+            adapter.setItems(it)
         }
     }
 
@@ -40,7 +38,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, BottomSheetMovieBinding>(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): BottomSheetMovieBinding = BottomSheetMovieBinding.inflate(inflater, container, false)
+    ): FragmentProfileBinding = FragmentProfileBinding.inflate(inflater, container, false)
 
 //    private fun setStatsParameters(watchListCount: Int = 0, watchedCount: Int = 0) {
 //        binding.watchedListCount.text = watchListCount.toString()

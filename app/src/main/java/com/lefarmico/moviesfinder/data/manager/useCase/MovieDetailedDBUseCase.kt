@@ -7,3 +7,5 @@ import kotlinx.coroutines.flow.Flow
 fun interface SaveMovieDetailedToDBUseCase : suspend (MovieDetailedData) -> Flow<State<Int>>
 
 fun interface DeleteMovieDetailedFromDBUseCase : suspend (MovieDetailedData) -> Flow<State<Int>>
+
+fun interface GetWatchListMovieDetailedFromDBUseCase : suspend () -> Flow<State<List<MovieDetailedData>>>
