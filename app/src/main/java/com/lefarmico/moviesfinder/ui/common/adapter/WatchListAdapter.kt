@@ -8,21 +8,21 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.data.entity.MovieBriefData
+import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
 import com.lefarmico.moviesfinder.databinding.ItemWatchListRecyclerBinding
 import com.lefarmico.moviesfinder.private.Private
 import com.lefarmico.moviesfinder.ui.common.widget.RatingView
 import com.squareup.picasso.Picasso
 
 class WatchListAdapter(
-    private val onClick: (MovieBriefData) -> Unit
+    private val onClick: (MovieDetailedData) -> Unit
 ) : RecyclerView.Adapter<WatchListAdapter.ViewHolder>() {
 
-    private var items: List<MovieBriefData> = emptyList()
+    private var items: List<MovieDetailedData> = emptyList()
 
     class WatchListDiffUtil(
-        private val oldList: List<MovieBriefData>,
-        private val newList: List<MovieBriefData>
+        private val oldList: List<MovieDetailedData>,
+        private val newList: List<MovieDetailedData>
     ) : DiffUtil.Callback() {
         override fun getOldListSize(): Int = oldList.size
 
@@ -42,13 +42,15 @@ class WatchListAdapter(
         val description: TextView = itemBinding.description
         val rating: RatingView = itemBinding.movieRate
 
-        fun bind(movieBriefData: MovieBriefData) {
-            title.text = movieBriefData.title
-            description.text = movieBriefData.description
-            rating.setRatingValue(movieBriefData.rating ?: 50.0f)
+        fun bind(movieDetailedData: MovieDetailedData) {
+            title.text = movieDetailedData.title
+            description.text = movieDetailedData.description
+            rating.setRatingValue(movieDetailedData.rating)
+
+            // TODO вынести
             Picasso
                 .get()
-                .load(Private.IMAGES_URL + "w342" + movieBriefData.posterPath)
+                .load(Private.IMAGES_URL + "w342" + movieDetailedData.posterPath)
                 .fit()
                 .error(R.drawable.ic_launcher_foreground)
                 .placeholder(R.drawable.ic_launcher_foreground)
@@ -74,7 +76,7 @@ class WatchListAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    fun setItems(items: List<MovieBriefData>) {
+    fun setItems(items: List<MovieDetailedData>) {
         val oldField = this.items
         this.items = items
         val diffCallback = WatchListDiffUtil(oldField, items)

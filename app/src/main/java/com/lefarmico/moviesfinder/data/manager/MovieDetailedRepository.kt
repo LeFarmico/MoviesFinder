@@ -61,4 +61,14 @@ class MovieDetailedRepository @Inject constructor(
             emit(State.Error(e))
         }
     }
+
+    suspend fun getWatchListMovieDetailed(): Flow<State<List<MovieDetailedData>>> = flow {
+        emit(State.Loading)
+        try {
+            val watchListMovies = savedMoviesDao.getWatchListMovieDetailed()
+            emit(State.Success(watchListMovies))
+        } catch (e: Exception) {
+            emit(State.Error(e))
+        }
+    }
 }
