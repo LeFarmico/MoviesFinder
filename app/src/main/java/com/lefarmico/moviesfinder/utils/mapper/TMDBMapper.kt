@@ -28,7 +28,7 @@ fun TmdbMovieDetailsResult.toDetailedViewData(
     country: String = "US"
 ) = MovieDetailedData(
     id = this.id,
-    itemId = this.id,
+    movieId = this.id,
     posterPath = this.poster_path,
     title = this.title,
     rating = this.vote_average,

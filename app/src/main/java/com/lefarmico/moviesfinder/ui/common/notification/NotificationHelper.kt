@@ -24,6 +24,6 @@ object NotificationHelper {
         }
 
         val notificationManager = NotificationManagerCompat.from(context)
-        notificationManager.notify(movieItem.itemId, builder.build())
+        notificationManager.notify(movieItem.movieId, builder.build())
     }
 }

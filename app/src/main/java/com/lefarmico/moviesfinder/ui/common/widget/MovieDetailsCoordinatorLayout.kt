@@ -20,6 +20,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.data.entity.MovieBriefData
 import com.lefarmico.moviesfinder.data.entity.MovieCastData
 import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
 import com.lefarmico.moviesfinder.data.entity.MovieProviderData
@@ -27,6 +28,7 @@ import com.lefarmico.moviesfinder.databinding.BottomSheetMovieBinding
 import com.lefarmico.moviesfinder.private.Private
 import com.lefarmico.moviesfinder.ui.common.adapter.CastAdapter
 import com.lefarmico.moviesfinder.ui.common.adapter.SpinnerProviderAdapter
+import com.lefarmico.moviesfinder.ui.common.adapter.WatchListAdapter
 import com.lefarmico.moviesfinder.ui.common.animation.TextViewCollapseLineAnimator
 import com.lefarmico.moviesfinder.ui.common.decorator.PaddingItemDecoration
 import com.squareup.picasso.Picasso
@@ -53,6 +55,9 @@ class MovieDetailsCoordinatorLayout(
     private val genres: TextView = binding.genresTextView
     private val actors: RecyclerView = binding.actorsRecyclerView
     private val isWatchlist: ToggleButton = binding.favoriteToggleButton
+    // TODO: change height to other avoid full rendering
+    private val recommendations: RecyclerView = binding.recommendations
+    private val recommendationsHeader: TextView = binding.recommendationsHeader
 
     private var isScrollEnabled = true
     private var isDraggingEnabled = true
@@ -72,17 +77,48 @@ class MovieDetailsCoordinatorLayout(
                 horizontalPd = getPixelOffsetResource(R.dimen.stnd_very_small_margin)
             )
         )
+        setDecorationRecommendationsRecycler(
+            PaddingItemDecoration(
+                verticalPd = getPixelOffsetResource(R.dimen.stnd_between_line_space)
+            )
+        )
         setAppBarBehavior()
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
         super.onDestroy(owner)
         actors.invalidateItemDecorations()
+        recommendations.invalidateItemDecorations()
     }
 
+    fun setRecommendations(movieBriefList: List<MovieBriefData>) {
+        if (movieBriefList.isEmpty()) {
+            recommendationsHeader.visibility = View.GONE
+            recommendations.adapter = null
+            recommendations.visibility = View.GONE
+        } else {
+            recommendationsHeader.visibility = View.VISIBLE
+            recommendations.visibility = View.VISIBLE
+            if (recommendations.adapter == null) {
+                // TODO handle onClick
+                recommendations.adapter = WatchListAdapter {}.apply { setItems(movieBriefList) }
+            } else {
+                (recommendations.adapter as WatchListAdapter).setItems(movieBriefList)
+            }
+        }
+    }
+
+    // TODO: bug, multiply decorators
     private fun setDecorationCastRecycler(vararg decorators: RecyclerView.ItemDecoration) {
         for (i in decorators.indices) {
             actors.addItemDecoration(decorators[i], i)
+        }
+    }
+
+    // TODO: bug, multiply decorators
+    private fun setDecorationRecommendationsRecycler(vararg decorators: RecyclerView.ItemDecoration) {
+        for (i in decorators.indices) {
+            recommendations.addItemDecoration(decorators[i], i)
         }
     }
 

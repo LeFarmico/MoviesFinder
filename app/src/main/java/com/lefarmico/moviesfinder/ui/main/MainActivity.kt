@@ -56,6 +56,10 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         viewModel.toastLiveData.observe(this) {
             it?.let { showToast(it) }
         }
+
+        viewModel.recommendationsLiveData.observe(this) {
+            binding.bottomSheet.setRecommendations(it)
+        }
         viewModel.startObserveMovieDetailedFromChannel()
     }
 
@@ -108,6 +112,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     }
 
     private fun launchItemDetails(movieDetailedData: MovieDetailedData) {
+        viewModel.getRecommendations(movieDetailedData.movieId)
         binding.bottomSheet.setMovieItem(movieDetailedData)
         binding.bottomSheet.getBehavior().state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }

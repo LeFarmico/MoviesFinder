@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import com.lefarmico.moviesfinder.databinding.FragmentProfileBinding
 import com.lefarmico.moviesfinder.ui.base.BaseFragment
 import com.lefarmico.moviesfinder.ui.common.adapter.WatchListAdapter
+import com.lefarmico.moviesfinder.utils.mapper.toBriefData
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,8 +25,8 @@ class ProfileFragment : BaseFragment<ProfileViewModel, FragmentProfileBinding>()
 
         val adapter = WatchListAdapter {}
         binding.watchlistRecyclerView.adapter = adapter
-        viewModel.state.observe(viewLifecycleOwner) {
-            adapter.setItems(it)
+        viewModel.state.observe(viewLifecycleOwner) { movieDetailedList ->
+            adapter.setItems(movieDetailedList.map { it.toBriefData() })
         }
     }
 
