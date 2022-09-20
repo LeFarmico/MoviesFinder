@@ -17,10 +17,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getPopularMovies: GetPopularMovieBriefList,
-    private val getUpcomingMovies: GetUpcomingMovieBriefList,
-    private val getNowPlayingMovies: GetNowPlayingMovieBriefList,
-    private val getTopRatedMovies: GetTopRatedMovieBriefList,
+    private val getPopularMovies: GetPopularMovieBriefListUseCase,
+    private val getUpcomingMovies: GetUpcomingMovieBriefListUseCase,
+    private val getNowPlayingMovies: GetNowPlayingMovieBriefListUseCase,
+    private val getTopRatedMovies: GetTopRatedMovieBriefListUseCase,
     private val getMovieDetailed: GetMovieDetailedApiUseCase,
     private val interactor: Interactor
 ) : ViewModel() {

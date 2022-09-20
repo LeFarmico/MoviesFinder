@@ -56,10 +56,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         viewModel.toastLiveData.observe(this) {
             it?.let { showToast(it) }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
         viewModel.startObserveMovieDetailedFromChannel()
     }
 

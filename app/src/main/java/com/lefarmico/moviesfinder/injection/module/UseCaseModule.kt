@@ -17,29 +17,35 @@ class UseCaseModule {
     @Provides
     fun provideGetPopularMovieBriefListCategory(
         movieBriefListRepository: MovieBriefListRepository
-    ): GetPopularMovieBriefList =
-        GetPopularMovieBriefList(movieBriefListRepository::getPopularMovieBriefList)
+    ): GetPopularMovieBriefListUseCase =
+        GetPopularMovieBriefListUseCase(movieBriefListRepository::getPopularMovieBriefList)
 
     @Singleton
     @Provides
     fun provideGetUpcomingMovieBriefListCategory(
         movieBriefListRepository: MovieBriefListRepository
-    ): GetUpcomingMovieBriefList = GetUpcomingMovieBriefList(movieBriefListRepository::getUpcomingMovieBriefList)
+    ): GetUpcomingMovieBriefListUseCase = GetUpcomingMovieBriefListUseCase(movieBriefListRepository::getUpcomingMovieBriefList)
 
     @Singleton
     @Provides
     fun provideGetNowPlayingMovieBriefListCategory(
         movieBriefListRepository: MovieBriefListRepository
-    ): GetNowPlayingMovieBriefList = GetNowPlayingMovieBriefList(movieBriefListRepository::getNowPlayingMovieBriefList)
+    ): GetNowPlayingMovieBriefListUseCase = GetNowPlayingMovieBriefListUseCase(movieBriefListRepository::getNowPlayingMovieBriefList)
 
     @Singleton
     @Provides
     fun provideGetTopRatedMovieBriefListCategory(
         movieBriefListRepository: MovieBriefListRepository
-    ): GetTopRatedMovieBriefList = GetTopRatedMovieBriefList(movieBriefListRepository::getTopRatedMovieBriefList)
+    ): GetTopRatedMovieBriefListUseCase = GetTopRatedMovieBriefListUseCase(movieBriefListRepository::getTopRatedMovieBriefList)
 
     @Provides
     @Singleton
     fun provideGetMovieDetailedApiUseCase(movieDetailedRepository: MovieDetailedRepository) =
         GetMovieDetailedApiUseCase(movieDetailedRepository::getMovieDetailedData)
+
+    @Provides
+    @Singleton
+    fun provideGetRecommendationsMovieBriefListUseCase(
+        movieBriefListRepository: MovieBriefListRepository
+    ) = GetRecommendationsMovieBriefListUseCase(movieBriefListRepository::getRecommendationsMovieBriefList)
 }

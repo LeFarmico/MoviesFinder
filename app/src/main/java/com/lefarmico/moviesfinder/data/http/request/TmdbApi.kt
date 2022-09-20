@@ -30,4 +30,11 @@ interface TmdbApi {
         @Query("query") query: String,
         @Query("page") page: Int
     ): NetworkResponse<TmdbMovieListResult>
+
+    @GET("3/movie/{movie_id}/recommendations")
+    suspend fun getRecommendations(
+        @Query("api_key") apiKey: String,
+        @Path("movie_id") movieId: Int,
+        @Query("language") language: String = "en-US"
+    ): NetworkResponse<TmdbMovieListResult>
 }
