@@ -2,27 +2,28 @@ package com.lefarmico.moviesfinder.ui.common.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
+import com.lefarmico.moviesfinder.data.entity.MovieBriefData
 import com.lefarmico.moviesfinder.databinding.ItemWatchListRecyclerBinding
 import com.lefarmico.moviesfinder.private.Private
 import com.lefarmico.moviesfinder.ui.common.widget.RatingView
 import com.squareup.picasso.Picasso
 
 class WatchListAdapter(
-    private val onClick: (MovieDetailedData) -> Unit
+    private val onClick: (MovieBriefData) -> Unit
 ) : RecyclerView.Adapter<WatchListAdapter.ViewHolder>() {
 
-    private var items: List<MovieDetailedData> = emptyList()
+    private var items: List<MovieBriefData> = emptyList()
 
     class WatchListDiffUtil(
-        private val oldList: List<MovieDetailedData>,
-        private val newList: List<MovieDetailedData>
+        private val oldList: List<MovieBriefData>,
+        private val newList: List<MovieBriefData>
     ) : DiffUtil.Callback() {
         override fun getOldListSize(): Int = oldList.size
 
@@ -42,15 +43,18 @@ class WatchListAdapter(
         val description: TextView = itemBinding.description
         val rating: RatingView = itemBinding.movieRate
 
-        fun bind(movieDetailedData: MovieDetailedData) {
-            title.text = movieDetailedData.title
-            description.text = movieDetailedData.description
-            rating.setRatingValue(movieDetailedData.rating)
-
-            // TODO вынести
+        fun bind(movieBriefData: MovieBriefData) {
+            title.text = movieBriefData.title
+            description.text = movieBriefData.description
+            if (movieBriefData.rating == null) {
+                rating.visibility = View.GONE
+            } else {
+                rating.visibility = View.VISIBLE
+                rating.setRatingValue(movieBriefData.rating)
+            }
             Picasso
                 .get()
-                .load(Private.IMAGES_URL + "w342" + movieDetailedData.posterPath)
+                .load(Private.IMAGES_URL + "w342" + movieBriefData.posterPath)
                 .fit()
                 .error(R.drawable.ic_launcher_foreground)
                 .placeholder(R.drawable.ic_launcher_foreground)
@@ -76,7 +80,7 @@ class WatchListAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    fun setItems(items: List<MovieDetailedData>) {
+    fun setItems(items: List<MovieBriefData>) {
         val oldField = this.items
         this.items = items
         val diffCallback = WatchListDiffUtil(oldField, items)

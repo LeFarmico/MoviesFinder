@@ -243,6 +243,34 @@
                 tools:listitem="@layout/item_cast"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 />
+            <View
+                android:id="@+id/divider_3"
+                style="@style/Divider"
+                android:layout_marginHorizontal="@dimen/stnd_margin"
+                android:layout_marginTop="@dimen/stnd_between_line_space"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/recommendations_header"
+                style="@style/TextStyle.SecondaryHeading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/stnd_between_line_space"
+                android:layout_marginBottom="@dimen/stnd_small_margin"
+                android:layout_marginStart="@dimen/stnd_margin"
+                android:text="@string/recommendations"
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recommendations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/stnd_between_line_space"
+                android:layout_marginHorizontal="@dimen/stnd_margin"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"
+                tools:listitem="@layout/item_watch_list_recycler"
+                />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
     <androidx.cardview.widget.CardView

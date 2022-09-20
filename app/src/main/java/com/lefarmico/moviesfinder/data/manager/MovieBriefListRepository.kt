@@ -21,7 +21,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MovieBriefListRepository @Inject constructor(
@@ -44,17 +43,15 @@ class MovieBriefListRepository @Inject constructor(
 
     suspend fun getRecommendationsMovieBriefList(movieId: Int): Flow<State<List<MovieBriefData>>> = flow {
         emit(State.Loading)
-        CoroutineScope(Dispatchers.IO).launch {
-            when (val response = tmdbApi.getRecommendations(API_KEY, movieId)) {
-                is NetworkResponse.Success -> {
-                    emit(State.Success(response.data.tmdbMovie.toBriefList()))
-                }
-                is NetworkResponse.Error -> {
-                    emit(State.Error(RuntimeException("Server side error with code: ${response.code}")))
-                }
-                is NetworkResponse.Exception -> {
-                    emit(State.Error(response.throwable))
-                }
+        when (val response = tmdbApi.getRecommendations(movieId, API_KEY)) {
+            is NetworkResponse.Success -> {
+                emit(State.Success(response.data.tmdbMovie.toBriefList()))
+            }
+            is NetworkResponse.Error -> {
+                emit(State.Error(RuntimeException("Server side error with code: ${response.code}")))
+            }
+            is NetworkResponse.Exception -> {
+                emit(State.Error(response.throwable))
             }
         }
     }

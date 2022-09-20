@@ -18,7 +18,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class MovieDetailedData(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val id: Int = 0,
-    @ColumnInfo(name = "movie_id") val itemId: Int,
+    @ColumnInfo(name = "movie_id") val movieId: Int,
     @ColumnInfo(name = "poster_path") val posterPath: String?,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "is_watchlist") val isWatchlist: Boolean,
