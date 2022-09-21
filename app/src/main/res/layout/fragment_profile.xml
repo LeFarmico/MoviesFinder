@@ -45,7 +45,7 @@
                 style="@style/TextStyle.SecondaryHeading"
                 />
             <TextView
-                android:id="@+id/movies_watched_text_view"
+                android:id="@+id/movie_rate_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
@@ -60,7 +60,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/watched_list_count"
+                android:id="@+id/user_rate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
@@ -68,7 +68,7 @@
                 tools:text="@string/_72"
                 />
             <TextView
-                android:id="@+id/tv_series_text_view"
+                android:id="@+id/user_rate_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
@@ -83,6 +83,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_watch_list_recycler"
+            tools:listitem="@layout/widget_movie_large"
             />
 </LinearLayout>

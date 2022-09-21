@@ -24,7 +24,7 @@ class MenuItemAdapter(
 
     private val job = Job(parentJob).apply {
         invokeOnCompletion {
-            Log.d(TAG, "the Job have been completed.")
+            Log.d(TAG, "the Job has been completed.")
         }
     }
 

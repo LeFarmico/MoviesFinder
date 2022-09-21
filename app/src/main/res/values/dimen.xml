@@ -6,9 +6,12 @@
     <dimen name="stnd_large_margin">32dp</dimen>
 
     <dimen name="stnd_between_line_space">16dp</dimen>
+    <dimen name="stnd_half_between_line_space">8dp</dimen>
 
     <dimen name="stnd_big_border_radius">8dp</dimen>
     <dimen name="stnd_small_border_radius">4dp</dimen>
+
+    <dimen name="stnd_button_height">40dp</dimen>
 
     <dimen name="abbbar_height">200dp</dimen>
     <dimen name="right_side_from_poster">160dp</dimen>
