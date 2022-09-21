@@ -134,4 +134,5 @@ dependencies {
 
     // Views
     implementation(Dependency.circleImageView)
+    implementation(kotlin("reflect"))
 }

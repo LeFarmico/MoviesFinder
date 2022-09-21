@@ -41,9 +41,9 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     private val movieDescription: TextView = binding.movieDescription
     private val providerSpinner: Spinner = binding.providerSpinner
     private val releaseDate: TextView = binding.releaseDate
-    private val genres: TextView = binding.genresTextView
-    private val actors: RecyclerView = binding.actorsRecyclerView
-    private val isWatchlist: ToggleButton = binding.favoriteToggleButton
+    private val genres: TextView = binding.genres
+    private val actors: RecyclerView = binding.recycler
+    private val isWatchlist: ToggleButton = binding.watchlistToggle
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)

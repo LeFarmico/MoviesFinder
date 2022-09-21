@@ -82,7 +82,9 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
-    <style name="AppBarOverlay">
-
+    <style name="UntitledToggleButton">
+        <item name="android:backgroundTint">@color/primary_color</item>
+        <item name="android:textOff"></item>
+        <item name="android:textOn"></item>
     </style>
 </resources>

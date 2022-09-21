@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/half_big_card_height"
+    android:layout_marginStart="@dimen/right_side_from_poster"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/genres"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextStyle.Subtitle"
+        android:layout_marginTop="4dp"
+        android:maxLines="3"
+        android:ellipsize="end"
+        tools:text="@string/genres"
+        />
+
+    <TextView
+        android:id="@+id/length"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextStyle.Subtitle"
+        android:maxLines="1"
+        android:ellipsize="end"
+        tools:text="@string/duration"
+        />
+
+    <TextView
+        android:id="@+id/release_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextStyle.Subtitle"
+        android:maxLines="1"
+        android:ellipsize="end"
+        tools:text="@string/release_date"
+        />
+</LinearLayout>
