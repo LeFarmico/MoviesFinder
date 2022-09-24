@@ -52,9 +52,9 @@ class MovieDetailsCoordinatorLayout(
     private val providerSpinner: Spinner = binding.providerSpinner
     private val movieLength: TextView = binding.length
     private val releaseDate: TextView = binding.releaseDate
-    private val genres: TextView = binding.genresTextView
-    private val actors: RecyclerView = binding.actorsRecyclerView
-    private val isWatchlist: ToggleButton = binding.favoriteToggleButton
+    private val genres: TextView = binding.genres
+    private val actors: RecyclerView = binding.castRecycler
+    private val isWatchlist: ToggleButton = binding.watchlistToggle
     // TODO: change height to other avoid full rendering
     private val recommendations: RecyclerView = binding.recommendations
     private val recommendationsHeader: TextView = binding.recommendationsHeader
@@ -233,7 +233,7 @@ class MovieDetailsCoordinatorLayout(
         setPoster(movieItem.posterPath)
         setBackground(movieItem.posterPath)
         setDescription(movieItem.description)
-        binding.actorsRecyclerView.isNestedScrollingEnabled = false
+        binding.castRecycler.isNestedScrollingEnabled = false
     }
 
     fun watchListCallback(onChecked: () -> Unit, notChecked: () -> Unit) {
