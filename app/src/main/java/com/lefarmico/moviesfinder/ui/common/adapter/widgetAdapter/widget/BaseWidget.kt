@@ -18,7 +18,7 @@ sealed interface WidgetModel {
     }
 
     data class MovieInfoOverview(
-        val genreList: List<String>,
+        val genres: String,
         val length: String,
         val releaseDate: String
     ) : WidgetModel {
@@ -32,14 +32,16 @@ sealed interface WidgetModel {
         companion object
     }
 
-    data class HeaderAndRecycler(
+    data class CastAndCrewWidgetModel(
+        val castHeader: String,
+        val crewHeader: String,
         val castList: List<MovieCastData>,
         val crewList: List<MovieCrewData>
     ) : WidgetModel {
         companion object
     }
 
-    data class WhereToWatch(val providerList: MovieProviderData) : WidgetModel {
+    data class WhereToWatch(val providerList: List<MovieProviderData>) : WidgetModel {
         companion object
     }
 

@@ -42,7 +42,7 @@ class BottomSheetMovieDetails(context: Context, @Nullable attributeSet: Attribut
     private val providerSpinner: Spinner = binding.providerSpinner
     private val releaseDate: TextView = binding.releaseDate
     private val genres: TextView = binding.genres
-    private val actors: RecyclerView = binding.recycler
+    private val actors: RecyclerView = binding.castRecycler
     private val isWatchlist: ToggleButton = binding.watchlistToggle
 
     override fun onStart(owner: LifecycleOwner) {
