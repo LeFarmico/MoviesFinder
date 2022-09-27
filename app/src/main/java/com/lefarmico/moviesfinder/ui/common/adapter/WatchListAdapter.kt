@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieBriefData
-import com.lefarmico.moviesfinder.databinding.ItemWatchListRecyclerBinding
+import com.lefarmico.moviesfinder.databinding.WidgetMovieLargeBinding
 import com.lefarmico.moviesfinder.private.Private
 import com.lefarmico.moviesfinder.ui.common.widget.RatingView
 import com.squareup.picasso.Picasso
@@ -36,7 +36,7 @@ class WatchListAdapter(
             oldList[oldItemPosition] == newList[newItemPosition]
     }
 
-    class ViewHolder(itemBinding: ItemWatchListRecyclerBinding) :
+    class ViewHolder(itemBinding: WidgetMovieLargeBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
         private val poster: ImageView = itemBinding.poster
         val title: TextView = itemBinding.title
@@ -64,7 +64,7 @@ class WatchListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(
-            ItemWatchListRecyclerBinding.inflate(
+            WidgetMovieLargeBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )

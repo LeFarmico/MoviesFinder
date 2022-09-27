@@ -1,5 +1,6 @@
 package com.lefarmico.moviesfinder.ui.common.adapter.widgetAdapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,7 +39,7 @@ class WidgetAdapter : ListAdapter<WidgetModel, WidgetAdapter.WidgetViewHolder>(W
         private val watchlistToggle = widgetRatingOverviewBinding.watchlistToggle
 
         fun bind(ratingOverview: WidgetModel.RatingOverview) {
-            usersRating.setRatingValue(ratingOverview.usesRating)
+            usersRating.setRatingValue(ratingOverview.usesRating ?: 0f)
             watchlistToggle.isChecked = ratingOverview.isWatchList
         }
 
@@ -86,7 +87,7 @@ class WidgetAdapter : ListAdapter<WidgetModel, WidgetAdapter.WidgetViewHolder>(W
         private val binding = widgetWhereToWatchBinding
 
         fun bind(whereToWatch: WidgetModel.WhereToWatch) {
-            if (whereToWatch.providerList.isEmpty()) {
+            if (whereToWatch.providerList == null || whereToWatch.providerList.isEmpty()) {
                 spinner.visibility = View.GONE
             } else {
                 spinner.visibility = View.VISIBLE
@@ -152,8 +153,35 @@ class WidgetAdapter : ListAdapter<WidgetModel, WidgetAdapter.WidgetViewHolder>(W
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
-            WidgetModel.RatingOverview.ordinal() -> RatingViewHolder(
-                WidgetRatingOverviewBinding.inflate(
+            WidgetModel.RatingOverview.ordinal() -> {
+                RatingViewHolder(
+                    WidgetRatingOverviewBinding.inflate(
+                        LayoutInflater.from(parent.context), parent, false
+                    )
+                )
+            }
+            WidgetModel.CastAndCrewWidgetModel.ordinal() -> CastAndCrewViewHolder(
+                WidgetHeaderWithRecyclerBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
+            )
+            WidgetModel.MovieInfoOverview.ordinal() -> MovieOverviewViewHolder(
+                WidgetMovieOverviewBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
+            )
+            WidgetModel.MovieLargeWidget.ordinal() -> MovieLargeViewHolder(
+                WidgetMovieLargeBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
+            )
+            WidgetModel.WhereToWatch.ordinal() -> WhereToWatchViewHolder(
+                WidgetWhereToWatchBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
+            )
+            WidgetModel.HeaderAndTextExpandable.ordinal() -> HeaderAndTextViewHolder(
+                WidgetHeaderAndTextBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
@@ -202,13 +230,17 @@ class WidgetAdapter : ListAdapter<WidgetModel, WidgetAdapter.WidgetViewHolder>(W
 
     private inline fun <reified T : Any> T.ordinal(): Int {
         if (T::class.isSealed) {
-            return T::class.java.classes.indexOfFirst { sub -> sub == javaClass }
+            return T::class.java.classes.indexOfFirst { sub -> sub == javaClass }.also {
+                Log.d("ORDINAL", "${T::class} viewType = $it")
+            }
         }
         val klass = if (T::class.isCompanion) {
             javaClass.declaringClass
         } else {
             javaClass
         }
-        return klass.superclass?.classes?.indexOfFirst { it == klass } ?: -1
+        return klass.superclass?.classes?.indexOfFirst { it == klass }.also {
+            Log.d("ORDINAL", "${T::class} viewType = $it")
+        } ?: -1
     }
 }

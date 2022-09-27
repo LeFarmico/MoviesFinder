@@ -7,13 +7,13 @@ import com.lefarmico.moviesfinder.data.entity.MovieCastData
 import com.lefarmico.moviesfinder.data.entity.MovieCrewData
 import com.lefarmico.moviesfinder.data.entity.MovieProviderData
 
-sealed interface WidgetModel {
+sealed class WidgetModel {
 
     data class RatingOverview(
-        val usesRating: Float,
-        val userRating: Int,
+        val usesRating: Float?,
+        val userRating: Int?,
         val isWatchList: Boolean
-    ) : WidgetModel {
+    ) : WidgetModel() {
         companion object
     }
 
@@ -21,14 +21,14 @@ sealed interface WidgetModel {
         val genres: String,
         val length: String,
         val releaseDate: String
-    ) : WidgetModel {
+    ) : WidgetModel() {
         companion object
     }
 
     data class HeaderAndTextExpandable(
         val header: String,
         val description: String
-    ) : WidgetModel {
+    ) : WidgetModel() {
         companion object
     }
 
@@ -37,19 +37,19 @@ sealed interface WidgetModel {
         val crewHeader: String,
         val castList: List<MovieCastData>,
         val crewList: List<MovieCrewData>
-    ) : WidgetModel {
+    ) : WidgetModel() {
         companion object
     }
 
-    data class WhereToWatch(val providerList: List<MovieProviderData>) : WidgetModel {
+    data class WhereToWatch(val providerList: List<MovieProviderData>?) : WidgetModel() {
         companion object
     }
 
-    data class MovieLargeWidget(val movieBriefData: MovieBriefData) : WidgetModel {
+    data class MovieLargeWidget(val movieBriefData: MovieBriefData) : WidgetModel() {
         companion object
     }
 
-    data class Header(val header: String) : WidgetModel {
+    data class Header(val header: String) : WidgetModel() {
         companion object
     }
 }
