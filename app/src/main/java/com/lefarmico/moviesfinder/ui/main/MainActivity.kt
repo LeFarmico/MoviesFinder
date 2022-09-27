@@ -15,6 +15,8 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.ui.base.BaseActivity
+import com.lefarmico.moviesfinder.ui.common.adapter.widgetAdapter.WidgetAdapter
+import com.lefarmico.moviesfinder.ui.common.adapter.widgetAdapter.widget.WidgetModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,6 +31,8 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
 
     private lateinit var navController: NavController
     private lateinit var appBarConfig: AppBarConfiguration
+
+    private val widgetAdapter = WidgetAdapter()
 
     private val TAG = this.javaClass.canonicalName
 
@@ -46,11 +50,39 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         setupActionBarWithNavController(navController, appBarConfig)
 
         binding.bottomSheet.bindBottomSheetBehaviour()
+        binding.bottomSheet.setRecyclerAdapter(widgetAdapter)
         applyBottomSheetStateCallbacks()
         lifecycle.addObserver(binding.bottomSheet)
 
         viewModel.shownMovieLiveData.observe(this) {
             launchItemDetails(it)
+            widgetAdapter.submitList(
+                listOf(
+                    WidgetModel.MovieInfoOverview(
+                        genres = it.genres.reduce { acc, s -> "$acc / $s" },
+                        length = "Length: ${it.length} min",
+                        releaseDate = it.releaseDate
+                    ),
+                    WidgetModel.RatingOverview(
+                        usesRating = it.rating,
+                        userRating = it.yourRate,
+                        isWatchList = it.isWatchlist
+                    ),
+                    WidgetModel.WhereToWatch(
+                        providerList = it.watchMovieProviderData
+                    ),
+                    WidgetModel.HeaderAndTextExpandable(
+                        header = getString(R.string.storyline),
+                        description = it.description
+                    ),
+                    WidgetModel.CastAndCrewWidgetModel(
+                        castHeader = getString(R.string.cast),
+                        crewHeader = getString(R.string.crew),
+                        castList = it.actors ?: listOf(),
+                        crewList = it.directors ?: listOf()
+                    )
+                )
+            )
         }
 
         viewModel.toastLiveData.observe(this) {
@@ -58,7 +90,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         }
 
         viewModel.recommendationsLiveData.observe(this) {
-            binding.bottomSheet.setRecommendations(it)
+//            binding.bottomSheet.setRecommendations(it)
         }
         viewModel.startObserveMovieDetailedFromChannel()
     }
@@ -70,14 +102,14 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     private fun applyBottomSheetStateCallbacks() {
         binding.bottomSheet.apply {
 
-            watchListCallback(
-                onChecked = {
-                    viewModel.tryToSaveMovieToWatchlist()
-                },
-                notChecked = {
-                    viewModel.tryToRemoveMovieFromWatchlist()
-                }
-            )
+//            watchListCallback(
+//                onChecked = {
+//                    viewModel.tryToSaveMovieToWatchlist()
+//                },
+//                notChecked = {
+//                    viewModel.tryToRemoveMovieFromWatchlist()
+//                }
+//            )
 
             onSlide = { slideOffset ->
                 binding.blackBackgroundFrameLayout.alpha = slideOffset
