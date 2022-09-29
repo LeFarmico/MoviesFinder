@@ -15,8 +15,8 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.ui.base.BaseActivity
-import com.lefarmico.moviesfinder.ui.common.adapter.widgetAdapter.WidgetAdapter
-import com.lefarmico.moviesfinder.ui.common.adapter.widgetAdapter.widget.WidgetModel
+import com.lefarmico.moviesfinder.ui.main.adapter.MovieDetailsAdapter
+import com.lefarmico.moviesfinder.ui.main.adapter.model.MovieDetailsModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,7 +32,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     private lateinit var navController: NavController
     private lateinit var appBarConfig: AppBarConfiguration
 
-    private val widgetAdapter = WidgetAdapter()
+    private val movieDetailsAdapter = MovieDetailsAdapter()
 
     private val TAG = this.javaClass.canonicalName
 
@@ -50,49 +50,21 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         setupActionBarWithNavController(navController, appBarConfig)
 
         binding.bottomSheet.bindBottomSheetBehaviour()
-        binding.bottomSheet.setRecyclerAdapter(widgetAdapter)
+        binding.bottomSheet.setRecyclerAdapter(movieDetailsAdapter)
         applyBottomSheetStateCallbacks()
         lifecycle.addObserver(binding.bottomSheet)
 
-        viewModel.shownMovieLiveData.observe(this) {
-            launchItemDetails(it)
-            widgetAdapter.submitList(
-                listOf(
-                    WidgetModel.MovieInfoOverview(
-                        genres = it.genres.reduce { acc, s -> "$acc / $s" },
-                        length = "Length: ${it.length} min",
-                        releaseDate = it.releaseDate
-                    ),
-                    WidgetModel.RatingOverview(
-                        usesRating = it.rating,
-                        userRating = it.yourRate,
-                        isWatchList = it.isWatchlist
-                    ),
-                    WidgetModel.WhereToWatch(
-                        providerList = it.watchMovieProviderData
-                    ),
-                    WidgetModel.HeaderAndTextExpandable(
-                        header = getString(R.string.storyline),
-                        description = it.description
-                    ),
-                    WidgetModel.CastAndCrewWidgetModel(
-                        castHeader = getString(R.string.cast),
-                        crewHeader = getString(R.string.crew),
-                        castList = it.actors ?: listOf(),
-                        crewList = it.directors ?: listOf()
-                    )
-                )
-            )
-        }
-
-        viewModel.toastLiveData.observe(this) {
-            it?.let { showToast(it) }
-        }
-
-        viewModel.recommendationsLiveData.observe(this) {
-//            binding.bottomSheet.setRecommendations(it)
-        }
         viewModel.startObserveMovieDetailedFromChannel()
+        viewModel.state.observe(this) { state ->
+            state.apply {
+                shownMovie?.let {
+                    launchItemDetails(it.movieData, it.movieDetailsModelList)
+                }
+                toast?.let {
+                    showToast(it)
+                }
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -101,15 +73,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
 
     private fun applyBottomSheetStateCallbacks() {
         binding.bottomSheet.apply {
-
-//            watchListCallback(
-//                onChecked = {
-//                    viewModel.tryToSaveMovieToWatchlist()
-//                },
-//                notChecked = {
-//                    viewModel.tryToRemoveMovieFromWatchlist()
-//                }
-//            )
 
             onSlide = { slideOffset ->
                 binding.blackBackgroundFrameLayout.alpha = slideOffset
@@ -143,10 +106,10 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         }
     }
 
-    private fun launchItemDetails(movieDetailedData: MovieDetailedData) {
-        viewModel.getRecommendations(movieDetailedData.movieId)
+    private fun launchItemDetails(movieDetailedData: MovieDetailedData, movieDetailsModelList: List<MovieDetailsModel>) {
         binding.bottomSheet.setMovieItem(movieDetailedData)
         binding.bottomSheet.getBehavior().state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        movieDetailsAdapter.submitList(movieDetailsModelList)
     }
 
     private fun showToast(message: String) {
