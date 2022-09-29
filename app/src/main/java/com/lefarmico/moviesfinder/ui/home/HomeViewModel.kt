@@ -12,7 +12,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,7 +20,6 @@ class HomeViewModel @Inject constructor(
     private val getUpcomingMovies: GetUpcomingMovieBriefListUseCase,
     private val getNowPlayingMovies: GetNowPlayingMovieBriefListUseCase,
     private val getTopRatedMovies: GetTopRatedMovieBriefListUseCase,
-    private val getMovieDetailed: GetMovieDetailedApiUseCase,
     private val interactor: Interactor
 ) : ViewModel() {
 
@@ -35,11 +33,7 @@ class HomeViewModel @Inject constructor(
 
     fun showMovieDetail(movieId: Int) {
         viewModelScope.launch {
-            when (val movieDetailedDataState = getMovieDetailed(movieId)) {
-                is State.Error -> throw movieDetailedDataState.exception
-                is State.Success -> interactor.sendMovieDetailedToChannel(movieDetailedDataState.data)
-                else -> throw IllegalStateException("State.Loading is not able in this function")
-            }
+            interactor.sendMovieDetailedToChannel(movieId)
         }
     }
 

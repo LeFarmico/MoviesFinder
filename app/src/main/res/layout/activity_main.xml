@@ -45,7 +45,7 @@
         style="@style/BottomNavigatorStyle"
         />
 
-    <com.lefarmico.moviesfinder.ui.common.widget.MovieDetailsCoordinatorLayout2
+    <com.lefarmico.moviesfinder.ui.common.view.BottomSheetCoordinatorLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

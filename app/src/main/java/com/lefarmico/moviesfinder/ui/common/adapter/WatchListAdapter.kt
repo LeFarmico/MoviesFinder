@@ -12,7 +12,7 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieBriefData
 import com.lefarmico.moviesfinder.databinding.WidgetMovieLargeBinding
 import com.lefarmico.moviesfinder.private.Private
-import com.lefarmico.moviesfinder.ui.common.widget.RatingView
+import com.lefarmico.moviesfinder.ui.common.view.RatingView
 import com.squareup.picasso.Picasso
 
 class WatchListAdapter(

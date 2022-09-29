@@ -145,7 +145,7 @@
                 android:layout_marginHorizontal="@dimen/stnd_margin"
                 android:layout_marginTop="16dp">
 
-                <com.lefarmico.moviesfinder.ui.common.widget.RatingView
+                <com.lefarmico.moviesfinder.ui.common.view.RatingView
                     android:id="@+id/movie_rate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -177,7 +177,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     />
 
-                <com.lefarmico.moviesfinder.ui.common.widget.PersonalRatingView
+                <com.lefarmico.moviesfinder.ui.common.view.PersonalRatingView
                     android:id="@+id/user_rate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

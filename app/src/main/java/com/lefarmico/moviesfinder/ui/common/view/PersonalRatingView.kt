@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.ui.common.widget
+package com.lefarmico.moviesfinder.ui.common.view
 
 import android.content.Context
 import android.graphics.*
