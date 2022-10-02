@@ -18,23 +18,25 @@ class PaddingItemDecoration constructor(
 
     constructor(
         horizontalPd: Int = 0,
-        verticalPd: Int = 0
+        verticalPd: Int = 0,
+        dimenType: Int = FirstLastPaddingItemDecorator.PX,
     ) : this(
         leftPd = horizontalPd,
         rightPd = horizontalPd,
         topPd = verticalPd,
         bottomPd = verticalPd,
-        dimenType = PX
+        dimenType = dimenType
     )
 
     constructor(
-        layoutPd: Int = 0
+        layoutPd: Int = 0,
+        dimenType: Int = FirstLastPaddingItemDecorator.PX,
     ) : this(
         leftPd = layoutPd,
         rightPd = layoutPd,
         topPd = layoutPd,
         bottomPd = layoutPd,
-        dimenType = PX
+        dimenType = dimenType
     )
 
     override fun getItemOffsets(
@@ -44,6 +46,7 @@ class PaddingItemDecoration constructor(
         state: RecyclerView.State
     ) {
         super.getItemOffsets(outRect, view, parent, state)
+
         when (dimenType) {
             PX -> {
                 outRect.right = rightPd

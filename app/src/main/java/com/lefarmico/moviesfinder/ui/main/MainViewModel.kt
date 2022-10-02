@@ -27,9 +27,9 @@ class MainViewModel @Inject constructor(
     private val getRecommendations: GetRecommendationsMovieBriefListUseCase,
 ) : ViewModel() {
 
-    private var _state = MutableLiveData<MainState>()
+    private var _state = MutableLiveData(MainState())
     val state get() = _state
-    private val currentState: MainState = state.value ?: MainState()
+    private val currentState: MainState get() = state.value ?: MainState()
 
     fun startObserveMovieDetailedFromChannel() {
         viewModelScope.launch {
@@ -76,35 +76,46 @@ class MainViewModel @Inject constructor(
                             )
                         )
                         movieDetailsModelList.add(
+                            MovieDetailsModel.Header(R.string.cast)
+                        )
+                        movieDetailsModelList.add(
                             MovieDetailsModel.CastAndCrewMovieDetailsModel(
-                                castHeader = R.string.cast,
-                                crewHeader = R.string.crew,
                                 castList = moveState.data.actors ?: listOf(),
                                 crewList = moveState.data.directors ?: listOf()
                             )
                         )
+                        val shownMovie = ShownMovie(
+                            moveState.data,
+                            movieDetailsModelList
+                        )
+                        _state.value = currentState.copy(
+                            shownMovie = shownMovie,
+                            bottomSheetState = MainState.BottomSheetState.HalfExpanded
+                        )
                         val recommendationState = recommendationsState.await()
                         recommendationState.collectLatest { recState ->
+                            val recommendationModelList = mutableListOf<MovieDetailsModel>()
                             when (recState) {
                                 is State.Success -> {
                                     if (recState.data.isNotEmpty()) {
                                         val movieLargeModelList = recState.data.map { MovieDetailsModel.MovieLargeModel(it) }
-                                        movieDetailsModelList.add(
+                                        recommendationModelList.add(
                                             MovieDetailsModel.Header(
                                                 R.string.you_may_also_like
                                             )
                                         )
-                                        movieDetailsModelList.addAll(movieLargeModelList)
+                                        recommendationModelList.addAll(movieLargeModelList)
                                     }
                                 }
                                 is State.Error -> {}
                                 State.Loading -> {}
                             }
-                            val shownMovie = ShownMovie(
-                                moveState.data,
-                                movieDetailsModelList
+                            _state.value = currentState.copy(
+                                shownMovie = shownMovie.copy(
+                                    movieData = moveState.data,
+                                    movieDetailsModelList = movieDetailsModelList + recommendationModelList
+                                )
                             )
-                            _state.value = currentState.copy(shownMovie = shownMovie)
                         }
                     }
                     else -> throw IllegalStateException("State.Loading is not able in this function")
@@ -114,40 +125,45 @@ class MainViewModel @Inject constructor(
     }
 
     fun tryToSaveMovieToWatchlist() {
-//        viewModelScope.launch {
-//            currentState.shownMovie?.copy(isWatchlist = true)?.let {
-//                saveMovieDetailedToDBUseCase(it).collectLatest { state ->
-//                    when (state) {
-//                        is State.Error -> _state.value = currentState.copy(toast = "${state.exception.message}")
-//                        State.Loading -> {}
-//                        is State.Success -> {
-//                            // TODO return message id from resources
-//                            _state.value = currentState.copy(toast = "The movie successfully saved to watchlist")
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        viewModelScope.launch {
+            println("!!!!! $currentState")
+            currentState.shownMovie?.let {
+                saveMovieDetailedToDBUseCase(it.movieData.copy(isWatchlist = true)).collectLatest { state ->
+                    when (state) {
+                        is State.Error -> _state.value = currentState.copy(toast = "${state.exception.message}")
+                        State.Loading -> {}
+                        is State.Success -> {
+                            // TODO return message id from resources
+                            _state.value = currentState.copy(toast = "The movie successfully saved to watchlist")
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun tryToRemoveMovieFromWatchlist() {
-//        viewModelScope.launch {
-//            currentState.shownMovie?.copy(isWatchlist = false)?.let {
-//                deleteMovieDetailedFromDBUseCase(it).collectLatest { state ->
-//                    when (state) {
-//                        is State.Error -> _state.value = currentState.copy(toast = "${state.exception.message}")
-//                        State.Loading -> {}
-//                        is State.Success -> {
-//                            // TODO return message id from resources
-//                            _state.value = currentState.copy(toast = "The movie successfully deleted to watchlist")
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        viewModelScope.launch {
+            currentState.shownMovie?.let {
+                deleteMovieDetailedFromDBUseCase(it.movieData.copy(isWatchlist = false)).collectLatest { state ->
+                    when (state) {
+                        is State.Error -> _state.value = currentState.copy(toast = "${state.exception.message}")
+                        State.Loading -> {}
+                        is State.Success -> {
+                            // TODO return message id from resources
+                            _state.value = currentState.copy(toast = "The movie successfully deleted to watchlist")
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun cleanToast() {
         _state.value = currentState.copy(toast = null)
+    }
+
+    fun setBottomSheetState(bottomSheetState: MainState.BottomSheetState) {
+        _state.value = currentState.copy(bottomSheetState = bottomSheetState)
     }
 }

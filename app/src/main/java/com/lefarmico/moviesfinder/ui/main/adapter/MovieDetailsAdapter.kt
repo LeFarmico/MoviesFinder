@@ -4,6 +4,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DimenRes
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -12,11 +14,15 @@ import com.lefarmico.moviesfinder.databinding.*
 import com.lefarmico.moviesfinder.private.Private
 import com.lefarmico.moviesfinder.ui.common.adapter.CastAdapter
 import com.lefarmico.moviesfinder.ui.common.adapter.SpinnerProviderAdapter
+import com.lefarmico.moviesfinder.ui.common.decorator.FirstLastPaddingItemDecorator
+import com.lefarmico.moviesfinder.ui.common.decorator.PaddingItemDecoration
 import com.lefarmico.moviesfinder.ui.main.adapter.model.MovieDetailsModel
 import com.lefarmico.moviesfinder.ui.main.adapter.model.WidgetDiffUtilCallback
 import com.squareup.picasso.Picasso
 
-class MovieDetailsAdapter : ListAdapter<MovieDetailsModel, MovieDetailsAdapter.MovieDetailsViewHolder>(WidgetDiffUtilCallback()) {
+class MovieDetailsAdapter(
+    private val onWatchListClick: (Boolean) -> Unit
+) : ListAdapter<MovieDetailsModel, MovieDetailsAdapter.MovieDetailsViewHolder>(WidgetDiffUtilCallback()) {
 
     sealed class MovieDetailsViewHolder(
         viewBinding: ViewBinding,
@@ -46,7 +52,7 @@ class MovieDetailsAdapter : ListAdapter<MovieDetailsModel, MovieDetailsAdapter.M
             watchlistToggle.isChecked = ratingOverview.isWatchList
         }
 
-        fun onCheckedWatchlist(onChecked: () -> Unit, notChecked: () -> Unit) {
+        fun onCheckedWatchlistClick(onChecked: () -> Unit, notChecked: () -> Unit) {
             watchlistToggle.setOnClickListener {
                 if (watchlistToggle.isChecked) { onChecked() } else { notChecked() }
             }
@@ -62,7 +68,6 @@ class MovieDetailsAdapter : ListAdapter<MovieDetailsModel, MovieDetailsAdapter.M
         private val releaseDate = widgetMovieOverviewBinding.releaseDate
 
         fun bind(movieInfoOverView: MovieDetailsModel.MovieInfoOverview) {
-//            movieInfoOverView.genreList.reduce { acc, s -> "$acc / $s" }
             genres.text = movieInfoOverView.genres
             length.text = movieInfoOverView.length
             releaseDate.text = movieInfoOverView.releaseDate
@@ -130,20 +135,20 @@ class MovieDetailsAdapter : ListAdapter<MovieDetailsModel, MovieDetailsAdapter.M
         widgetHeaderWithRecyclerBinding: WidgetHeaderWithRecyclerBinding
     ) : MovieDetailsViewHolder(widgetHeaderWithRecyclerBinding) {
 
-        private val header = widgetHeaderWithRecyclerBinding.header
-        private val recycler = widgetHeaderWithRecyclerBinding.castRecycler
+        val recycler = widgetHeaderWithRecyclerBinding.widgetRecycler.apply {
+            isNestedScrollingEnabled = false
+            adapter = CastAdapter()
+        }
         private val root = widgetHeaderWithRecyclerBinding.root
 
         fun bind(castAndCrewMovieDetailsModel: MovieDetailsModel.CastAndCrewMovieDetailsModel) {
             if (castAndCrewMovieDetailsModel.castList.isEmpty()) {
                 root.visibility = View.GONE
             } else {
-
-                header.text = root.context.getString(castAndCrewMovieDetailsModel.castHeader)
                 root.visibility = View.VISIBLE
-                recycler.adapter = CastAdapter().apply {
-                    submitList(castAndCrewMovieDetailsModel.castList)
-                }
+                (recycler.adapter as CastAdapter)
+                    .submitList(castAndCrewMovieDetailsModel.castList)
+                Log.d("DECORATION_COUNT", "${recycler.itemDecorationCount}")
             }
         }
     }
@@ -169,7 +174,20 @@ class MovieDetailsAdapter : ListAdapter<MovieDetailsModel, MovieDetailsAdapter.M
                 WidgetHeaderWithRecyclerBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
-            )
+            ).apply {
+                val pagerSnapHelper = LinearSnapHelper()
+                pagerSnapHelper.attachToRecyclerView(recycler)
+                recycler.addItemDecoration(
+                    PaddingItemDecoration(
+                        rightPd = parent.getDimPx(R.dimen.stnd_small_margin)
+                    )
+                )
+                recycler.addItemDecoration(
+                    FirstLastPaddingItemDecorator(
+                        leftPd = parent.getDimPx(R.dimen.stnd_margin)
+                    )
+                )
+            }
             MovieDetailsModel.MovieInfoOverview.ordinal() -> MovieOverviewViewHolder(
                 WidgetMovieOverviewBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
@@ -194,6 +212,9 @@ class MovieDetailsAdapter : ListAdapter<MovieDetailsModel, MovieDetailsAdapter.M
         }
     }
 
+    private fun ViewGroup.getDimPx(@DimenRes res: Int): Int =
+        this.context.resources.getDimensionPixelOffset(res)
+
     override fun onBindViewHolder(holder: MovieDetailsViewHolder, position: Int) {
         when (val model = getItem(position)) {
             is MovieDetailsModel.Header -> {
@@ -203,9 +224,9 @@ class MovieDetailsAdapter : ListAdapter<MovieDetailsModel, MovieDetailsAdapter.M
             is MovieDetailsModel.RatingOverview -> {
                 holder as RatingViewHolder
                 holder.bind(model)
-                holder.onCheckedWatchlist(
-                    onChecked = {},
-                    notChecked = {}
+                holder.onCheckedWatchlistClick(
+                    onChecked = { onWatchListClick(true) },
+                    notChecked = { onWatchListClick(false) }
                 )
             }
             is MovieDetailsModel.CastAndCrewMovieDetailsModel -> {
@@ -235,17 +256,13 @@ class MovieDetailsAdapter : ListAdapter<MovieDetailsModel, MovieDetailsAdapter.M
 
     private inline fun <reified T : Any> T.ordinal(): Int {
         if (T::class.isSealed) {
-            return T::class.java.classes.indexOfFirst { sub -> sub == javaClass }.also {
-                Log.d("ORDINAL", "${T::class} viewType = $it")
-            }
+            return T::class.java.classes.indexOfFirst { sub -> sub == javaClass }
         }
         val klass = if (T::class.isCompanion) {
             javaClass.declaringClass
         } else {
             javaClass
         }
-        return klass.superclass?.classes?.indexOfFirst { it == klass }.also {
-            Log.d("ORDINAL", "${T::class} viewType = $it")
-        } ?: -1
+        return klass.superclass?.classes?.indexOfFirst { it == klass } ?: -1
     }
 }

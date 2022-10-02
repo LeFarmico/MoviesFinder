@@ -19,8 +19,8 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
 import com.lefarmico.moviesfinder.databinding.BottomSheetMovieRecycleBinding
 import com.lefarmico.moviesfinder.private.Private
-import com.lefarmico.moviesfinder.ui.common.decorator.PaddingItemDecoration
 import com.lefarmico.moviesfinder.ui.main.adapter.MovieDetailsAdapter
+import com.lefarmico.moviesfinder.ui.main.adapter.decorator.MovieDetailsDecorator
 import com.squareup.picasso.Picasso
 
 class BottomSheetCoordinatorLayout(
@@ -55,8 +55,10 @@ class BottomSheetCoordinatorLayout(
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
         recycler.addItemDecoration(
-            PaddingItemDecoration(
-                bottomPd = getPixelOffsetResource(R.dimen.stnd_between_line_space)
+            MovieDetailsDecorator(
+                horizontalPd = getPixelOffsetResource(R.dimen.stnd_margin),
+                betweenLinePd = getPixelOffsetResource(R.dimen.stnd_between_line_space),
+                headerBottomPd = getPixelOffsetResource(R.dimen.stnd_very_small_margin)
             ),
             0
         )

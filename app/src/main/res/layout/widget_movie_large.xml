@@ -15,8 +15,8 @@
         >
         <ImageView
             android:id="@+id/poster"
-            android:layout_width="@dimen/big_card_width"
-            android:layout_height="@dimen/big_card_height"
+            android:layout_width="@dimen/small_card_width"
+            android:layout_height="@dimen/small_card_height"
             android:background="@drawable/shape_poster"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_foreground"
@@ -29,9 +29,10 @@
         android:layout_height="wrap_content"
         android:text="@string/movie_title"
         style="@style/TextStyle.SecondaryHeading"
+        android:maxLines="2"
         app:layout_constraintStart_toEndOf="@id/card_view"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/card_view"
-        android:layout_marginTop="@dimen/stnd_between_line_space"
         android:layout_marginStart="@dimen/stnd_half_between_line_space"
         />
     <TextView
@@ -39,7 +40,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/stnd_half_between_line_space"
-        android:maxLines="5"
+        android:maxLines="3"
         android:ellipsize="end"
         tools:text="@tools:sample/lorem/random"
         app:layout_constraintStart_toStartOf="@id/title"
@@ -50,7 +51,6 @@
         android:id="@+id/movie_rate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         app:layout_constraintStart_toStartOf="@id/title"
         app:layout_constraintBottom_toBottomOf="parent"
         />

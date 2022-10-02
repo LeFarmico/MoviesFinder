@@ -32,7 +32,13 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     private lateinit var navController: NavController
     private lateinit var appBarConfig: AppBarConfiguration
 
-    private val movieDetailsAdapter = MovieDetailsAdapter()
+    private val movieDetailsAdapter = MovieDetailsAdapter { isChecked ->
+        if (isChecked) {
+            viewModel.tryToSaveMovieToWatchlist()
+        } else {
+            viewModel.tryToRemoveMovieFromWatchlist()
+        }
+    }
 
     private val TAG = this.javaClass.canonicalName
 
@@ -63,6 +69,14 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                 toast?.let {
                     showToast(it)
                 }
+                bottomSheetState.apply {
+                    val bottomSheetState = when (this) {
+                        MainState.BottomSheetState.Expanded -> BottomSheetBehavior.STATE_EXPANDED
+                        MainState.BottomSheetState.HalfExpanded -> BottomSheetBehavior.STATE_HALF_EXPANDED
+                        MainState.BottomSheetState.Hidden -> BottomSheetBehavior.STATE_HIDDEN
+                    }
+                    binding.bottomSheet.getBehavior().state = bottomSheetState
+                }
             }
         }
     }
@@ -78,6 +92,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                 binding.blackBackgroundFrameLayout.alpha = slideOffset
             }
             onHidden = {
+                viewModel.setBottomSheetState(MainState.BottomSheetState.Hidden)
                 binding.apply {
                     blackBackgroundFrameLayout.isClickable = false
                     bottomNavigationBarView.visibility = View.VISIBLE
@@ -97,6 +112,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                 disableScroll()
             }
             onExpanded = {
+                viewModel.setBottomSheetState(MainState.BottomSheetState.Expanded)
                 disableDragging()
                 enableScroll()
                 onNavigateUpPressed {
@@ -107,9 +123,8 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     }
 
     private fun launchItemDetails(movieDetailedData: MovieDetailedData, movieDetailsModelList: List<MovieDetailsModel>) {
-        binding.bottomSheet.setMovieItem(movieDetailedData)
-        binding.bottomSheet.getBehavior().state = BottomSheetBehavior.STATE_HALF_EXPANDED
         movieDetailsAdapter.submitList(movieDetailsModelList)
+        binding.bottomSheet.setMovieItem(movieDetailedData)
     }
 
     private fun showToast(message: String) {
