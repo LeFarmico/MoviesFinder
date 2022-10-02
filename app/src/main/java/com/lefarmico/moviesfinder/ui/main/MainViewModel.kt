@@ -76,35 +76,43 @@ class MainViewModel @Inject constructor(
                             )
                         )
                         movieDetailsModelList.add(
+                            MovieDetailsModel.Header(R.string.cast)
+                        )
+                        movieDetailsModelList.add(
                             MovieDetailsModel.CastAndCrewMovieDetailsModel(
-                                castHeader = R.string.cast,
-                                crewHeader = R.string.crew,
                                 castList = moveState.data.actors ?: listOf(),
                                 crewList = moveState.data.directors ?: listOf()
                             )
                         )
+                        val shownMovie = ShownMovie(
+                            moveState.data,
+                            movieDetailsModelList
+                        )
+                        _state.value = currentState.copy(shownMovie = shownMovie)
                         val recommendationState = recommendationsState.await()
                         recommendationState.collectLatest { recState ->
+                            val recommendationModelList = mutableListOf<MovieDetailsModel>()
                             when (recState) {
                                 is State.Success -> {
                                     if (recState.data.isNotEmpty()) {
                                         val movieLargeModelList = recState.data.map { MovieDetailsModel.MovieLargeModel(it) }
-                                        movieDetailsModelList.add(
+                                        recommendationModelList.add(
                                             MovieDetailsModel.Header(
                                                 R.string.you_may_also_like
                                             )
                                         )
-                                        movieDetailsModelList.addAll(movieLargeModelList)
+                                        recommendationModelList.addAll(movieLargeModelList)
                                     }
                                 }
                                 is State.Error -> {}
                                 State.Loading -> {}
                             }
-                            val shownMovie = ShownMovie(
-                                moveState.data,
-                                movieDetailsModelList
+                            _state.value = currentState.copy(
+                                shownMovie = shownMovie.copy(
+                                    movieData = moveState.data,
+                                    movieDetailsModelList = movieDetailsModelList + recommendationModelList
+                                )
                             )
-                            _state.value = currentState.copy(shownMovie = shownMovie)
                         }
                     }
                     else -> throw IllegalStateException("State.Loading is not able in this function")

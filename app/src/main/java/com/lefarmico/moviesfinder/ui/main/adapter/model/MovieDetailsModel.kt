@@ -34,8 +34,6 @@ sealed class MovieDetailsModel {
     }
 
     data class CastAndCrewMovieDetailsModel(
-        @StringRes val castHeader: Int,
-        @StringRes val crewHeader: Int,
         val castList: List<MovieCastData>,
         val crewList: List<MovieCrewData>
     ) : MovieDetailsModel() {

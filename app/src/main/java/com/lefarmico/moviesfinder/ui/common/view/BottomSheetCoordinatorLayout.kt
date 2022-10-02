@@ -57,7 +57,8 @@ class BottomSheetCoordinatorLayout(
         recycler.addItemDecoration(
             MovieDetailsDecorator(
                 horizontalPd = getPixelOffsetResource(R.dimen.stnd_margin),
-                betweenLinePd = getPixelOffsetResource(R.dimen.stnd_between_line_space)
+                betweenLinePd = getPixelOffsetResource(R.dimen.stnd_between_line_space),
+                headerBottomPd = getPixelOffsetResource(R.dimen.stnd_very_small_margin)
             ),
             0
         )

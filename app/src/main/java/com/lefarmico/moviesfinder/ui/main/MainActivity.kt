@@ -113,9 +113,9 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     }
 
     private fun launchItemDetails(movieDetailedData: MovieDetailedData, movieDetailsModelList: List<MovieDetailsModel>) {
+        movieDetailsAdapter.submitList(movieDetailsModelList)
         binding.bottomSheet.setMovieItem(movieDetailedData)
         binding.bottomSheet.getBehavior().state = BottomSheetBehavior.STATE_HALF_EXPANDED
-        movieDetailsAdapter.submitList(movieDetailsModelList)
     }
 
     private fun showToast(message: String) {

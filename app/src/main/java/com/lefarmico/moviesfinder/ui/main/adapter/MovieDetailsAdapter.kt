@@ -134,8 +134,7 @@ class MovieDetailsAdapter(
         widgetHeaderWithRecyclerBinding: WidgetHeaderWithRecyclerBinding
     ) : MovieDetailsViewHolder(widgetHeaderWithRecyclerBinding) {
 
-        private val header = widgetHeaderWithRecyclerBinding.header
-        val recycler = widgetHeaderWithRecyclerBinding.castRecycler.apply {
+        val recycler = widgetHeaderWithRecyclerBinding.widgetRecycler.apply {
             isNestedScrollingEnabled = false
             adapter = CastAdapter()
         }
@@ -145,7 +144,6 @@ class MovieDetailsAdapter(
             if (castAndCrewMovieDetailsModel.castList.isEmpty()) {
                 root.visibility = View.GONE
             } else {
-                header.text = root.context.getString(castAndCrewMovieDetailsModel.castHeader)
                 root.visibility = View.VISIBLE
                 (recycler.adapter as CastAdapter)
                     .submitList(castAndCrewMovieDetailsModel.castList)
