@@ -27,9 +27,9 @@ class MainViewModel @Inject constructor(
     private val getRecommendations: GetRecommendationsMovieBriefListUseCase,
 ) : ViewModel() {
 
-    private var _state = MutableLiveData<MainState>()
+    private var _state = MutableLiveData(MainState())
     val state get() = _state
-    private val currentState: MainState = state.value ?: MainState()
+    private val currentState: MainState get() = state.value ?: MainState()
 
     fun startObserveMovieDetailedFromChannel() {
         viewModelScope.launch {
@@ -114,37 +114,38 @@ class MainViewModel @Inject constructor(
     }
 
     fun tryToSaveMovieToWatchlist() {
-//        viewModelScope.launch {
-//            currentState.shownMovie?.copy(isWatchlist = true)?.let {
-//                saveMovieDetailedToDBUseCase(it).collectLatest { state ->
-//                    when (state) {
-//                        is State.Error -> _state.value = currentState.copy(toast = "${state.exception.message}")
-//                        State.Loading -> {}
-//                        is State.Success -> {
-//                            // TODO return message id from resources
-//                            _state.value = currentState.copy(toast = "The movie successfully saved to watchlist")
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        viewModelScope.launch {
+            println("!!!!! $currentState")
+            currentState.shownMovie?.let {
+                saveMovieDetailedToDBUseCase(it.movieData.copy(isWatchlist = true)).collectLatest { state ->
+                    when (state) {
+                        is State.Error -> _state.value = currentState.copy(toast = "${state.exception.message}")
+                        State.Loading -> {}
+                        is State.Success -> {
+                            // TODO return message id from resources
+                            _state.value = currentState.copy(toast = "The movie successfully saved to watchlist")
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun tryToRemoveMovieFromWatchlist() {
-//        viewModelScope.launch {
-//            currentState.shownMovie?.copy(isWatchlist = false)?.let {
-//                deleteMovieDetailedFromDBUseCase(it).collectLatest { state ->
-//                    when (state) {
-//                        is State.Error -> _state.value = currentState.copy(toast = "${state.exception.message}")
-//                        State.Loading -> {}
-//                        is State.Success -> {
-//                            // TODO return message id from resources
-//                            _state.value = currentState.copy(toast = "The movie successfully deleted to watchlist")
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        viewModelScope.launch {
+            currentState.shownMovie?.let {
+                deleteMovieDetailedFromDBUseCase(it.movieData.copy(isWatchlist = false)).collectLatest { state ->
+                    when (state) {
+                        is State.Error -> _state.value = currentState.copy(toast = "${state.exception.message}")
+                        State.Loading -> {}
+                        is State.Success -> {
+                            // TODO return message id from resources
+                            _state.value = currentState.copy(toast = "The movie successfully deleted to watchlist")
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun cleanToast() {

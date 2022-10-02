@@ -32,7 +32,13 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     private lateinit var navController: NavController
     private lateinit var appBarConfig: AppBarConfiguration
 
-    private val movieDetailsAdapter = MovieDetailsAdapter()
+    private val movieDetailsAdapter = MovieDetailsAdapter { isChecked ->
+        if (isChecked) {
+            viewModel.tryToSaveMovieToWatchlist()
+        } else {
+            viewModel.tryToRemoveMovieFromWatchlist()
+        }
+    }
 
     private val TAG = this.javaClass.canonicalName
 
