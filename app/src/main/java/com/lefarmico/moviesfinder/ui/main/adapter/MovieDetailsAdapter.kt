@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DimenRes
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -174,6 +175,8 @@ class MovieDetailsAdapter(
                     LayoutInflater.from(parent.context), parent, false
                 )
             ).apply {
+                val pagerSnapHelper = LinearSnapHelper()
+                pagerSnapHelper.attachToRecyclerView(recycler)
                 recycler.addItemDecoration(
                     PaddingItemDecoration(
                         rightPd = parent.getDimPx(R.dimen.stnd_small_margin)
@@ -210,7 +213,7 @@ class MovieDetailsAdapter(
     }
 
     private fun ViewGroup.getDimPx(@DimenRes res: Int): Int =
-        this.context.resources.getDimensionPixelOffset(R.dimen.stnd_margin)
+        this.context.resources.getDimensionPixelOffset(res)
 
     override fun onBindViewHolder(holder: MovieDetailsViewHolder, position: Int) {
         when (val model = getItem(position)) {

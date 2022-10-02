@@ -69,6 +69,14 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                 toast?.let {
                     showToast(it)
                 }
+                bottomSheetState.apply {
+                    val bottomSheetState = when (this) {
+                        MainState.BottomSheetState.Expanded -> BottomSheetBehavior.STATE_EXPANDED
+                        MainState.BottomSheetState.HalfExpanded -> BottomSheetBehavior.STATE_HALF_EXPANDED
+                        MainState.BottomSheetState.Hidden -> BottomSheetBehavior.STATE_HIDDEN
+                    }
+                    binding.bottomSheet.getBehavior().state = bottomSheetState
+                }
             }
         }
     }
@@ -84,6 +92,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                 binding.blackBackgroundFrameLayout.alpha = slideOffset
             }
             onHidden = {
+                viewModel.setBottomSheetState(MainState.BottomSheetState.Hidden)
                 binding.apply {
                     blackBackgroundFrameLayout.isClickable = false
                     bottomNavigationBarView.visibility = View.VISIBLE
@@ -103,6 +112,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                 disableScroll()
             }
             onExpanded = {
+                viewModel.setBottomSheetState(MainState.BottomSheetState.Expanded)
                 disableDragging()
                 enableScroll()
                 onNavigateUpPressed {
@@ -115,7 +125,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     private fun launchItemDetails(movieDetailedData: MovieDetailedData, movieDetailsModelList: List<MovieDetailsModel>) {
         movieDetailsAdapter.submitList(movieDetailsModelList)
         binding.bottomSheet.setMovieItem(movieDetailedData)
-        binding.bottomSheet.getBehavior().state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
 
     private fun showToast(message: String) {

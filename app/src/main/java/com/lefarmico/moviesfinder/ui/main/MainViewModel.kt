@@ -88,7 +88,10 @@ class MainViewModel @Inject constructor(
                             moveState.data,
                             movieDetailsModelList
                         )
-                        _state.value = currentState.copy(shownMovie = shownMovie)
+                        _state.value = currentState.copy(
+                            shownMovie = shownMovie,
+                            bottomSheetState = MainState.BottomSheetState.HalfExpanded
+                        )
                         val recommendationState = recommendationsState.await()
                         recommendationState.collectLatest { recState ->
                             val recommendationModelList = mutableListOf<MovieDetailsModel>()
@@ -158,5 +161,9 @@ class MainViewModel @Inject constructor(
 
     fun cleanToast() {
         _state.value = currentState.copy(toast = null)
+    }
+
+    fun setBottomSheetState(bottomSheetState: MainState.BottomSheetState) {
+        _state.value = currentState.copy(bottomSheetState = bottomSheetState)
     }
 }
