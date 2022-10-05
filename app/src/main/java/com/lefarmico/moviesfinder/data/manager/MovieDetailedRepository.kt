@@ -14,10 +14,10 @@ import javax.inject.Inject
 class MovieDetailedRepository @Inject constructor(
     private val savedMoviesDao: SavedMoviesDao,
     private val tmdbApi: TmdbApi,
-) {
+) : IMovieDetailedRepository {
 
     // TODO: encapsulate the request
-    suspend fun getMovieDetailedData(movieId: Int): State<MovieDetailedData> {
+    override suspend fun getMovieDetailedData(movieId: Int): State<MovieDetailedData> {
         val response = tmdbApi.getMovieDetails(
             movieId = movieId,
             apiKey = API_KEY,
@@ -42,7 +42,7 @@ class MovieDetailedRepository @Inject constructor(
             )
         }
     }
-    suspend fun saveMovieDetailed(movieDetailedData: MovieDetailedData): Flow<State<Int>> = flow {
+    override suspend fun saveMovieDetailed(movieDetailedData: MovieDetailedData): Flow<State<Int>> = flow {
         emit(State.Loading)
         try {
             val movieId = savedMoviesDao.insertMovieDetailed(movieDetailedData)
@@ -52,7 +52,7 @@ class MovieDetailedRepository @Inject constructor(
         }
     }
 
-    suspend fun deleteMovieDetailed(movieDetailedData: MovieDetailedData): Flow<State<Int>> = flow {
+    override suspend fun deleteMovieDetailed(movieDetailedData: MovieDetailedData): Flow<State<Int>> = flow {
         emit(State.Loading)
         try {
             val movieId = savedMoviesDao.deleteMovieDetails(movieDetailedData)
@@ -62,7 +62,7 @@ class MovieDetailedRepository @Inject constructor(
         }
     }
 
-    suspend fun getWatchListMovieDetailed(): Flow<State<List<MovieDetailedData>>> = flow {
+    override suspend fun getWatchListMovieDetailed(): Flow<State<List<MovieDetailedData>>> = flow {
         emit(State.Loading)
         try {
             val watchListMovies = savedMoviesDao.getWatchListMovieDetailed()
