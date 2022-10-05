@@ -26,22 +26,22 @@ import javax.inject.Inject
 class MovieBriefListRepository @Inject constructor(
     private val tmdbApi: TmdbApi,
     private val savedMoviesDao: SavedMoviesDao
-) {
+) : IMovieBriefListRepository {
 
-    suspend fun getPopularMovieBriefList() = getMovieBriefListByCategoryAndPage(
+    override suspend fun getPopularMovieBriefList() = getMovieBriefListByCategoryAndPage(
         categoryData = CategoryData.PopularCategory
     )
-    suspend fun getNowPlayingMovieBriefList() = getMovieBriefListByCategoryAndPage(
+    override suspend fun getNowPlayingMovieBriefList() = getMovieBriefListByCategoryAndPage(
         categoryData = CategoryData.NowPlayingCategory
     )
-    suspend fun getUpcomingMovieBriefList() = getMovieBriefListByCategoryAndPage(
+    override suspend fun getUpcomingMovieBriefList() = getMovieBriefListByCategoryAndPage(
         categoryData = CategoryData.UpcomingCategory
     )
-    suspend fun getTopRatedMovieBriefList() = getMovieBriefListByCategoryAndPage(
+    override suspend fun getTopRatedMovieBriefList() = getMovieBriefListByCategoryAndPage(
         categoryData = CategoryData.TopRatedCategory
     )
 
-    suspend fun getRecommendationsMovieBriefList(movieId: Int): Flow<State<List<MovieBriefData>>> = flow {
+    override suspend fun getRecommendationsMovieBriefList(movieId: Int): Flow<State<List<MovieBriefData>>> = flow {
         emit(State.Loading)
         when (val response = tmdbApi.getRecommendations(movieId, API_KEY)) {
             is NetworkResponse.Success -> {

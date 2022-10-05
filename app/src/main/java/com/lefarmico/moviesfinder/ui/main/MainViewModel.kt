@@ -1,8 +1,6 @@
 package com.lefarmico.moviesfinder.ui.main
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.http.response.entity.State
 import com.lefarmico.moviesfinder.data.manager.Interactor

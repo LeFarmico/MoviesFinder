@@ -44,9 +44,9 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         Log.d(TAG, "onCreate")
         setSupportActionBar(binding.toolbar)
-
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         binding.bottomNavigationBarView.setupWithNavController(navController)
@@ -62,6 +62,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
 
         viewModel.startObserveMovieDetailedFromChannel()
         viewModel.state.observe(this) { state ->
+
             state.apply {
                 shownMovie?.let {
                     launchItemDetails(it.movieData, it.movieDetailsModelList)
