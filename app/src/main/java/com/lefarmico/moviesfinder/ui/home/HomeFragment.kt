@@ -8,16 +8,27 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
+import com.lefarmico.moviesfinder.databinding.FragmentHomeBinding
 import com.lefarmico.moviesfinder.ui.base.BaseFragment
 import com.lefarmico.moviesfinder.ui.common.adapter.MenuItemAdapter
 import com.lefarmico.moviesfinder.ui.common.decorator.PaddingItemDecoration
+import com.lefarmico.moviesfinder.ui.movie.MovieFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<HomeViewModel, FragmentMovieBinding>() {
+class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
-    private lateinit var itemAdapter: MenuItemAdapter
+    private var itemAdapter = MenuItemAdapter(
+        parentJob = job
+    ) {
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(
+                R.id.fragment_container_view_tag,
+                MovieFragment::class.java,
+                MovieFragment.createBundle(it.movieId)
+            ).commit()
+        viewModel.showMovieDetail(it.movieId)
+    }
     private lateinit var paddingDecorator: PaddingItemDecoration
 
     override fun getInjectViewModel(): HomeViewModel {
@@ -29,16 +40,11 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentMovieBinding>() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): FragmentMovieBinding = FragmentMovieBinding.inflate(inflater, container, false)
+    ): FragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        itemAdapter = MenuItemAdapter(
-            parentJob = job
-        ) {
-            viewModel.showMovieDetail(it.movieId)
-        }
         paddingDecorator = PaddingItemDecoration(
             topPd = requireContext().resources.getDimension(R.dimen.stnd_small_margin).toInt()
         )

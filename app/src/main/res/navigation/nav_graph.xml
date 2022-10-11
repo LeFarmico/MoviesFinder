@@ -9,7 +9,7 @@
         android:id="@+id/movies_menu"
         android:name="com.lefarmico.moviesfinder.ui.home.HomeFragment"
         android:label="fragment_movie"
-        tools:layout="@layout/fragment_movie" />
+        tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/favorites_menu"
         android:name="com.lefarmico.moviesfinder.ui.profile.ProfileFragment"
