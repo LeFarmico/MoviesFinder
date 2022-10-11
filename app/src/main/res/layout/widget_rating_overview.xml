@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/additional_details"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:orientation="horizontal"
+    android:layout_gravity="center_horizontal"
+    android:showDividers="middle"
+    android:divider="@color/on_background_color"
+    android:dividerPadding="@dimen/stnd_small_margin"
+    android:baselineAligned="false">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <com.lefarmico.moviesfinder.ui.common.view.RatingView
+            android:id="@+id/movie_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:id="@+id/movie_rate_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextStyle.Warning"
+            android:text="@string/users_rate"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <com.lefarmico.moviesfinder.ui.common.view.PersonalRatingView
+            android:id="@+id/user_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            app:rating_number="80"
+            app:view_size="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/user_rate_text"
+            app:layout_constraintEnd_toStartOf="@id/vertical_divider_2"
+            app:layout_constraintStart_toEndOf="@id/vertical_divider_1"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <TextView
+            android:id="@+id/user_rate_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextStyle.Warning"
+            android:text="@string/my_rate"
+            app:layout_constraintTop_toBottomOf="@+id/user_rate"
+            app:layout_constraintStart_toStartOf="@id/user_rate"
+            app:layout_constraintEnd_toEndOf="@id/user_rate"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <ToggleButton
+            android:id="@+id/watchlist_toggle"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            style="@style/UntitledToggleButton"
+            android:background="@drawable/selector_wishlist_ic"
+            app:layout_constraintBottom_toTopOf="@+id/watchlist_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/vertical_divider_2"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/watchlist_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextStyle.Warning"
+            android:text="@string/watch_list"
+            app:layout_constraintTop_toBottomOf="@+id/watchlist_toggle"
+            app:layout_constraintStart_toStartOf="@id/watchlist_toggle"
+            app:layout_constraintEnd_toEndOf="@id/watchlist_toggle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+    </LinearLayout>
+
+
+
+</LinearLayout>

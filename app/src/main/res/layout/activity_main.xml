@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<FrameLayout
     android:id="@+id/activity_main"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.MainActivity">
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"/>
+    android:layout_height="match_parent">
+
     <TextView
         android:id="@+id/error_text_view"
         android:layout_width="wrap_content"
@@ -35,19 +29,16 @@
         android:background="@color/black"
         android:alpha="0"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/search_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:fabSize="normal"
-        android:src="@drawable/ic_baseline_search_24"
-        app:backgroundTint="?attr/colorAccent"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="64dp"
-        android:layout_marginEnd="16dp"
-        android:contentDescription="@string/search" />
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_bar_view"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:menu="@menu/bottom_navigation_bar"
+        android:layout_gravity="bottom"
+        style="@style/BottomNavigatorStyle"
+        />
 
-    <com.lefarmico.moviesfinder.customViews.BottomSheetMovieDetails
+    <com.lefarmico.moviesfinder.ui.common.view.BottomSheetCoordinatorLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -57,12 +48,4 @@
         android:focusable="true"
         app:layout_behavior="@string/bottom_sheet_behavior"/>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation_bar_view"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:menu="@menu/bottom_navigation_bar"
-        android:layout_gravity="bottom"
-        style="@style/BottomNavigatorStyle"
-        />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</FrameLayout>

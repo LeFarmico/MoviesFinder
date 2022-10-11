@@ -18,9 +18,13 @@ object Version {
     const val recyclerView = "1.2.1"
     const val fragmentKtx = "1.5.2"
     const val material2 = "1.6.1"
+    const val coroutines = "1.6.4"
 
     // Tests
     const val junit = "4.13.2"
     const val junitExt = "1.1.3"
     const val espresso = "3.4.0"
+
+    // Jetpack
+    const val pagingVersion = "3.1.1"
 }

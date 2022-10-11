@@ -15,6 +15,8 @@
     <string name="drama_category">Drama</string>
     <string name="comedy_category">Comedy</string>
     <string name="cast">Cast</string>
+    <string name="you_may_also_like">You may also like</string>
+    <string name="where_to_watch">Where to watch</string>
     <string name="directors">Directors:</string>
     <string name="rating">Rating: </string>
     <string name="rate_this_movie">RATE THIS MOVIE</string>
@@ -59,4 +61,7 @@
     <string name="for_you">For you</string>
     <string name="watched">Watched</string>
     <string name="watchlist">Watchlist</string>
+    <string name="cancel">Cancel</string>
+    <string name="okay">OK</string>
+    <string name="crew">Crew</string>
 </resources>

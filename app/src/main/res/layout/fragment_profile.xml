@@ -1,107 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/additional_details"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="fragments.ProfileFragment"
-        >
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/margin_start"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="16dp"
-            />
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/margin_end"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="16dp"
-            />
-        <TextView
-            android:id="@+id/movies_watched_count"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:scaleX="0.8"
-            android:scaleY="0.8"
-            android:text="@string/_145"
-            style="@style/TextStyle.PrimaryHeading"
-            android:textAlignment="center"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@id/vertical_divider_1"
-            app:layout_constraintStart_toStartOf="@id/margin_start"
-            app:layout_constraintTop_toTopOf="@id/vertical_divider_1"
-            />
-        <TextView
-            android:id="@+id/movies_watched_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TextStyle.Warning"
-            app:layout_constraintTop_toBottomOf="@+id/movies_watched_count"
-            app:layout_constraintStart_toStartOf="@id/movies_watched_count"
-            app:layout_constraintEnd_toEndOf="@id/movies_watched_count"
-            android:text="@string/movies_watched"
-            />
+<LinearLayout
+    android:id="@+id/additional_details"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginHorizontal="16dp"
+    tools:context=".ui.profile.ProfileFragment"
+    android:orientation="vertical">
 
-        <View
-            android:id="@+id/vertical_divider_1"
-            style="@style/Divider.Vertical"
-            android:layout_height="56dp"
-            app:layout_constraintEnd_toStartOf="@id/watched_list_count"
-            app:layout_constraintStart_toEndOf="@id/movies_watched_count"
-            app:layout_constraintTop_toBottomOf="@id/watchlist_text_view"
-            />
-        <TextView
-            android:id="@+id/watched_list_count"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:scaleX="0.8"
-            android:scaleY="0.8"
-            android:text="@string/_72"
-            style="@style/TextStyle.PrimaryHeading"
-            android:textAlignment="center"
-            android:layout_marginHorizontal="16dp"
-            app:layout_constraintEnd_toStartOf="@id/margin_end"
-            app:layout_constraintStart_toEndOf="@id/vertical_divider_1"
-            app:layout_constraintTop_toTopOf="@id/movies_watched_count"
-            />
-        <TextView
-            android:id="@+id/tv_series_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TextStyle.Warning"
-            app:layout_constraintTop_toBottomOf="@+id/watched_list_count"
-            app:layout_constraintStart_toStartOf="@id/watched_list_count"
-            app:layout_constraintEnd_toEndOf="@id/watched_list_count"
-            android:text="@string/watchlist"
-            />
     <TextView
         android:id="@+id/watchlist_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/watch_list"
         android:textSize="20sp"
-        android:layout_marginTop="8dp"
+        android:layout_marginVertical="8dp"
         android:fontFamily="@font/roboto_black"
         style="@style/TextStyle.PrimaryHeading"
-        app:layout_constraintStart_toStartOf="@id/margin_start"
-        app:layout_constraintTop_toTopOf="parent"
         />
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/watchlist_recycler_view"
+
+    <LinearLayout
+        android:id="@+id/stats_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:divider="@color/on_background_color"
+        android:showDividers="middle"
+        android:baselineAligned="false">
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:orientation="vertical"
-            tools:listitem="@layout/item_watch_list_recycler"
-            app:layout_constraintTop_toBottomOf="@id/vertical_divider_1"
-            app:layout_constraintStart_toStartOf="@id/margin_start"
-            app:layout_constraintEnd_toEndOf="@id/margin_end"
-            />
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/movies_watched_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="@string/_145"
+                android:textAlignment="center"
+                style="@style/TextStyle.SecondaryHeading"
+                />
+            <TextView
+                android:id="@+id/movie_rate_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                style="@style/TextStyle.Warning"
+                android:text="@string/movies_watched"
+                />
+        </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/user_rate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                style="@style/TextStyle.SecondaryHeading"
+                tools:text="@string/_72"
+                />
+            <TextView
+                android:id="@+id/user_rate_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                style="@style/TextStyle.Warning"
+                android:text="@string/watchlist"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/watchlist_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/widget_movie_large"
+            />
+</LinearLayout>

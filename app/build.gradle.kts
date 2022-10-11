@@ -3,6 +3,7 @@ plugins {
     id("kotlin-android")
     id("kotlin-kapt")
     id("kotlin-parcelize")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -81,8 +82,6 @@ android {
 dependencies {
 
     // Android
-    implementation(Dependency.androidCore)
-    implementation(Dependency.appCompat)
     implementation(Dependency.constraintLayout)
     implementation(Dependency.cardView)
     implementation(Dependency.recyclerView)
@@ -91,17 +90,17 @@ dependencies {
 
     // Tests
     testImplementation(Dependency.junit)
+    testImplementation(Dependency.jetpackPagingTest)
     androidTestImplementation(Dependency.junitExt)
     androidTestImplementation(Dependency.espresso)
 
     // Picasso
     implementation(Dependency.picasso)
 
-    // Dagger 2
-    implementation(Dependency.dagger)
-    implementation(Dependency.daggerAndroidSupport)
-    kapt(Dependency.daggerAndroidProcessor)
-    kapt(Dependency.daggerCompiler)
+    // Hilt
+    implementation(Dependency.daggerHilt)
+    kapt(Dependency.hiltCompiler)
+    kapt(Dependency.hiltAndroidCompiler)
 
     // Navigation Components
     implementation(Dependency.navigationFragment)
@@ -126,18 +125,14 @@ dependencies {
     implementation(Dependency.roomKtx)
     implementation(Dependency.roomRx)
 
-    // RXJava
-    implementation(Dependency.rxjava3Android)
-    implementation(Dependency.rxjava3)
-    implementation(Dependency.rxjavaKotlin)
-    implementation(Dependency.rxjavaRetrofitAdapter)
+    // Coroutines
+    implementation(Dependency.coroutinesCore)
+    implementation(Dependency.coroutinesAndroid)
 
-    // CircleImageView
-    implementation("de.hdodenhof:circleimageview:3.1.0")
+    // Jetpack
+    implementation(Dependency.jetpackPaging)
 
-    // Neumorphism
-    implementation("com.github.fornewid:neumorphism:0.3.0")
-
-    // Modules
-    implementation(project(":remote_module"))
+    // Views
+    implementation(Dependency.circleImageView)
+    implementation(kotlin("reflect"))
 }
