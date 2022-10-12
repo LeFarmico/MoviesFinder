@@ -4,12 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
 import com.lefarmico.moviesfinder.ui.base.BaseFragment
 import com.lefarmico.moviesfinder.ui.main.adapter.MovieDetailsAdapter
+import com.lefarmico.moviesfinder.ui.main.adapter.model.MovieDetailsModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MovieFragment : BaseFragment<MovieViewModel, FragmentMovieBinding>() {
 
     private lateinit var movieDetailsAdapter: MovieDetailsAdapter
@@ -29,26 +35,56 @@ class MovieFragment : BaseFragment<MovieViewModel, FragmentMovieBinding>() {
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        if (savedInstanceState != null) {
-            val movieId = savedInstanceState.getInt(BUNDLE_KEY)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        try {
+            val movieId = requireArguments().getInt(BUNDLE_KEY)
             viewModel.launchMovieDetailed(movieId)
+        } catch (e: NullPointerException) {
+            closeFragment()
         }
 
-        movieDetailsAdapter = MovieDetailsAdapter { isChecked ->
-            if (isChecked) {
-                viewModel.saveMovieToWatchlist()
-            } else {
-                viewModel.removeMovieFromWatchlist()
+        movieDetailsAdapter = MovieDetailsAdapter(
+            onWatchListClick = { isChecked ->
+                if (isChecked) {
+                    viewModel.saveMovieToWatchlist()
+                } else {
+                    viewModel.removeMovieFromWatchlist()
+                }
+            },
+            onRecommendedMovieClick = {
+                // TODO debug
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .addToBackStack("MovieFragment${requireActivity().supportFragmentManager.backStackEntryCount}")
+                    .add(
+                        R.id.nav_host_fragment,
+                        MovieFragment::class.java,
+                        createBundle(it.movieId)
+                    ).commit()
+            }
+        )
+        setUp()
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            state.apply {
+                movieData?.let {
+                    launchItemDetails(it, movieDetailsModelList)
+                }
+                toast?.let { message ->
+                    showToast(message)
+                }
+                val bottomSheetState = when (bottomSheetState) {
+                    MovieFragmentState.BottomSheetState.Expanded -> BottomSheetBehavior.STATE_EXPANDED
+                    MovieFragmentState.BottomSheetState.HalfExpanded -> BottomSheetBehavior.STATE_HALF_EXPANDED
+                }
+                binding.bottomSheet.getBehavior().state = bottomSheetState
             }
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setUp()
+    private fun launchItemDetails(movieDetailedData: MovieDetailedData, movieDetailsModelList: List<MovieDetailsModel>) {
+        movieDetailsAdapter.submitList(movieDetailsModelList)
+        binding.bottomSheet.setMovieItem(movieDetailedData)
     }
 
     private fun setUp() {
@@ -72,7 +108,7 @@ class MovieFragment : BaseFragment<MovieViewModel, FragmentMovieBinding>() {
                     blackBackgroundFrameLayout.isClickable = true
                     blackBackgroundFrameLayout.setOnClickListener { view ->
                         view.isClickable = false
-                        behavior.state = BottomSheetBehavior.STATE_HIDDEN
+                        closeFragment()
                     }
                 }
                 disableScroll()
@@ -83,15 +119,21 @@ class MovieFragment : BaseFragment<MovieViewModel, FragmentMovieBinding>() {
                 enableScroll()
                 onNavigateUpPressed {
                     it.state = BottomSheetBehavior.STATE_HIDDEN
-                    removeFragment()
+                    closeFragment()
                 }
             }
         }
         lifecycle.addObserver(binding.bottomSheet)
     }
 
-    private fun removeFragment() {
-        requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
+    private fun closeFragment() {
+        requireActivity().supportFragmentManager.popBackStack()
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show().also {
+            viewModel.cleanToast()
+        }
     }
 
     companion object {

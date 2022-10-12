@@ -1,6 +1,7 @@
 package com.lefarmico.moviesfinder.ui.movie
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.http.response.entity.State
@@ -8,19 +9,20 @@ import com.lefarmico.moviesfinder.data.manager.useCase.DeleteMovieDetailedFromDB
 import com.lefarmico.moviesfinder.data.manager.useCase.GetMovieDetailedApiUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetRecommendationsMovieBriefListUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.SaveMovieDetailedToDBUseCase
-import com.lefarmico.moviesfinder.ui.base.BaseViewModel
 import com.lefarmico.moviesfinder.ui.main.adapter.model.MovieDetailsModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.lang.IllegalStateException
+import javax.inject.Inject
 
-class MovieViewModel(
+@HiltViewModel
+class MovieViewModel @Inject constructor(
     private val saveMovieDetailedToDBUseCase: SaveMovieDetailedToDBUseCase,
     private val deleteMovieDetailedFromDBUseCase: DeleteMovieDetailedFromDBUseCase,
     private val getMovieDetailed: GetMovieDetailedApiUseCase,
     private val getRecommendations: GetRecommendationsMovieBriefListUseCase,
-) : BaseViewModel() {
+) : ViewModel() {
 
     private var _state = MutableLiveData<MovieFragmentState>()
     val state get() = _state

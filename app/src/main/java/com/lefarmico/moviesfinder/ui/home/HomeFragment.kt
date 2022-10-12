@@ -22,8 +22,9 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
         parentJob = job
     ) {
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(
-                R.id.fragment_container_view_tag,
+            .addToBackStack("MovieFragment")
+            .add(
+                R.id.nav_host_fragment,
                 MovieFragment::class.java,
                 MovieFragment.createBundle(it.movieId)
             ).commit()

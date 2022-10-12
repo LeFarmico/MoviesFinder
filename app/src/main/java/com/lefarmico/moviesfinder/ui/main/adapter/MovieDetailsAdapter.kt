@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.data.entity.MovieBriefData
 import com.lefarmico.moviesfinder.databinding.*
 import com.lefarmico.moviesfinder.private.Private
 import com.lefarmico.moviesfinder.ui.common.adapter.CastAdapter
@@ -21,7 +22,8 @@ import com.lefarmico.moviesfinder.ui.main.adapter.model.WidgetDiffUtilCallback
 import com.squareup.picasso.Picasso
 
 class MovieDetailsAdapter(
-    private val onWatchListClick: (Boolean) -> Unit
+    private val onWatchListClick: (Boolean) -> Unit,
+    private val onRecommendedMovieClick: (MovieBriefData) -> Unit
 ) : ListAdapter<MovieDetailsModel, MovieDetailsAdapter.MovieDetailsViewHolder>(WidgetDiffUtilCallback()) {
 
     sealed class MovieDetailsViewHolder(
@@ -113,6 +115,7 @@ class MovieDetailsAdapter(
         private val title = widgetMovieLargeBinding.title
         private val description = widgetMovieLargeBinding.description
         private val rating = widgetMovieLargeBinding.movieRate
+        val root = widgetMovieLargeBinding.root
 
         fun bind(movieLargeWidget: MovieDetailsModel.MovieLargeModel) {
             Picasso.get()
@@ -244,6 +247,10 @@ class MovieDetailsAdapter(
             is MovieDetailsModel.MovieLargeModel -> {
                 holder as MovieLargeViewHolder
                 holder.bind(model)
+                // TODO debug
+                holder.root.setOnClickListener {
+                    onRecommendedMovieClick(model.movieBriefData)
+                }
             }
             is MovieDetailsModel.WhereToWatch -> {
                 holder as WhereToWatchViewHolder
