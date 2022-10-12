@@ -6,6 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"/>
     <TextView
         android:id="@+id/error_text_view"
         android:layout_width="wrap_content"
@@ -37,15 +42,4 @@
         android:layout_gravity="bottom"
         style="@style/BottomNavigatorStyle"
         />
-
-    <com.lefarmico.moviesfinder.ui.common.view.BottomSheetCoordinatorLayout
-        android:id="@+id/bottom_sheet"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:behavior_peekHeight="0dp"
-        android:clickable="true"
-        app:behavior_hideable="true"
-        android:focusable="true"
-        app:layout_behavior="@string/bottom_sheet_behavior"/>
-
 </FrameLayout>

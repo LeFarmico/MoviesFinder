@@ -23,7 +23,7 @@ import com.lefarmico.moviesfinder.ui.main.adapter.MovieDetailsAdapter
 import com.lefarmico.moviesfinder.ui.main.adapter.decorator.MovieDetailsDecorator
 import com.squareup.picasso.Picasso
 
-class BottomSheetCoordinatorLayout(
+class MovieCoordinatorLayout(
     context: Context,
     @Nullable attributeSet: AttributeSet
 ) : CoordinatorLayout(context, attributeSet), DefaultLifecycleObserver {
