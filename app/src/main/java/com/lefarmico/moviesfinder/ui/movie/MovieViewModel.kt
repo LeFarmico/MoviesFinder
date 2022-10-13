@@ -9,7 +9,7 @@ import com.lefarmico.moviesfinder.data.manager.useCase.DeleteMovieDetailedFromDB
 import com.lefarmico.moviesfinder.data.manager.useCase.GetMovieDetailedApiUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetRecommendationsMovieBriefListUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.SaveMovieDetailedToDBUseCase
-import com.lefarmico.moviesfinder.ui.main.adapter.model.MovieDetailsModel
+import com.lefarmico.moviesfinder.data.entity.MovieDetailsAdapterModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collectLatest
@@ -36,20 +36,20 @@ class MovieViewModel @Inject constructor(
             val recommendationsState = async {
                 getRecommendations(movieId)
             }
-            val movieDetailsModelList = mutableListOf<MovieDetailsModel>()
+            val movieDetailsAdapterModelList = mutableListOf<MovieDetailsAdapterModel>()
             when (val moveState = movieDetailedState.await()) {
                 is State.Error -> throw moveState.exception
                 is State.Success -> {
                     // TODO add builder
-                    movieDetailsModelList.add(
-                        MovieDetailsModel.MovieInfoOverview(
+                    movieDetailsAdapterModelList.add(
+                        MovieDetailsAdapterModel.MovieInfoOverviewAdapter(
                             genres = moveState.data.genres.reduce { acc, s -> "$acc / $s" },
                             length = "Length: ${moveState.data.length} min",
                             releaseDate = moveState.data.releaseDate
                         )
                     )
-                    movieDetailsModelList.add(
-                        MovieDetailsModel.RatingOverview(
+                    movieDetailsAdapterModelList.add(
+                        MovieDetailsAdapterModel.RatingOverview(
                             usesRating = moveState.data.rating,
                             userRating = moveState.data.yourRate,
                             isWatchList = moveState.data.isWatchlist
@@ -58,45 +58,45 @@ class MovieViewModel @Inject constructor(
                     if (moveState.data.watchMovieProviderData != null &&
                         moveState.data.watchMovieProviderData.isEmpty()
                     ) {
-                        movieDetailsModelList.add(
-                            MovieDetailsModel.WhereToWatch(
+                        movieDetailsAdapterModelList.add(
+                            MovieDetailsAdapterModel.WhereToWatch(
                                 providerList = moveState.data.watchMovieProviderData
                             )
                         )
                     }
-                    movieDetailsModelList.add(
-                        MovieDetailsModel.HeaderAndTextExpandable(
+                    movieDetailsAdapterModelList.add(
+                        MovieDetailsAdapterModel.HeaderAndTextExpandable(
                             header = R.string.storyline,
                             description = moveState.data.description
                         )
                     )
-                    movieDetailsModelList.add(
-                        MovieDetailsModel.Header(R.string.cast)
+                    movieDetailsAdapterModelList.add(
+                        MovieDetailsAdapterModel.Header(R.string.cast)
                     )
-                    movieDetailsModelList.add(
-                        MovieDetailsModel.CastAndCrewMovieDetailsModel(
+                    movieDetailsAdapterModelList.add(
+                        MovieDetailsAdapterModel.CastAndCrewMovieDetailsAdapterModel(
                             castList = moveState.data.actors ?: listOf(),
                             crewList = moveState.data.directors ?: listOf()
                         )
                     )
                     _state.value = currentState.copy(
                         movieData = moveState.data,
-                        movieDetailsModelList = movieDetailsModelList,
+                        movieDetailsAdapterModelList = movieDetailsAdapterModelList,
                         bottomSheetState = MovieFragmentState.BottomSheetState.HalfExpanded
                     )
                     val recommendationState = recommendationsState.await()
                     recommendationState.collectLatest { recState ->
-                        val recommendationModelList = mutableListOf<MovieDetailsModel>()
+                        val recommendationModelList = mutableListOf<MovieDetailsAdapterModel>()
                         when (recState) {
                             is State.Success -> {
                                 if (recState.data.isNotEmpty()) {
-                                    val movieLargeModelList = recState.data.map { MovieDetailsModel.MovieLargeModel(it) }
+                                    val movieWidgetList = recState.data.map { MovieDetailsAdapterModel.MovieWidgetAdapter(it) }
                                     recommendationModelList.add(
-                                        MovieDetailsModel.Header(
+                                        MovieDetailsAdapterModel.Header(
                                             R.string.you_may_also_like
                                         )
                                     )
-                                    recommendationModelList.addAll(movieLargeModelList)
+                                    recommendationModelList.addAll(movieWidgetList)
                                 }
                             }
                             is State.Error -> {}
@@ -104,7 +104,7 @@ class MovieViewModel @Inject constructor(
                         }
                         _state.value = currentState.copy(
                             movieData = moveState.data,
-                            movieDetailsModelList = movieDetailsModelList + recommendationModelList
+                            movieDetailsAdapterModelList = movieDetailsAdapterModelList + recommendationModelList
                         )
                     }
                 }

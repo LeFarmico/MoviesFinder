@@ -19,8 +19,8 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
 import com.lefarmico.moviesfinder.databinding.BottomSheetMovieRecycleBinding
 import com.lefarmico.moviesfinder.private.Private
-import com.lefarmico.moviesfinder.ui.main.adapter.MovieDetailsAdapter
-import com.lefarmico.moviesfinder.ui.main.adapter.decorator.MovieDetailsDecorator
+import com.lefarmico.moviesfinder.ui.common.adapter.MovieDetailsAdapter
+import com.lefarmico.moviesfinder.ui.common.adapter.decorator.MovieDetailsDecorator
 import com.squareup.picasso.Picasso
 
 class MovieCoordinatorLayout(

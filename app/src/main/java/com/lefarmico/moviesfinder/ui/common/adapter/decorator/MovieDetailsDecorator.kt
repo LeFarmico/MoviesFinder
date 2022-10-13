@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.ui.main.adapter.decorator
+package com.lefarmico.moviesfinder.ui.common.adapter.decorator
 
 import android.content.res.Resources
 import android.graphics.Rect
