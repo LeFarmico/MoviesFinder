@@ -1,12 +1,12 @@
 package com.lefarmico.moviesfinder.ui.movie
 
 import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
-import com.lefarmico.moviesfinder.ui.main.adapter.model.MovieDetailsModel
+import com.lefarmico.moviesfinder.data.entity.MovieDetailsAdapterModel
 
 data class MovieFragmentState(
     val isLoading: Boolean = false,
     val movieData: MovieDetailedData? = null,
-    val movieDetailsModelList: List<MovieDetailsModel> = listOf(),
+    val movieDetailsAdapterModelList: List<MovieDetailsAdapterModel> = listOf(),
     val toast: String? = null,
     val bottomSheetState: BottomSheetState = BottomSheetState.HalfExpanded
 ) {

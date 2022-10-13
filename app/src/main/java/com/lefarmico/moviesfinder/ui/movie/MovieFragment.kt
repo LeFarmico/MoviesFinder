@@ -1,6 +1,7 @@
 package com.lefarmico.moviesfinder.ui.movie
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +12,9 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
 import com.lefarmico.moviesfinder.ui.base.BaseFragment
-import com.lefarmico.moviesfinder.ui.main.adapter.MovieDetailsAdapter
-import com.lefarmico.moviesfinder.ui.main.adapter.model.MovieDetailsModel
+import com.lefarmico.moviesfinder.ui.common.adapter.MovieDetailsAdapter
+import com.lefarmico.moviesfinder.data.entity.MovieDetailsAdapterModel
+import com.lefarmico.moviesfinder.ui.navigation.api.params.MovieFragmentParams
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -59,7 +61,7 @@ class MovieFragment : BaseFragment<MovieViewModel, FragmentMovieBinding>() {
                     .add(
                         R.id.nav_host_fragment,
                         MovieFragment::class.java,
-                        createBundle(it.movieId)
+                        createBundle(MovieFragmentParams(it.id))
                     ).commit()
             }
         )
@@ -68,7 +70,7 @@ class MovieFragment : BaseFragment<MovieViewModel, FragmentMovieBinding>() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             state.apply {
                 movieData?.let {
-                    launchItemDetails(it, movieDetailsModelList)
+                    launchItemDetails(it, movieDetailsAdapterModelList)
                 }
                 toast?.let { message ->
                     showToast(message)
@@ -82,8 +84,8 @@ class MovieFragment : BaseFragment<MovieViewModel, FragmentMovieBinding>() {
         }
     }
 
-    private fun launchItemDetails(movieDetailedData: MovieDetailedData, movieDetailsModelList: List<MovieDetailsModel>) {
-        movieDetailsAdapter.submitList(movieDetailsModelList)
+    private fun launchItemDetails(movieDetailedData: MovieDetailedData, movieDetailsAdapterModelList: List<MovieDetailsAdapterModel>) {
+        movieDetailsAdapter.submitList(movieDetailsAdapterModelList)
         binding.bottomSheet.setMovieItem(movieDetailedData)
     }
 
@@ -138,10 +140,12 @@ class MovieFragment : BaseFragment<MovieViewModel, FragmentMovieBinding>() {
 
     companion object {
         private const val BUNDLE_KEY = "movie_fragment"
-
-        fun createBundle(data: Int): Bundle {
+        fun createBundle(data: Parcelable): Bundle {
+            if (data !is MovieFragmentParams) {
+                throw IllegalArgumentException("MovieFragment.createBundle() accept MovieFragmentParams as the type")
+            }
             return Bundle().apply {
-                putInt(BUNDLE_KEY, data)
+                putParcelable(BUNDLE_KEY, data)
             }
         }
     }

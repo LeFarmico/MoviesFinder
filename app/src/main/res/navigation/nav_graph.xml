@@ -3,20 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/movies_menu">
+    app:startDestination="@id/home_fragment">
 
     <fragment
-        android:id="@+id/movies_menu"
+        android:id="@+id/home_fragment"
         android:name="com.lefarmico.moviesfinder.ui.home.HomeFragment"
         android:label="fragment_movie"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_home_fragment_to_movie_fragment"
+            app:destination="@id/movie_fragment" />
+    </fragment>
     <fragment
         android:id="@+id/favorites_menu"
         android:name="com.lefarmico.moviesfinder.ui.profile.ProfileFragment"
         android:label="ProfileFragment" />
     <fragment
-        android:id="@+id/searchFragment"
+        android:id="@+id/search_fragment"
         android:name="com.lefarmico.moviesfinder.ui.search.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/movie_fragment"
+        android:name="com.lefarmico.moviesfinder.ui.movie.MovieFragment"
+        android:label="MovieFragment" >
+        <action
+            android:id="@+id/action_movie_fragment_self"
+            app:destination="@id/movie_fragment" />
+    </fragment>
 </navigation>
