@@ -2,7 +2,7 @@ package com.lefarmico.moviesfinder.ui.navigation.impl
 
 import android.os.Parcelable
 import android.util.Log
-import androidx.navigation.NavController
+import androidx.fragment.app.FragmentManager
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.ui.movie.MovieFragment
 import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
@@ -12,33 +12,43 @@ import javax.inject.Inject
 class ScreenResolverImpl @Inject constructor() : ScreenResolver {
 
     override fun navigate(
-        navController: NavController?,
+        fragmentManager: FragmentManager?,
         data: Parcelable?,
         screenDestination: ScreenDestination
     ) {
         try {
             when (screenDestination) {
                 ScreenDestination.FromHomeToMovieDestination -> {
-                    navController!!.navigate(
-                        R.id.action_home_fragment_to_movie_fragment,
-                        data?.let { MovieFragment.createBundle(it) },
-                    )
+                    fragmentManager!!.beginTransaction()
+                        .addToBackStack(
+                            "MovieFragment${fragmentManager.backStackEntryCount}"
+                        )
+                        .add(
+                            R.id.nav_host_fragment,
+                            MovieFragment::class.java,
+                            data?.let { MovieFragment.createBundle(it) }
+                        ).commit()
                 }
                 ScreenDestination.HomeDestination -> {
                     Log.i("ScreenResolver", "Not yet implemented")
                 }
                 ScreenDestination.MovieToSelfDestination -> {
-                    navController!!.navigate(
-                        R.id.action_movie_fragment_self,
-                        data?.let { MovieFragment.createBundle(it) }
-                    )
+                    fragmentManager!!.beginTransaction()
+                        .addToBackStack(
+                            "MovieFragment${fragmentManager.backStackEntryCount}"
+                        )
+                        .add(
+                            R.id.nav_host_fragment,
+                            MovieFragment::class.java,
+                            data?.let { MovieFragment.createBundle(it) }
+                        ).commit()
                 }
                 ScreenDestination.ProfileDestination -> {
                     Log.i("ScreenResolver", "Not yet implemented")
                 }
             }
         } catch (e: NullPointerException) {
-            throw RuntimeException("Navigation controller is not bind")
+            throw RuntimeException("Fragment Manager is not bind")
         }
     }
 }
