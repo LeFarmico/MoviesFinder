@@ -12,7 +12,9 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_home_fragment_to_movie_fragment"
-            app:destination="@id/movie_fragment" />
+            app:destination="@id/movie_fragment"
+            app:launchSingleTop="false"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/favorites_menu"
@@ -29,6 +31,8 @@
         android:label="MovieFragment" >
         <action
             android:id="@+id/action_movie_fragment_self"
-            app:destination="@id/movie_fragment" />
+            app:destination="@id/movie_fragment"
+            app:launchSingleTop="false"
+            app:popUpToInclusive="false" />
     </fragment>
 </navigation>

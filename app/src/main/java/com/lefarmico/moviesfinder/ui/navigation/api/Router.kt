@@ -19,11 +19,7 @@ interface Router {
         sharedElements: Map<Any, String>? = null
     )
 
-    fun show(
-        notification: Notification,
-        data: Parcelable? = null,
-        anchor: Any? = null
-    )
+    fun show(notificationType: NotificationType)
 
     fun showDialog(
         dialog: Dialog

@@ -12,23 +12,32 @@ import com.lefarmico.moviesfinder.databinding.FragmentHomeBinding
 import com.lefarmico.moviesfinder.ui.base.BaseFragment
 import com.lefarmico.moviesfinder.ui.common.adapter.MenuItemAdapter
 import com.lefarmico.moviesfinder.ui.common.decorator.PaddingItemDecoration
-import com.lefarmico.moviesfinder.ui.movie.MovieFragment
+import com.lefarmico.moviesfinder.ui.navigation.api.Router
+import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
+import com.lefarmico.moviesfinder.ui.navigation.api.params.MovieFragmentParams
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
+    @Inject lateinit var router: Router
+
     private var itemAdapter = MenuItemAdapter(
         parentJob = job
     ) {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .addToBackStack("MovieFragment")
-            .add(
-                R.id.nav_host_fragment,
-                MovieFragment::class.java,
-                MovieFragment.createBundle(it.movieId)
-            ).commit()
-        viewModel.showMovieDetail(it.movieId)
+        router.navigate(
+            ScreenDestination.FromHomeToMovieDestination,
+            MovieFragmentParams(it.movieId)
+        )
+//        requireActivity().supportFragmentManager.beginTransaction()
+//            .addToBackStack("MovieFragment")
+//            .add(
+//                R.id.nav_host_fragment,
+//                MovieFragment::class.java,
+//                MovieFragment.createBundle(it.movieId)
+//            ).commit()
+//        viewModel.showMovieDetail(it.movieId)
     }
     private lateinit var paddingDecorator: PaddingItemDecoration
 
