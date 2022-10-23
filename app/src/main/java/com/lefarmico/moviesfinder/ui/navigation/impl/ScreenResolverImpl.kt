@@ -7,8 +7,9 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.ui.movie.MovieFragment
 import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
 import com.lefarmico.moviesfinder.ui.navigation.api.resolver.ScreenResolver
+import javax.inject.Inject
 
-class ScreenResolverImpl : ScreenResolver {
+class ScreenResolverImpl @Inject constructor() : ScreenResolver {
 
     override fun navigate(
         navController: NavController?,
@@ -19,8 +20,8 @@ class ScreenResolverImpl : ScreenResolver {
             when (screenDestination) {
                 ScreenDestination.FromHomeToMovieDestination -> {
                     navController!!.navigate(
-                        R.id.action_movie_fragment_self,
-                        data?.let { MovieFragment.createBundle(it) }
+                        R.id.action_home_fragment_to_movie_fragment,
+                        data?.let { MovieFragment.createBundle(it) },
                     )
                 }
                 ScreenDestination.HomeDestination -> {
@@ -37,7 +38,7 @@ class ScreenResolverImpl : ScreenResolver {
                 }
             }
         } catch (e: NullPointerException) {
-            Log.e("ScreenResolver", "Navigation controller is not bind", e)
+            throw RuntimeException("Navigation controller is not bind")
         }
     }
 }

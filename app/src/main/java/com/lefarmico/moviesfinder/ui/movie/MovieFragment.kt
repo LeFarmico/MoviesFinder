@@ -8,17 +8,21 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
+import com.lefarmico.moviesfinder.data.entity.MovieDetailsAdapterModel
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
 import com.lefarmico.moviesfinder.ui.base.BaseFragment
 import com.lefarmico.moviesfinder.ui.common.adapter.MovieDetailsAdapter
-import com.lefarmico.moviesfinder.data.entity.MovieDetailsAdapterModel
+import com.lefarmico.moviesfinder.ui.navigation.api.Router
+import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
 import com.lefarmico.moviesfinder.ui.navigation.api.params.MovieFragmentParams
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MovieFragment : BaseFragment<MovieViewModel, FragmentMovieBinding>() {
+
+    @Inject lateinit var router: Router
 
     private lateinit var movieDetailsAdapter: MovieDetailsAdapter
 
@@ -40,8 +44,8 @@ class MovieFragment : BaseFragment<MovieViewModel, FragmentMovieBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         try {
-            val movieId = requireArguments().getInt(BUNDLE_KEY)
-            viewModel.launchMovieDetailed(movieId)
+            val movieParams = requireArguments().getParcelable<MovieFragmentParams>(BUNDLE_KEY)
+            viewModel.launchMovieDetailed(movieParams!!.movieId)
         } catch (e: NullPointerException) {
             closeFragment()
         }
@@ -55,14 +59,18 @@ class MovieFragment : BaseFragment<MovieViewModel, FragmentMovieBinding>() {
                 }
             },
             onRecommendedMovieClick = {
+                router.navigate(
+                    ScreenDestination.MovieToSelfDestination,
+                    MovieFragmentParams(it.movieId)
+                )
                 // TODO debug
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .addToBackStack("MovieFragment${requireActivity().supportFragmentManager.backStackEntryCount}")
-                    .add(
-                        R.id.nav_host_fragment,
-                        MovieFragment::class.java,
-                        createBundle(MovieFragmentParams(it.id))
-                    ).commit()
+//                requireActivity().supportFragmentManager.beginTransaction()
+//                    .addToBackStack("MovieFragment${requireActivity().supportFragmentManager.backStackEntryCount}")
+//                    .add(
+//                        R.id.nav_host_fragment,
+//                        MovieFragment::class.java,
+//                        createBundle()
+//                    ).commit()
             }
         )
         setUp()
@@ -129,7 +137,7 @@ class MovieFragment : BaseFragment<MovieViewModel, FragmentMovieBinding>() {
     }
 
     private fun closeFragment() {
-        requireActivity().supportFragmentManager.popBackStack()
+        router.back()
     }
 
     private fun showToast(message: String) {
@@ -142,7 +150,7 @@ class MovieFragment : BaseFragment<MovieViewModel, FragmentMovieBinding>() {
         private const val BUNDLE_KEY = "movie_fragment"
         fun createBundle(data: Parcelable): Bundle {
             if (data !is MovieFragmentParams) {
-                throw IllegalArgumentException("MovieFragment.createBundle() accept MovieFragmentParams as the type")
+                throw IllegalArgumentException("MovieFragment.createBundle() accepts MovieFragmentParams as the type")
             }
             return Bundle().apply {
                 putParcelable(BUNDLE_KEY, data)

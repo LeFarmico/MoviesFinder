@@ -2,18 +2,24 @@ package com.lefarmico.moviesfinder.ui.navigation.impl
 
 import android.app.Activity
 import android.os.Parcelable
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lefarmico.moviesfinder.ui.navigation.api.Dialog
-import com.lefarmico.moviesfinder.ui.navigation.api.Notification
+import com.lefarmico.moviesfinder.ui.navigation.api.NotificationType
 import com.lefarmico.moviesfinder.ui.navigation.api.Router
 import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
+import com.lefarmico.moviesfinder.ui.navigation.api.resolver.DialogResolver
+import com.lefarmico.moviesfinder.ui.navigation.api.resolver.NotificationResolver
 import com.lefarmico.moviesfinder.ui.navigation.api.resolver.ScreenResolver
 import javax.inject.Inject
 
 class RouterImpl @Inject constructor(
-    private val screenResolver: ScreenResolver
+    private val screenResolver: ScreenResolver,
+    private val notificationResolver: NotificationResolver,
+    private val dialogResolver: DialogResolver
 ) : Router {
 
     private var navController: NavController? = null
@@ -21,15 +27,20 @@ class RouterImpl @Inject constructor(
     private var fragmentManager: FragmentManager? = null
 
     override fun bind(activity: Activity) {
-        TODO("Not yet implemented")
+        this.activity = activity
+        this.fragmentManager = (activity as FragmentActivity).supportFragmentManager
     }
 
     override fun bindNavController(navController: NavController) {
-        TODO("Not yet implemented")
+        this.navController = navController
     }
 
     override fun bindNavigationUI(bottomNavigationView: BottomNavigationView) {
-        TODO("Not yet implemented")
+        try {
+            bottomNavigationView.setupWithNavController(navController!!)
+        } catch (e: NullPointerException) {
+            throw RuntimeException("Navigation Controller must not be null")
+        }
     }
 
     override fun navigate(
@@ -37,18 +48,26 @@ class RouterImpl @Inject constructor(
         data: Parcelable?,
         sharedElements: Map<Any, String>?
     ) {
-        TODO("Not yet implemented")
+        screenResolver.navigate(navController, data, screenDestination)
     }
 
-    override fun show(notification: Notification, data: Parcelable?, anchor: Any?) {
-        TODO("Not yet implemented")
+    override fun show(notificationType: NotificationType) {
+        notificationResolver.show(activity, notificationType)
     }
 
     override fun showDialog(dialog: Dialog) {
-        TODO("Not yet implemented")
+        try {
+            dialogResolver.show(fragmentManager!!, dialog)
+        } catch (e: NullPointerException) {
+            throw RuntimeException("Fragment Manager must not be null")
+        }
     }
 
     override fun back() {
-        TODO("Not yet implemented")
+        try {
+            navController!!.popBackStack()
+        } catch (e: NullPointerException) {
+            throw RuntimeException("Navigation Controller must not be null")
+        }
     }
 }
