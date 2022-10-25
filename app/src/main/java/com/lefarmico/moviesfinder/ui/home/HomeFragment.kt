@@ -30,14 +30,6 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             ScreenDestination.FromHomeToMovieDestination,
             MovieFragmentParams(it.movieId)
         )
-//        requireActivity().supportFragmentManager.beginTransaction()
-//            .addToBackStack("MovieFragment")
-//            .add(
-//                R.id.nav_host_fragment,
-//                MovieFragment::class.java,
-//                MovieFragment.createBundle(it.movieId)
-//            ).commit()
-//        viewModel.showMovieDetail(it.movieId)
     }
     private lateinit var paddingDecorator: PaddingItemDecoration
 

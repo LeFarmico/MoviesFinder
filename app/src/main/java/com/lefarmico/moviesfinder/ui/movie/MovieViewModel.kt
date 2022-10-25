@@ -1,15 +1,16 @@
 package com.lefarmico.moviesfinder.ui.movie
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.data.entity.MovieDetailsAdapterModel
 import com.lefarmico.moviesfinder.data.http.response.entity.State
 import com.lefarmico.moviesfinder.data.manager.useCase.DeleteMovieDetailedFromDBUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetMovieDetailedApiUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetRecommendationsMovieBriefListUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.SaveMovieDetailedToDBUseCase
-import com.lefarmico.moviesfinder.data.entity.MovieDetailsAdapterModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collectLatest
@@ -25,7 +26,7 @@ class MovieViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var _state = MutableLiveData<MovieFragmentState>()
-    val state get() = _state
+    val state: LiveData<MovieFragmentState> get() = _state
     private val currentState: MovieFragmentState get() = state.value ?: MovieFragmentState()
 
     fun launchMovieDetailed(movieId: Int) {
