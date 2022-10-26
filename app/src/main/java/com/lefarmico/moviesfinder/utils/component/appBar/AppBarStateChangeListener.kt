@@ -1,11 +1,14 @@
 package com.lefarmico.moviesfinder.utils.component.appBar
 
+import android.os.Parcelable
 import com.google.android.material.appbar.AppBarLayout
+import kotlinx.parcelize.Parcelize
 import kotlin.math.abs
 
 abstract class AppBarStateChangeListener : AppBarLayout.OnOffsetChangedListener {
 
-    sealed class State {
+    @Parcelize
+    sealed class State : Parcelable {
         object Idle : State()
         object Expanded : State()
         object Collapsed : State()

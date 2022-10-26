@@ -17,6 +17,7 @@ import com.lefarmico.moviesfinder.ui.navigation.api.NotificationType
 import com.lefarmico.moviesfinder.ui.navigation.api.Router
 import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
 import com.lefarmico.moviesfinder.ui.navigation.api.params.MovieFragmentParams
+import com.lefarmico.moviesfinder.utils.component.appBar.AppBarStateChangeListener
 import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetBehaviourHandler
 import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetBehaviourHandlerImpl
 import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetStateListener
@@ -39,6 +40,8 @@ class MovieFragment :
     private var isDraggingEnabled = true
 
     private lateinit var movieDetailsAdapter: MovieDetailsAdapter
+
+    private var appBarInternalState: AppBarStateChangeListener.State = AppBarStateChangeListener.State.Idle
 
     override fun getInjectViewModel(): MovieViewModel {
         val viewModel: MovieViewModel by viewModels()
@@ -67,12 +70,20 @@ class MovieFragment :
             layoutParams.apply {
                 if (behavior == null)
                     behavior = AppBarLayout.Behavior()
-                val behavior = behavior as AppBarLayout.Behavior
-                behavior.setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
+
+                val appBarBehavior = behavior as AppBarLayout.Behavior
+                appBarBehavior.setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
                     override fun canDrag(appBarLayout: AppBarLayout): Boolean = isScrollEnabled
                 })
             }
         }
+
+        // AppBar State change listener
+        binding.bottomSheet.appBar.addOnOffsetChangedListener(object : AppBarStateChangeListener() {
+            override fun onStateChanged(appBarLayout: AppBarLayout?, state: State) {
+                appBarInternalState = state
+            }
+        })
 
         try {
             savedInstanceState!!.getParcelable<MovieInternalState>(BUNDLE_STATE)!!.also {
@@ -120,7 +131,8 @@ class MovieFragment :
     override fun onSaveInstanceState(outState: Bundle) {
         val movieInternalState = MovieInternalState(
             getCurrentState(),
-            binding.blackBackgroundFrameLayout.alpha
+            binding.blackBackgroundFrameLayout.alpha,
+            appBarInternalState
         )
         outState.putParcelable(
             BUNDLE_STATE,
@@ -167,6 +179,12 @@ class MovieFragment :
             BottomSheetBehavior.STATE_HALF_EXPANDED -> halfExpandBS()
             BottomSheetBehavior.STATE_EXPANDED -> expandBS()
         }
+        when (movieInternalState.appBarState) {
+            AppBarStateChangeListener.State.Collapsed -> binding.bottomSheet.appBar.setExpanded(false)
+            AppBarStateChangeListener.State.Expanded -> binding.bottomSheet.appBar.setExpanded(true)
+            AppBarStateChangeListener.State.Idle -> {}
+        }
+
         setBackgroundAlpha(movieInternalState.backgroundAlpha)
     }
 
@@ -228,5 +246,6 @@ class MovieFragment :
 @Parcelize
 data class MovieInternalState(
     val sheetState: Int,
-    val backgroundAlpha: Float
+    val backgroundAlpha: Float,
+    val appBarState: AppBarStateChangeListener.State
 ) : Parcelable
