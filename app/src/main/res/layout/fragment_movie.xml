@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black"
-        android:alpha="0"/>
+        android:alpha="0.5"/>
     <com.lefarmico.moviesfinder.ui.common.view.MovieCoordinatorLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
