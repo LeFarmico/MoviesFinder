@@ -9,6 +9,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.viewModels
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
 import com.lefarmico.moviesfinder.ui.base.BaseFragment
 import com.lefarmico.moviesfinder.ui.common.OnBackPressListener
@@ -22,6 +23,7 @@ import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetBehavio
 import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetBehaviourHandlerImpl
 import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetStateListener
 import com.lefarmico.moviesfinder.utils.extension.getArgumentsData
+import com.lefarmico.moviesfinder.utils.extension.getDrawable
 import com.lefarmico.moviesfinder.utils.extension.removeArgument
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
@@ -157,6 +159,7 @@ class MovieFragment :
     override fun onExpand() {
         enableDragging(false)
         enableScrolling(true)
+        binding.bottomSheet.toolbar.navigationIcon = getDrawable(R.drawable.ic_baseline_arrow_back_24)
         binding.bottomSheet.toolbar.setNavigationOnClickListener {
             closeFragment()
         }
@@ -165,6 +168,7 @@ class MovieFragment :
     override fun onHalfExpand() {
         enableScrolling(false)
         enableDragging(true)
+        binding.bottomSheet.toolbar.navigationIcon = null
         binding.blackBackgroundFrameLayout.setOnClickListener {
             closeFragment()
         }
