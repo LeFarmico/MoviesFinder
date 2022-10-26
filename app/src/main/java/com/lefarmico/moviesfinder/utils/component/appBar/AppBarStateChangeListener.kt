@@ -32,7 +32,6 @@ abstract class AppBarStateChangeListener : AppBarLayout.OnOffsetChangedListener 
             }
             mState = State.Idle
         }
-
     }
 
     abstract fun onStateChanged(appBarLayout: AppBarLayout?, state: State)
