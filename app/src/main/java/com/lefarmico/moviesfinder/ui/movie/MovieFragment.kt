@@ -71,10 +71,10 @@ class MovieFragment :
                 if (behavior == null)
                     behavior = AppBarLayout.Behavior()
 
-                val appBarBehavior = behavior as AppBarLayout.Behavior
-                appBarBehavior.setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
-                    override fun canDrag(appBarLayout: AppBarLayout): Boolean = isScrollEnabled
-                })
+                (behavior as AppBarLayout.Behavior)
+                    .setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
+                        override fun canDrag(appBarLayout: AppBarLayout): Boolean = isScrollEnabled
+                    })
             }
         }
 
@@ -88,13 +88,13 @@ class MovieFragment :
         try {
             savedInstanceState!!.getParcelable<MovieInternalState>(BUNDLE_STATE)!!.also {
                 recoverState(it)
+            }.also {
+                removeArgument(BUNDLE_KEY)
             }
         } catch (e: NullPointerException) {
             getArgumentsData<MovieFragmentParams>(BUNDLE_KEY)
                 ?.let { params ->
                     getNewState(params.movieId)
-                }.also {
-                    removeArgument(BUNDLE_KEY)
                 }
         }
 
@@ -180,8 +180,8 @@ class MovieFragment :
             BottomSheetBehavior.STATE_EXPANDED -> expandBS()
         }
         when (movieInternalState.appBarState) {
-            AppBarStateChangeListener.State.Collapsed -> binding.bottomSheet.appBar.setExpanded(false)
-            AppBarStateChangeListener.State.Expanded -> binding.bottomSheet.appBar.setExpanded(true)
+            AppBarStateChangeListener.State.Collapsed -> binding.bottomSheet.appBar.setExpanded(false, false)
+            AppBarStateChangeListener.State.Expanded -> binding.bottomSheet.appBar.setExpanded(true, false)
             AppBarStateChangeListener.State.Idle -> {}
         }
 
