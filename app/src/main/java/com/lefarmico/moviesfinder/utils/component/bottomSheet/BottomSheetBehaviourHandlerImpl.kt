@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.ui.movie
+package com.lefarmico.moviesfinder.utils.component.bottomSheet
 
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -20,6 +20,7 @@ class BottomSheetBehaviourHandlerImpl : BottomSheetBehaviourHandler {
     private var isInitialState = true
 
     private var stateListener: BottomSheetStateListener? = null
+
     override fun getCurrentState(): Int = behavior.state
 
     private lateinit var bottomSheet: View

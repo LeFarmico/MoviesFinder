@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.ui.movie
+package com.lefarmico.moviesfinder.utils.component.bottomSheet
 
 interface BottomSheetStateListener {
 

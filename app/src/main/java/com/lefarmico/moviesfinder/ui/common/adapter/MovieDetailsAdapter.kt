@@ -13,11 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieBriefData
+import com.lefarmico.moviesfinder.data.entity.MovieDetailsAdapterModel
 import com.lefarmico.moviesfinder.databinding.*
 import com.lefarmico.moviesfinder.private.Private
 import com.lefarmico.moviesfinder.ui.common.decorator.FirstLastPaddingItemDecorator
 import com.lefarmico.moviesfinder.ui.common.decorator.PaddingItemDecoration
-import com.lefarmico.moviesfinder.data.entity.MovieDetailsAdapterModel
 import com.squareup.picasso.Picasso
 
 class MovieDetailsAdapter(
