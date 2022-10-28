@@ -88,7 +88,7 @@ class MovieFragment :
         })
 
         try {
-            savedInstanceState!!.getParcelable<MovieInternalState>(BUNDLE_STATE)!!.also {
+            savedInstanceState!!.getParcelable<MovieElementState>(BUNDLE_STATE)!!.also {
                 recoverState(it)
             }.also {
                 removeArgument(BUNDLE_KEY)
@@ -131,14 +131,14 @@ class MovieFragment :
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        val movieInternalState = MovieInternalState(
+        val movieElementState = MovieElementState(
             getCurrentState(),
             binding.blackBackgroundFrameLayout.alpha,
             appBarInternalState
         )
         outState.putParcelable(
             BUNDLE_STATE,
-            movieInternalState
+            movieElementState
         )
     }
 
@@ -178,18 +178,18 @@ class MovieFragment :
         setBackgroundAlpha(offset)
     }
 
-    private fun recoverState(movieInternalState: MovieInternalState) {
-        when (movieInternalState.sheetState) {
+    private fun recoverState(movieElementState: MovieElementState) {
+        when (movieElementState.sheetState) {
             BottomSheetBehavior.STATE_HALF_EXPANDED -> halfExpandBS()
             BottomSheetBehavior.STATE_EXPANDED -> expandBS()
         }
-        when (movieInternalState.appBarState) {
+        when (movieElementState.appBarState) {
             AppBarStateChangeListener.State.Collapsed -> binding.bottomSheet.appBar.setExpanded(false, false)
             AppBarStateChangeListener.State.Expanded -> binding.bottomSheet.appBar.setExpanded(true, false)
             AppBarStateChangeListener.State.Idle -> {}
         }
 
-        setBackgroundAlpha(movieInternalState.backgroundAlpha)
+        setBackgroundAlpha(movieElementState.backgroundAlpha)
     }
 
     private fun getNewState(movieId: Int) {
@@ -248,7 +248,7 @@ class MovieFragment :
 }
 
 @Parcelize
-data class MovieInternalState(
+data class MovieElementState(
     val sheetState: Int,
     val backgroundAlpha: Float,
     val appBarState: AppBarStateChangeListener.State
