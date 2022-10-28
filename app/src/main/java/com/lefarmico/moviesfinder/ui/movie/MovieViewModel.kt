@@ -82,8 +82,7 @@ class MovieViewModel @Inject constructor(
                     )
                     _state.value = currentState.copy(
                         movieData = moveState.data,
-                        movieDetailsAdapterModelList = movieDetailsAdapterModelList,
-                        bottomSheetState = MovieFragmentState.BottomSheetState.HalfExpanded
+                        movieDetailsAdapterModelList = movieDetailsAdapterModelList
                     )
                     val recommendationState = recommendationsState.await()
                     recommendationState.collectLatest { recState ->
@@ -150,9 +149,5 @@ class MovieViewModel @Inject constructor(
 
     fun cleanToast() {
         _state.value = currentState.copy(toast = null)
-    }
-
-    fun setBottomSheetState(bottomSheetState: MovieFragmentState.BottomSheetState) {
-        _state.value = currentState.copy(bottomSheetState = bottomSheetState)
     }
 }

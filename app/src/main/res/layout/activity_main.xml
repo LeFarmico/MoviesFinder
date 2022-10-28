@@ -23,7 +23,6 @@
         android:id="@+id/nav_host_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="56dp"
         android:name="androidx.navigation.fragment.NavHostFragment"
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph"/>
@@ -33,13 +32,4 @@
         android:layout_height="match_parent"
         android:background="@color/black"
         android:alpha="0"/>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation_bar_view"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:menu="@menu/bottom_navigation_bar"
-        android:layout_gravity="bottom"
-        style="@style/BottomNavigatorStyle"
-        />
 </FrameLayout>
