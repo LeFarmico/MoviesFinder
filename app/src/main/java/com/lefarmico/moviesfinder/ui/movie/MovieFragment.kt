@@ -43,6 +43,7 @@ class MovieFragment :
 
     private lateinit var movieDetailsAdapter: MovieDetailsAdapter
 
+    // UI element state
     private var appBarInternalState: AppBarStateChangeListener.State = AppBarStateChangeListener.State.Idle
 
     override fun getInjectViewModel(): MovieViewModel {
