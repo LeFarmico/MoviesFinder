@@ -2,7 +2,10 @@ package com.lefarmico.moviesfinder.ui.common.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +27,7 @@ class MenuItemAdapter(
 
     private val job = Job(parentJob).apply {
         invokeOnCompletion {
-            Log.d(TAG, "the Job has been completed.")
+            Log.d(TAG, "the Job have been completed.")
         }
     }
 
@@ -34,6 +37,7 @@ class MenuItemAdapter(
         menuMoviesBinding: ItemMenuMoviesBinding
     ) : RecyclerView.ViewHolder(menuMoviesBinding.root) {
 
+        private val root = menuMoviesBinding.root
         private val header = menuMoviesBinding.headerTitle
         private val moviesListRecycler = menuMoviesBinding.itemsList.also {
             it.addItemDecoration(
@@ -50,6 +54,25 @@ class MenuItemAdapter(
             val headerText = itemView.context.getString(movies.movieCategoryData.categoryResource)
             header.text = headerText
             moviesListRecycler.adapter = MovieBriefPagingAdapter(onItemClick).apply {
+                addLoadStateListener { loadState ->
+
+                    if (loadState.refresh is LoadState.Loading) {
+                        root.visibility = View.GONE
+                    } else {
+                        root.visibility = View.VISIBLE
+
+                        // getting the error
+                        val error = when {
+                            loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
+                            loadState.append is LoadState.Error -> loadState.append as LoadState.Error
+                            loadState.refresh is LoadState.Error -> loadState.refresh as LoadState.Error
+                            else -> null
+                        }
+                        error?.let {
+                            Toast.makeText(root.context, it.error.message, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
                 coroutineScope.launch {
                     submitData(movies.movieBriefDataList)
                 }
