@@ -12,8 +12,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
 import com.lefarmico.moviesfinder.ui.base.BaseFragment
-import com.lefarmico.moviesfinder.ui.common.OnBackPressListener
 import com.lefarmico.moviesfinder.ui.common.adapter.MovieDetailsAdapter
+import com.lefarmico.moviesfinder.ui.common.delegation.OnBackPressListener
+import com.lefarmico.moviesfinder.ui.common.delegation.OnBackPressListenerImpl
 import com.lefarmico.moviesfinder.ui.navigation.api.NotificationType
 import com.lefarmico.moviesfinder.ui.navigation.api.Router
 import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
@@ -32,8 +33,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MovieFragment :
     BaseFragment<MovieViewModel, FragmentMovieBinding>(),
-    OnBackPressListener,
     BottomSheetStateListener,
+    OnBackPressListener by OnBackPressListenerImpl(),
     BottomSheetBehaviourHandler by BottomSheetBehaviourHandlerImpl() {
 
     @Inject lateinit var router: Router
@@ -66,6 +67,11 @@ class MovieFragment :
 
         bindBS(binding.bottomSheet)
         bindBSStateListener(this)
+
+        // onBackPress registration
+        registerOnBackPress(requireActivity(), this.lifecycle) {
+            closeFragment()
+        }
 
         // AppBar layout behaviour
         val layoutParams = binding.bottomSheet.appBar.layoutParams
@@ -141,10 +147,6 @@ class MovieFragment :
             BUNDLE_STATE,
             movieElementState
         )
-    }
-
-    override fun onBackPress() {
-        closeFragment()
     }
 
     // closes fragment by the router for popup animation
