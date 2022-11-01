@@ -22,8 +22,6 @@ class BottomSheetBehaviourHandlerImpl : BottomSheetBehaviourHandler, DefaultLife
 
     private var stateListener: BottomSheetStateListener? = null
 
-    private fun getCurrentState(): Int = bottomSheetBehavior?.state ?: BottomSheetBehavior.STATE_SETTLING
-
     override fun bindBottomSheet(
         bottomSheet: View,
         lifecycle: Lifecycle,

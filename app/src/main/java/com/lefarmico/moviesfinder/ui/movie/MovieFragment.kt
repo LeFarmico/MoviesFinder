@@ -31,6 +31,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
+@Parcelize
+data class MovieElementState(
+    val sheetState: Int = BottomSheetBehavior.STATE_SETTLING,
+    val backgroundAlpha: Float = 0f,
+    val appBarState: AppBarStateChangeListener.State = AppBarStateChangeListener.State.Idle,
+    val isDraggable: Boolean = true,
+    val isScrollable: Boolean = false
+) : Parcelable
+
 @AndroidEntryPoint
 class MovieFragment :
     BaseFragment<MovieViewModel, FragmentMovieBinding>(),
@@ -39,15 +48,10 @@ class MovieFragment :
     BottomSheetBehaviourHandler by BottomSheetBehaviourHandlerImpl() {
 
     @Inject lateinit var router: Router
-
-    private var isScrollEnabled = true
-    private var isDraggingEnabled = true
-
     private lateinit var movieDetailsAdapter: MovieDetailsAdapter
 
     // UI element state
-    private var appBarInternalState: AppBarStateChangeListener.State = AppBarStateChangeListener.State.Idle
-    private var bottomSheetState: Int = BottomSheetBehavior.STATE_SETTLING
+    private var elementState = MovieElementState()
 
     override fun getInjectViewModel(): MovieViewModel {
         val viewModel: MovieViewModel by viewModels()
@@ -83,7 +87,7 @@ class MovieFragment :
 
                 (behavior as AppBarLayout.Behavior)
                     .setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
-                        override fun canDrag(appBarLayout: AppBarLayout): Boolean = isScrollEnabled
+                        override fun canDrag(appBarLayout: AppBarLayout): Boolean = elementState.isScrollable
                     })
             }
         }
@@ -91,7 +95,9 @@ class MovieFragment :
         // AppBar State change listener
         binding.bottomSheet.appBar.addOnOffsetChangedListener(object : AppBarStateChangeListener() {
             override fun onStateChanged(appBarLayout: AppBarLayout?, state: State) {
-                appBarInternalState = state
+                elementState = elementState.copy(
+                    appBarState = state
+                )
             }
         })
 
@@ -151,32 +157,29 @@ class MovieFragment :
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        val movieElementState = MovieElementState(
-            bottomSheetState,
-            binding.blackBackgroundFrameLayout.alpha,
-            appBarInternalState
-        )
         outState.putParcelable(
             BUNDLE_STATE,
-            movieElementState
+            elementState
         )
     }
 
     // closes fragment by the router for popup animation
     override fun onHide() {
-        bottomSheetState = BottomSheetBehavior.STATE_HIDDEN
-        binding.apply {
-            blackBackgroundFrameLayout.isClickable = false
-            enableScrolling(false)
-            enableDragging(true)
-        }
+        elementState = elementState.copy(
+            sheetState = BottomSheetBehavior.STATE_HIDDEN,
+            isScrollable = false,
+            isDraggable = true
+        )
+        binding.blackBackgroundFrameLayout.isClickable = false
         router.back()
     }
 
     override fun onExpand() {
-        bottomSheetState = BottomSheetBehavior.STATE_EXPANDED
-        enableDragging(false)
-        enableScrolling(true)
+        elementState = elementState.copy(
+            sheetState = BottomSheetBehavior.STATE_EXPANDED,
+            isScrollable = true,
+            isDraggable = false
+        )
         binding.bottomSheet.toolbar.navigationIcon = getDrawable(R.drawable.ic_baseline_arrow_back_24)
         binding.bottomSheet.toolbar.setNavigationOnClickListener {
             closeFragment()
@@ -184,9 +187,11 @@ class MovieFragment :
     }
 
     override fun onHalfExpand() {
-        bottomSheetState = BottomSheetBehavior.STATE_HALF_EXPANDED
-        enableScrolling(false)
-        enableDragging(true)
+        elementState = elementState.copy(
+            sheetState = BottomSheetBehavior.STATE_HALF_EXPANDED,
+            isScrollable = false,
+            isDraggable = true
+        )
         binding.bottomSheet.toolbar.navigationIcon = null
         binding.blackBackgroundFrameLayout.setOnClickListener {
             closeFragment()
@@ -198,16 +203,25 @@ class MovieFragment :
     }
 
     private fun recoverState(movieElementState: MovieElementState) {
+        // set up BottomSheet state
         when (movieElementState.sheetState) {
             BottomSheetBehavior.STATE_HALF_EXPANDED -> halfExpandBottomSheet()
             BottomSheetBehavior.STATE_EXPANDED -> expandBottomSheet()
         }
+        // set up AppBar state
         when (movieElementState.appBarState) {
             AppBarStateChangeListener.State.Collapsed -> binding.bottomSheet.appBar.setExpanded(false, false)
             AppBarStateChangeListener.State.Expanded -> binding.bottomSheet.appBar.setExpanded(true, false)
             AppBarStateChangeListener.State.Idle -> {}
         }
+        // set up Draggable of view
+        binding.bottomSheet.recycler.isNestedScrollingEnabled = movieElementState.isScrollable
+        // set up Scrollable of the view
+        val layoutParams = binding.bottomSheet.layoutParams as CoordinatorLayout.LayoutParams
+        val behavior = layoutParams.behavior as BottomSheetBehavior<*>
+        behavior.isDraggable = elementState.isDraggable
 
+        // set up background black shade
         setBackgroundAlpha(movieElementState.backgroundAlpha)
     }
 
@@ -226,16 +240,10 @@ class MovieFragment :
         }
     }
 
-    private fun enableScrolling(isEnable: Boolean) {
-        isScrollEnabled = isEnable
-        binding.bottomSheet.recycler.isNestedScrollingEnabled = isEnable
-    }
-
     private fun enableDragging(isEnabled: Boolean) {
-        val layoutParams = (binding.bottomSheet.layoutParams as CoordinatorLayout.LayoutParams)
+        val layoutParams = binding.bottomSheet.layoutParams as CoordinatorLayout.LayoutParams
         val behavior = layoutParams.behavior as BottomSheetBehavior<*>
         behavior.isDraggable = isEnabled
-        isDraggingEnabled = isEnabled
     }
 
     // closes fragment by calling router.back() in onHide callback
@@ -267,10 +275,3 @@ class MovieFragment :
         }
     }
 }
-
-@Parcelize
-data class MovieElementState(
-    val sheetState: Int,
-    val backgroundAlpha: Float,
-    val appBarState: AppBarStateChangeListener.State
-) : Parcelable
