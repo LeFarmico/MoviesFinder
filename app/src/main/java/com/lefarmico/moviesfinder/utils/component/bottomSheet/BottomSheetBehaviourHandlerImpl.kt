@@ -1,72 +1,72 @@
 package com.lefarmico.moviesfinder.utils.component.bottomSheet
 
 import android.view.View
-import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class BottomSheetBehaviourHandlerImpl : BottomSheetBehaviourHandler {
+class BottomSheetBehaviourHandlerImpl : BottomSheetBehaviourHandler, DefaultLifecycleObserver {
 
-    private val behavior by lazy {
-        try {
-            (bottomSheet.layoutParams as CoordinatorLayout.LayoutParams).behavior
-                as BottomSheetBehavior<*>
-        } catch (e: NullPointerException) {
-            throw RuntimeException("BottomSheet view is not bind")
-        } catch (e: TypeCastException) {
-            throw RuntimeException("Bind view is not provide bottom sheet behaviour")
+    private var bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            invokeStateChangeListenerAction(newState)
+        }
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            stateListener?.onSlide(slideOffset)
         }
     }
+    private var bottomSheetBehavior: BottomSheetBehavior<*>? = null
 
     private var isInitialState = true
 
     private var stateListener: BottomSheetStateListener? = null
 
-    override fun getCurrentState(): Int = behavior.state
+    private fun getCurrentState(): Int = bottomSheetBehavior?.state ?: BottomSheetBehavior.STATE_SETTLING
 
-    private lateinit var bottomSheet: View
-
-    override fun bindBS(bottomSheet: View) {
-        this.bottomSheet = bottomSheet
-        BottomSheetBehavior.from(bottomSheet).addBottomSheetCallback(
-            object : BottomSheetBehavior.BottomSheetCallback() {
-                override fun onStateChanged(bottomSheet: View, newState: Int) {
-                    setStateParameters(newState)
-                }
-
-                override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    stateListener?.onSlide(slideOffset)
-                }
-            }
-        )
+    override fun bindBottomSheet(
+        bottomSheet: View,
+        lifecycle: Lifecycle,
+        listener: BottomSheetStateListener?
+    ) {
+        lifecycle.addObserver(this)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        stateListener = listener
     }
 
-    override fun bindBSStateListener(bottomSheetStateListener: BottomSheetStateListener) {
-        stateListener = bottomSheetStateListener
+    override fun expandBottomSheet() {
+        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+        doIfInitialState { stateListener?.onExpand() }
     }
 
-    override fun expandBS() {
-        behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        ifInitialSetStateParameters()
+    override fun halfExpandBottomSheet() {
+        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        doIfInitialState { stateListener?.onHalfExpand() }
     }
 
-    override fun halfExpandBS() {
-        behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-        ifInitialSetStateParameters()
+    override fun hideBottomSheet() {
+        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
+        doIfInitialState { stateListener?.onHide() }
     }
 
-    override fun hideBS() {
-        behavior.state = BottomSheetBehavior.STATE_HIDDEN
-        ifInitialSetStateParameters()
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
+        bottomSheetBehavior?.addBottomSheetCallback(bottomSheetCallback)
     }
 
-    private fun ifInitialSetStateParameters() {
+    override fun onPause(owner: LifecycleOwner) {
+        super.onPause(owner)
+        bottomSheetBehavior?.removeBottomSheetCallback(bottomSheetCallback)
+    }
+
+    private fun doIfInitialState(action: () -> Unit) {
         if (isInitialState) {
-            setStateParameters(getCurrentState())
+            action.invoke()
             isInitialState = false
         }
     }
 
-    private fun setStateParameters(state: Int) {
+    private fun invokeStateChangeListenerAction(state: Int) {
         when (state) {
             BottomSheetBehavior.STATE_HIDDEN -> stateListener?.onHide()
             BottomSheetBehavior.STATE_EXPANDED -> stateListener?.onExpand()

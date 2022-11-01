@@ -13,6 +13,7 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
 import com.lefarmico.moviesfinder.ui.base.BaseFragment
 import com.lefarmico.moviesfinder.ui.common.adapter.MovieDetailsAdapter
+import com.lefarmico.moviesfinder.ui.common.adapter.decorator.MovieDetailsDecorator
 import com.lefarmico.moviesfinder.ui.common.delegation.OnBackPressListener
 import com.lefarmico.moviesfinder.ui.common.delegation.OnBackPressListenerImpl
 import com.lefarmico.moviesfinder.ui.navigation.api.NotificationType
@@ -46,6 +47,7 @@ class MovieFragment :
 
     // UI element state
     private var appBarInternalState: AppBarStateChangeListener.State = AppBarStateChangeListener.State.Idle
+    private var bottomSheetState: Int = BottomSheetBehavior.STATE_SETTLING
 
     override fun getInjectViewModel(): MovieViewModel {
         val viewModel: MovieViewModel by viewModels()
@@ -65,8 +67,7 @@ class MovieFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bindBS(binding.bottomSheet)
-        bindBSStateListener(this)
+        bindBottomSheet(binding.bottomSheet, this.lifecycle, this)
 
         // onBackPress registration
         registerOnBackPress(requireActivity(), this.lifecycle) {
@@ -122,24 +123,36 @@ class MovieFragment :
                 )
             }
         )
-        binding.bottomSheet.setRecyclerAdapter(movieDetailsAdapter)
-        lifecycle.addObserver(binding.bottomSheet)
+        binding.bottomSheet.recycler.apply {
+            adapter = movieDetailsAdapter
+            addItemDecoration(
+                MovieDetailsDecorator(
+                    horizontalPd = R.dimen.stnd_margin.pixelOffset,
+                    betweenLinePd = R.dimen.stnd_between_line_space.pixelOffset,
+                    headerBottomPd = R.dimen.stnd_very_small_margin.pixelOffset
+                ),
+                0
+            )
+        }
+
         viewModel.state.observe(viewLifecycleOwner) { state ->
-            state.apply {
-                movieData?.let { movieDetailedData ->
-                    movieDetailsAdapter.submitList(movieDetailsAdapterModelList)
-                    binding.bottomSheet.setMovieItem(movieDetailedData)
+            state.movieData?.let { movieDetailedData ->
+                movieDetailsAdapter.submitList(state.movieDetailsAdapterModelList)
+                binding.bottomSheet.apply {
+                    collapsingToolbarLayout.title = movieDetailedData.title
+                    setBackgroundPoster(movieDetailedData.posterPath)
+                    setForegroundPoster(movieDetailedData.posterPath)
                 }
-                toast?.let { message ->
-                    showToast(message)
-                }
+            }
+            state.toast?.let { message ->
+                showToast(message)
             }
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         val movieElementState = MovieElementState(
-            getCurrentState(),
+            bottomSheetState,
             binding.blackBackgroundFrameLayout.alpha,
             appBarInternalState
         )
@@ -151,6 +164,7 @@ class MovieFragment :
 
     // closes fragment by the router for popup animation
     override fun onHide() {
+        bottomSheetState = BottomSheetBehavior.STATE_HIDDEN
         binding.apply {
             blackBackgroundFrameLayout.isClickable = false
             enableScrolling(false)
@@ -160,6 +174,7 @@ class MovieFragment :
     }
 
     override fun onExpand() {
+        bottomSheetState = BottomSheetBehavior.STATE_EXPANDED
         enableDragging(false)
         enableScrolling(true)
         binding.bottomSheet.toolbar.navigationIcon = getDrawable(R.drawable.ic_baseline_arrow_back_24)
@@ -169,6 +184,7 @@ class MovieFragment :
     }
 
     override fun onHalfExpand() {
+        bottomSheetState = BottomSheetBehavior.STATE_HALF_EXPANDED
         enableScrolling(false)
         enableDragging(true)
         binding.bottomSheet.toolbar.navigationIcon = null
@@ -183,8 +199,8 @@ class MovieFragment :
 
     private fun recoverState(movieElementState: MovieElementState) {
         when (movieElementState.sheetState) {
-            BottomSheetBehavior.STATE_HALF_EXPANDED -> halfExpandBS()
-            BottomSheetBehavior.STATE_EXPANDED -> expandBS()
+            BottomSheetBehavior.STATE_HALF_EXPANDED -> halfExpandBottomSheet()
+            BottomSheetBehavior.STATE_EXPANDED -> expandBottomSheet()
         }
         when (movieElementState.appBarState) {
             AppBarStateChangeListener.State.Collapsed -> binding.bottomSheet.appBar.setExpanded(false, false)
@@ -199,7 +215,7 @@ class MovieFragment :
         viewModel.launchMovieDetailed(movieId)
         val observer = viewModel.state
         observer.observe(viewLifecycleOwner) {
-            halfExpandBS()
+            halfExpandBottomSheet()
         }
     }
 
@@ -224,7 +240,7 @@ class MovieFragment :
 
     // closes fragment by calling router.back() in onHide callback
     private fun closeFragment() {
-        hideBS()
+        hideBottomSheet()
     }
 
     private fun showToast(message: String) {
@@ -234,6 +250,8 @@ class MovieFragment :
             viewModel.cleanToast()
         }
     }
+
+    private val Int.pixelOffset: Int get() = requireContext().resources.getDimensionPixelOffset(this)
 
     companion object {
         private const val BUNDLE_STATE = "movie_fragment_sheet_state"
