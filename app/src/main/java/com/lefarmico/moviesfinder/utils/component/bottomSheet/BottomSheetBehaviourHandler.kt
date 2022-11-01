@@ -1,20 +1,16 @@
 package com.lefarmico.moviesfinder.utils.component.bottomSheet
 
 import android.view.View
+import androidx.lifecycle.Lifecycle
 
 interface BottomSheetBehaviourHandler {
 
     // Binds Bottom Sheet have to Implement BottomSheetBehaviour
-    fun bindBS(bottomSheet: View)
+    fun bindBottomSheet(bottomSheet: View, lifecycle: Lifecycle, listener: BottomSheetStateListener?)
 
-    fun bindBSStateListener(bottomSheetStateListener: BottomSheetStateListener)
+    fun expandBottomSheet()
 
-    fun expandBS()
+    fun halfExpandBottomSheet()
 
-    fun halfExpandBS()
-
-    fun hideBS()
-
-    // Can be called only after bindBS() function
-    fun getCurrentState(): Int
+    fun hideBottomSheet()
 }
