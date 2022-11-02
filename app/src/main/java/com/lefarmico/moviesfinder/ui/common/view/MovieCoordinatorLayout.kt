@@ -3,7 +3,6 @@ package com.lefarmico.moviesfinder.ui.common.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.ImageView
 import androidx.annotation.Nullable
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -41,7 +40,6 @@ class MovieCoordinatorLayout(
 
     // TODO move sizes to another class
     fun setBackgroundPoster(posterPath: String?) {
-        backgroundPoster.visibility = View.VISIBLE
         Picasso.get()
             .load(Private.IMAGES_URL + "w500" + posterPath)
             .error(R.drawable.ic_launcher_foreground)
