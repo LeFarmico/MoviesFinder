@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.ui.common.delegation
+package com.lefarmico.moviesfinder.ui.common.delegation.onBackPress
 
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentActivity
@@ -6,7 +6,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 
-class OnBackPressListenerImpl : OnBackPressListener, DefaultLifecycleObserver {
+class OnBackPressHandlerImpl : OnBackPressHandler, DefaultLifecycleObserver {
 
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
