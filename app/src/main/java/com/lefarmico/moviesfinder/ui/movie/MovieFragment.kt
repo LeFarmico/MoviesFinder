@@ -230,19 +230,19 @@ class MovieFragment :
     }
 
     private fun setUpState() {
-//        // set up BottomSheet state
-//        when (sheetState) {
-//            BottomSheetBehavior.STATE_HALF_EXPANDED -> halfExpandBottomSheet()
-//            BottomSheetBehavior.STATE_EXPANDED -> expandBottomSheet()
-//        }
-//        // set up AppBar state
+        // set up BottomSheet state
+        when (sheetState) {
+            BottomSheetBehavior.STATE_HALF_EXPANDED -> halfExpandBottomSheet()
+            BottomSheetBehavior.STATE_EXPANDED -> expandBottomSheet()
+        }
+        // set up AppBar state
         when (appBarState) {
             AppBarStateChangeListener.State.Collapsed -> binding.bottomSheet.appBar.setExpanded(false, false)
             AppBarStateChangeListener.State.Expanded -> binding.bottomSheet.appBar.setExpanded(true, false)
             AppBarStateChangeListener.State.Idle -> {}
         }
         // set up Draggable of view
-//        binding.bottomSheet.recycler.isNestedScrollingEnabled = isScrollable
+        binding.bottomSheet.recycler.isNestedScrollingEnabled = isScrollable
 
         // set up Scrollable of the view
         val layoutParams = binding.bottomSheet.layoutParams as CoordinatorLayout.LayoutParams
