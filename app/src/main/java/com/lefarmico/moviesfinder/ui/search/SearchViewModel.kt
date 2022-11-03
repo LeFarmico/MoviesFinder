@@ -14,7 +14,7 @@ class SearchViewModel @Inject constructor(
     val interactor: Interactor
 ) : ViewModel() {
 
-    val searchSubject: PublishSubject<String> = PublishSubject.create()
+    private val searchSubject: PublishSubject<String> = PublishSubject.create()
     val searchAdapterLiveData = MutableLiveData<SearchAdapter>()
 
     fun searchViewObservable(): Observable<String> {
