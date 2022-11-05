@@ -13,12 +13,6 @@ import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
 import com.lefarmico.moviesfinder.ui.base.BaseFragment
 import com.lefarmico.moviesfinder.ui.common.adapter.MovieDetailsAdapter
 import com.lefarmico.moviesfinder.ui.common.adapter.decorator.MovieDetailsDecorator
-import com.lefarmico.moviesfinder.ui.common.delegation.appBarDragCallback.AppBarDragCallback
-import com.lefarmico.moviesfinder.ui.common.delegation.appBarDragCallback.AppBarDragCallbackImpl
-import com.lefarmico.moviesfinder.ui.common.delegation.appBarListener.AppBarStateChangeHandler
-import com.lefarmico.moviesfinder.ui.common.delegation.appBarListener.AppBarStateChangeHandlerImpl
-import com.lefarmico.moviesfinder.ui.common.delegation.onBackPress.OnBackPressHandler
-import com.lefarmico.moviesfinder.ui.common.delegation.onBackPress.OnBackPressHandlerImpl
 import com.lefarmico.moviesfinder.ui.navigation.api.NotificationType
 import com.lefarmico.moviesfinder.ui.navigation.api.Router
 import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
@@ -27,9 +21,17 @@ import com.lefarmico.moviesfinder.utils.component.appBar.AppBarStateChangeListen
 import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetBehaviourHandler
 import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetBehaviourHandlerImpl
 import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetStateListener
+import com.lefarmico.moviesfinder.utils.delegation.appBarDragCallback.AppBarDragCallback
+import com.lefarmico.moviesfinder.utils.delegation.appBarDragCallback.AppBarDragCallbackImpl
+import com.lefarmico.moviesfinder.utils.delegation.appBarListener.AppBarStateChangeHandler
+import com.lefarmico.moviesfinder.utils.delegation.appBarListener.AppBarStateChangeHandlerImpl
+import com.lefarmico.moviesfinder.utils.delegation.onBackPress.OnBackPressHandler
+import com.lefarmico.moviesfinder.utils.delegation.onBackPress.OnBackPressHandlerImpl
 import com.lefarmico.moviesfinder.utils.extension.getArgumentsData
 import com.lefarmico.moviesfinder.utils.extension.getDrawable
 import com.lefarmico.moviesfinder.utils.extension.removeArgument
+import com.lefarmico.moviesfinder.utils.logger.LifecycleLogger
+import com.lefarmico.moviesfinder.utils.logger.LifecycleLoggerImpl
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
@@ -50,7 +52,8 @@ class MovieFragment :
     AppBarStateChangeHandler by AppBarStateChangeHandlerImpl(),
     AppBarDragCallback by AppBarDragCallbackImpl(),
     OnBackPressHandler by OnBackPressHandlerImpl(),
-    BottomSheetBehaviourHandler by BottomSheetBehaviourHandlerImpl() {
+    BottomSheetBehaviourHandler by BottomSheetBehaviourHandlerImpl(),
+    LifecycleLogger by LifecycleLoggerImpl() {
 
     @Inject lateinit var router: Router
     private lateinit var movieDetailsAdapter: MovieDetailsAdapter
@@ -78,6 +81,8 @@ class MovieFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        registerLifecycleLogger(this.lifecycle, this::class.java, "MovieFragment")
 
         try {
             // getting saved state

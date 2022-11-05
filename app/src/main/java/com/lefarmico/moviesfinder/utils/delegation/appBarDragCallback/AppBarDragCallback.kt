@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.ui.common.delegation.appBarDragCallback
+package com.lefarmico.moviesfinder.utils.delegation.appBarDragCallback
 
 import androidx.lifecycle.Lifecycle
 import com.google.android.material.appbar.AppBarLayout

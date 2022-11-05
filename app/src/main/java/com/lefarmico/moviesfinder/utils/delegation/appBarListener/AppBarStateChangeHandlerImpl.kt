@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.ui.common.delegation.appBarListener
+package com.lefarmico.moviesfinder.utils.delegation.appBarListener
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle

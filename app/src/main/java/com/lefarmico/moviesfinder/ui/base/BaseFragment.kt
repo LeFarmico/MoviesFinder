@@ -1,7 +1,6 @@
 package com.lefarmico.moviesfinder.ui.base
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +29,6 @@ abstract class BaseFragment<VM : ViewModel, VB : ViewBinding> : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        debugLog { "onCreate()" }
         viewModel = getInjectViewModel()
     }
 
@@ -40,38 +38,11 @@ abstract class BaseFragment<VM : ViewModel, VB : ViewBinding> : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = getViewBinding(inflater, container, savedInstanceState)
-        debugLog { "onCreateView()" }
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        debugLog { "onViewCreated()" }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        debugLog { "onStart()" }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        debugLog { "onPause()" }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        debugLog { "onStop()" }
     }
 
     override fun onDetach() {
         super.onDetach()
-        debugLog { "onDetach()" }
         fragmentScope.coroutineContext.cancelChildren()
-    }
-
-    private inline fun debugLog(logText: () -> String) {
-        val className = this.javaClass.name
-        Log.d(className, logText.invoke())
     }
 }
