@@ -82,7 +82,7 @@ class MovieFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        registerLifecycleLogger(this.lifecycle, this::class.java, "MovieFragment")
+        registerLifecycleLogger(this.lifecycle, this::class.java, "MovieFragment", true)
 
         try {
             // getting saved state
@@ -99,7 +99,8 @@ class MovieFragment :
             }
         }
 
-        bindBottomSheet(binding.bottomSheet, this.lifecycle, this)
+        // register BottomSheet handler
+        registerBottomSheetHandler(binding.bottomSheet, this.lifecycle, this)
 
         // onBackPress registration
         registerOnBackPress(requireActivity(), this.lifecycle) {
@@ -118,11 +119,27 @@ class MovieFragment :
         registerDragCallback(
             binding.bottomSheet.appBar,
             this.lifecycle
-        ) {
-            isScrollable
-        }
+        ) { isScrollable }
 
-        setUpState()
+        // set up BottomSheet state
+        when (sheetState) {
+            BottomSheetBehavior.STATE_HALF_EXPANDED -> halfExpandBottomSheet()
+            BottomSheetBehavior.STATE_EXPANDED -> expandBottomSheet()
+        }
+        // set up AppBar state
+        when (appBarState) {
+            AppBarStateChangeListener.State.Collapsed -> binding.bottomSheet.appBar.setExpanded(false, false)
+            AppBarStateChangeListener.State.Expanded -> binding.bottomSheet.appBar.setExpanded(true, false)
+            AppBarStateChangeListener.State.Idle -> { /* waiting for the first state */ }
+        }
+        // set up Scrollable of view
+        binding.bottomSheet.recycler.isNestedScrollingEnabled = isScrollable
+
+        // set up Draggable of the view
+        enableDragging(isDraggable)
+
+        // set up background shade
+        setBackgroundAlpha(backgroundAlpha)
 
         movieDetailsAdapter = MovieDetailsAdapter(
             onWatchListClick = { isChecked ->
@@ -232,30 +249,6 @@ class MovieFragment :
         observer.observe(viewLifecycleOwner) {
             halfExpandBottomSheet()
         }
-    }
-
-    private fun setUpState() {
-        // set up BottomSheet state
-        when (sheetState) {
-            BottomSheetBehavior.STATE_HALF_EXPANDED -> halfExpandBottomSheet()
-            BottomSheetBehavior.STATE_EXPANDED -> expandBottomSheet()
-        }
-        // set up AppBar state
-        when (appBarState) {
-            AppBarStateChangeListener.State.Collapsed -> binding.bottomSheet.appBar.setExpanded(false, false)
-            AppBarStateChangeListener.State.Expanded -> binding.bottomSheet.appBar.setExpanded(true, false)
-            AppBarStateChangeListener.State.Idle -> {}
-        }
-        // set up Draggable of view
-        binding.bottomSheet.recycler.isNestedScrollingEnabled = isScrollable
-
-        // set up Scrollable of the view
-        val layoutParams = binding.bottomSheet.layoutParams as CoordinatorLayout.LayoutParams
-        val behavior = layoutParams.behavior as BottomSheetBehavior<*>
-        behavior.isDraggable = isDraggable
-
-        // set up background black shade
-        setBackgroundAlpha(backgroundAlpha)
     }
 
     private fun setBackgroundAlpha(alpha: Float) {
