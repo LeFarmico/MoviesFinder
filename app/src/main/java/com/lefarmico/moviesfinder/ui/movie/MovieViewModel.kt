@@ -11,6 +11,7 @@ import com.lefarmico.moviesfinder.data.manager.useCase.DeleteMovieDetailedFromDB
 import com.lefarmico.moviesfinder.data.manager.useCase.GetMovieDetailedApiUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetRecommendationsMovieBriefListUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.SaveMovieDetailedToDBUseCase
+import com.lefarmico.moviesfinder.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collectLatest
@@ -28,6 +29,9 @@ class MovieViewModel @Inject constructor(
     private var _state = MutableLiveData<MovieFragmentState>()
     val state: LiveData<MovieFragmentState> get() = _state
     private val currentState: MovieFragmentState get() = state.value ?: MovieFragmentState()
+
+    private val _notificationEvent = SingleLiveEvent<String>()
+    val event: LiveData<String> = _notificationEvent
 
     fun launchMovieDetailed(movieId: Int) {
         viewModelScope.launch {
@@ -118,11 +122,11 @@ class MovieViewModel @Inject constructor(
             currentState.movieData?.let {
                 saveMovieDetailedToDBUseCase(it.copy(isWatchlist = true)).collectLatest { state ->
                     when (state) {
-                        is State.Error -> _state.value = currentState.copy(toast = "${state.exception.message}")
+                        is State.Error -> _notificationEvent.value = "${state.exception.message}"
                         State.Loading -> {}
                         is State.Success -> {
                             // TODO return message id from resources
-                            _state.value = currentState.copy(toast = "The movie successfully saved to watchlist")
+                            _notificationEvent.value = "The movie successfully saved to watchlist"
                         }
                     }
                 }
@@ -135,19 +139,15 @@ class MovieViewModel @Inject constructor(
             currentState.movieData?.let {
                 deleteMovieDetailedFromDBUseCase(it.copy(isWatchlist = false)).collectLatest { state ->
                     when (state) {
-                        is State.Error -> _state.value = currentState.copy(toast = "${state.exception.message}")
+                        is State.Error -> _notificationEvent.value = "${state.exception.message}"
                         State.Loading -> {}
                         is State.Success -> {
                             // TODO return message id from resources
-                            _state.value = currentState.copy(toast = "The movie successfully deleted to watchlist")
+                            _notificationEvent.value = "The movie successfully deleted to watchlist"
                         }
                     }
                 }
             }
         }
-    }
-
-    fun cleanToast() {
-        _state.value = currentState.copy(toast = null)
     }
 }

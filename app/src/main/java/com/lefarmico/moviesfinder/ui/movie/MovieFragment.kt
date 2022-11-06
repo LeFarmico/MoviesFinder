@@ -178,9 +178,9 @@ class MovieFragment :
                     setForegroundPoster(movieDetailedData.posterPath)
                 }
             }
-            state.toast?.let { message ->
-                showToast(message)
-            }
+        }
+        viewModel.event.observe(viewLifecycleOwner) { event ->
+            router.show(NotificationType.Toast(event))
         }
     }
 
@@ -268,14 +268,6 @@ class MovieFragment :
     // closes fragment by calling router.back() in onHide callback
     private fun closeFragment() {
         hideBottomSheet()
-    }
-
-    private fun showToast(message: String) {
-        router.show(
-            NotificationType.Toast(message)
-        ).also {
-            viewModel.cleanToast()
-        }
     }
 
     private fun createElementState() = MovieElementState(
