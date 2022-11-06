@@ -22,7 +22,7 @@ class BottomSheetBehaviourHandlerImpl : BottomSheetBehaviourHandler, DefaultLife
 
     private var stateListener: BottomSheetStateListener? = null
 
-    override fun bindBottomSheet(
+    override fun registerBottomSheetHandler(
         bottomSheet: View,
         lifecycle: Lifecycle,
         listener: BottomSheetStateListener?

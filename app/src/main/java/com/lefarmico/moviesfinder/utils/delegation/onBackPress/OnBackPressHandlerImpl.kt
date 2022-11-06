@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.ui.common.delegation.onBackPress
+package com.lefarmico.moviesfinder.utils.delegation.onBackPress
 
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentActivity

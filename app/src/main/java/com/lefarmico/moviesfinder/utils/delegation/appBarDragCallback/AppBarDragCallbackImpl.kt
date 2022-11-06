@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.ui.common.delegation.appBarDragCallback
+package com.lefarmico.moviesfinder.utils.delegation.appBarDragCallback
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.DefaultLifecycleObserver

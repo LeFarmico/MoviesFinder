@@ -6,7 +6,7 @@ import androidx.lifecycle.Lifecycle
 interface BottomSheetBehaviourHandler {
 
     // Binds Bottom Sheet have to Implement BottomSheetBehaviour
-    fun bindBottomSheet(bottomSheet: View, lifecycle: Lifecycle, listener: BottomSheetStateListener?)
+    fun registerBottomSheetHandler(bottomSheet: View, lifecycle: Lifecycle, listener: BottomSheetStateListener?)
 
     fun expandBottomSheet()
 
