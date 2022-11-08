@@ -4,7 +4,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -22,7 +21,8 @@ import kotlinx.coroutines.launch
 
 class MenuItemAdapter(
     parentJob: Job,
-    private val onMovieClick: (MovieBriefData) -> Unit
+    private val onMovieClick: (MovieBriefData) -> Unit,
+    private val onErrorAction: (Throwable) -> Unit
 ) : ListAdapter<MenuItem, RecyclerView.ViewHolder>(MenuItemDiffUtil()) {
 
     private val job = Job(parentJob).apply {
@@ -37,6 +37,7 @@ class MenuItemAdapter(
         menuMoviesBinding: ItemMenuMoviesBinding
     ) : RecyclerView.ViewHolder(menuMoviesBinding.root) {
 
+        private val loadView = menuMoviesBinding.loadState
         private val root = menuMoviesBinding.root
         private val header = menuMoviesBinding.headerTitle
         private val moviesListRecycler = menuMoviesBinding.itemsList.also {
@@ -50,16 +51,25 @@ class MenuItemAdapter(
             )
         }
 
-        fun bind(coroutineScope: CoroutineScope, movies: MenuItem.Movies, onItemClick: (MovieBriefData) -> Unit) {
+        fun bind(
+            coroutineScope: CoroutineScope,
+            movies: MenuItem.Movies,
+            onItemClick: (MovieBriefData) -> Unit,
+            onErrorAction: (Throwable) -> Unit
+        ) {
             val headerText = itemView.context.getString(movies.movieCategoryData.categoryResource)
             header.text = headerText
             moviesListRecycler.adapter = MovieBriefPagingAdapter(onItemClick).apply {
                 addLoadStateListener { loadState ->
 
                     if (loadState.refresh is LoadState.Loading) {
-                        root.visibility = View.GONE
+                        loadView.root.visibility = View.VISIBLE
+                        header.visibility = View.GONE
+                        moviesListRecycler.visibility = View.GONE
                     } else {
-                        root.visibility = View.VISIBLE
+                        loadView.root.visibility = View.GONE
+                        header.visibility = View.VISIBLE
+                        moviesListRecycler.visibility = View.VISIBLE
 
                         // getting the error
                         val error = when {
@@ -69,7 +79,10 @@ class MenuItemAdapter(
                             else -> null
                         }
                         error?.let {
-                            Toast.makeText(root.context, it.error.message, Toast.LENGTH_LONG).show()
+                            loadView.root.visibility = View.GONE
+                            header.visibility = View.GONE
+                            moviesListRecycler.visibility = View.GONE
+                            onErrorAction(it.error)
                         }
                     }
                 }
@@ -106,7 +119,7 @@ class MenuItemAdapter(
             MenuItemType.Movies.typeNumber -> {
                 val viewHolder = holder as MoviesViewHolder
                 val item = getItem(position) as MenuItem.Movies
-                viewHolder.bind(scope, item, onMovieClick)
+                viewHolder.bind(scope, item, onMovieClick, onErrorAction)
             }
             else -> {
                 throw IllegalArgumentException("Incorrect viewType: $viewType")
