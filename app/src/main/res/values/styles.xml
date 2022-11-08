@@ -84,7 +84,13 @@
 
     <style name="UntitledToggleButton">
         <item name="android:backgroundTint">@color/primary_color</item>
-        <item name="android:textOff"></item>
-        <item name="android:textOn"></item>
+    </style>
+
+    <style name="OutlinedButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/ripple_button</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:layout_height">32dp</item>
+
     </style>
 </resources>

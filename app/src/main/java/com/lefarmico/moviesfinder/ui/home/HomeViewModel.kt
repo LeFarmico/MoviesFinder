@@ -3,9 +3,9 @@ package com.lefarmico.moviesfinder.ui.home
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MenuItem
 import com.lefarmico.moviesfinder.data.http.response.entity.State
-import com.lefarmico.moviesfinder.data.manager.Interactor
 import com.lefarmico.moviesfinder.data.manager.useCase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -20,7 +20,6 @@ class HomeViewModel @Inject constructor(
     private val getUpcomingMovies: GetUpcomingMovieBriefListUseCase,
     private val getNowPlayingMovies: GetNowPlayingMovieBriefListUseCase,
     private val getTopRatedMovies: GetTopRatedMovieBriefListUseCase,
-    private val interactor: Interactor
 ) : ViewModel() {
 
     val state = MutableLiveData(
@@ -31,13 +30,7 @@ class HomeViewModel @Inject constructor(
         loadMoviesCategories()
     }
 
-    fun showMovieDetail(movieId: Int) {
-        viewModelScope.launch {
-            interactor.sendMovieDetailedToChannel(movieId)
-        }
-    }
-
-    private fun loadMoviesCategories() {
+    fun loadMoviesCategories() {
         viewModelScope.launch {
             val popularCategory = async { getPopularMovies() }
             val upcomingCategory = async { getUpcomingMovies() }
@@ -51,19 +44,46 @@ class HomeViewModel @Inject constructor(
                 topRatedCategory
             ).merge().collectLatest { dataState ->
                 when (dataState) {
-                    is State.Error -> {}
                     State.Loading -> {
-                        state.value = state.value?.copy(isLoading = true)
+                        state.value = state.value?.copy(
+                            isLoading = true,
+                            error = null
+                        )
                     }
                     is State.Success -> {
                         menuItemList.add(dataState.data)
                         state.value = state.value?.copy(
                             isLoading = false,
-                            menuItemList = menuItemList
+                            menuItemList = menuItemList,
+                            error = null
+                        )
+                    }
+                    is State.Error -> {
+                        val error = Error(
+                            R.string.error_def_title,
+                            R.string.error_def_description,
+                            R.string.error_def_button
+                        )
+                        state.value = state.value?.copy(
+                            isLoading = false,
+                            error = error
                         )
                     }
                 }
             }
         }
+    }
+
+    // TODO split by error type
+    fun setErrorState(throwable: Throwable) {
+        val error = Error(
+            R.string.error_def_title,
+            R.string.error_def_description,
+            R.string.error_def_button
+        )
+        state.value = state.value?.copy(
+            isLoading = false,
+            error = error
+        )
     }
 }

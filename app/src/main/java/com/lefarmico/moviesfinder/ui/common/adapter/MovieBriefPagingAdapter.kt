@@ -1,7 +1,6 @@
 
 package com.lefarmico.moviesfinder.ui.common.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -53,7 +52,6 @@ class MovieBriefPagingAdapter(
         )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d("TAG", "bind, position = $position")
         holder.bind(getItem(position))
         if (getItem(position) != null) {
             holder.itemView.setOnClickListener {
