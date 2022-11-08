@@ -26,10 +26,9 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        router.apply {
-            bind(this@MainActivity)
-        }
+        router.bind(this@MainActivity)
 
+        // TODO create only once
         router.navigate(ScreenDestination.Home)
 
         viewModel.state.observe(this) { state ->

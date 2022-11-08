@@ -8,15 +8,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.lefarmico.moviesfinder.databinding.FragmentHomeBinding
 import com.lefarmico.moviesfinder.ui.base.BaseFragment
-import com.lefarmico.moviesfinder.ui.navigation.api.Router
-import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
+import com.lefarmico.moviesfinder.ui.navigation.api.fragmentRouter.FragmentDestination
+import com.lefarmico.moviesfinder.ui.navigation.api.fragmentRouter.FragmentRouter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
-    @Inject lateinit var router: Router
+    @Inject lateinit var fragmentRouter: FragmentRouter
 
     override fun getInjectViewModel(): HomeViewModel {
         val viewModel: HomeViewModel by viewModels()
@@ -32,8 +32,10 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        router.navigate(
-            ScreenDestination.ChildMovies
+        fragmentRouter.bindFragmentManager(childFragmentManager)
+
+        fragmentRouter.navigate(
+            FragmentDestination.Movies
         )
     }
 }

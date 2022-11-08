@@ -9,6 +9,4 @@ sealed class ScreenDestination() {
     object FromHomeToMovie : ScreenDestination()
 
     object MovieToSelf : ScreenDestination()
-
-    object ChildMovies : ScreenDestination()
 }

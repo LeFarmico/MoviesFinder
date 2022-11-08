@@ -5,7 +5,6 @@ import androidx.fragment.app.FragmentManager
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.ui.home.HomeFragment
 import com.lefarmico.moviesfinder.ui.movie.MovieFragment
-import com.lefarmico.moviesfinder.ui.movies.MoviesFragment
 import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
 import com.lefarmico.moviesfinder.ui.navigation.api.resolver.ScreenResolver
 import javax.inject.Inject
@@ -32,7 +31,10 @@ class ScreenResolverImpl @Inject constructor() : ScreenResolver {
                 }
                 ScreenDestination.Home -> {
                     fragmentManager!!.beginTransaction()
-                        .replace(
+                        .addToBackStack(
+                            "HomeFragment${fragmentManager.backStackEntryCount}"
+                        )
+                        .add(
                             R.id.main_fragment_container,
                             HomeFragment::class.java,
                             null
@@ -52,14 +54,6 @@ class ScreenResolverImpl @Inject constructor() : ScreenResolver {
                 ScreenDestination.Profile -> {
                     // TODO Implement Profile Screen
                     throw NotImplementedError("This Screen is not yet implemented")
-                }
-                ScreenDestination.ChildMovies -> {
-                    fragmentManager!!.beginTransaction()
-                        .replace(
-                            R.id.home_fragment_container,
-                            MoviesFragment::class.java,
-                            null
-                        ).commit()
                 }
             }
         } catch (e: NullPointerException) {
