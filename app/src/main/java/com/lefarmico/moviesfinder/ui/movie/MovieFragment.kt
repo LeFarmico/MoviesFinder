@@ -151,7 +151,7 @@ class MovieFragment :
             },
             onRecommendedMovieClick = {
                 router.navigate(
-                    ScreenDestination.MovieToSelfDestination,
+                    ScreenDestination.MovieToSelf,
                     MovieFragmentParams(it.movieId)
                 )
             }
