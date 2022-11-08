@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/error_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextStyle.SecondaryHeading"
+        tools:text="Error"
+        />
+
+    <TextView
+        android:id="@+id/error_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextStyle.Subtitle"
+        tools:text="No Internet connection"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/error_button"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="@dimen/stnd_margin"
+        tools:text="Retry"
+        style="@style/OutlinedButton"
+        />
+</LinearLayout>

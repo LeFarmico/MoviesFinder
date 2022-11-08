@@ -3,13 +3,10 @@ package com.lefarmico.moviesfinder.ui.main
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.ui.base.BaseActivity
 import com.lefarmico.moviesfinder.ui.navigation.api.Router
+import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -26,23 +23,13 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         return viewModel
     }
 
-    private lateinit var navController: NavController
-    private lateinit var appBarConfig: AppBarConfiguration
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        router.bind(this@MainActivity)
 
-        router.apply {
-            bind(this@MainActivity)
-            bindNavController(navHostFragment.navController)
-            bindNavigationUI(binding.bottomNavigationBarView)
-        }
-
-//        appBarConfig = AppBarConfiguration(
-//            setOf(R.id.home_fragment, R.id.favorites_menu)
-//        )
+        // TODO create only once
+        router.navigate(ScreenDestination.Home)
 
         viewModel.state.observe(this) { state ->
             state.apply {
@@ -54,7 +41,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp()
+        return supportFragmentManager.backStackEntryCount == 1
     }
 
     private fun showToast(message: String) {

@@ -6,6 +6,10 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <include layout="@layout/item_menu_movies_load_state"
+        android:id="@+id/load_state"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/header_title"
         android:layout_width="match_parent"
