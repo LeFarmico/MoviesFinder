@@ -2,11 +2,13 @@ package com.lefarmico.moviesfinder.ui.navigation.api
 
 sealed class ScreenDestination() {
 
-    object HomeDestination : ScreenDestination()
+    object Home : ScreenDestination()
 
-    object ProfileDestination : ScreenDestination()
+    object Profile : ScreenDestination()
 
-    object FromHomeToMovieDestination : ScreenDestination()
+    object FromHomeToMovie : ScreenDestination()
 
-    object MovieToSelfDestination : ScreenDestination()
+    object MovieToSelf : ScreenDestination()
+
+    object ChildMovies : ScreenDestination()
 }
