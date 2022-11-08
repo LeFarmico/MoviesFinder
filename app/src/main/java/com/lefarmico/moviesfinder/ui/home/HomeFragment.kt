@@ -24,14 +24,17 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
     @Inject lateinit var router: Router
 
     private var itemAdapter = MenuItemAdapter(
-        parentJob = job
-    ) {
-        router.navigate(
-            ScreenDestination.FromHomeToMovieDestination,
-            MovieFragmentParams(it.movieId)
-        )
-    }
-    private lateinit var paddingDecorator: PaddingItemDecoration
+        parentJob = job,
+        onMovieClick = {
+            router.navigate(
+                ScreenDestination.FromHomeToMovieDestination,
+                MovieFragmentParams(it.movieId)
+            )
+        },
+        onErrorAction = {
+            viewModel.setErrorState(it)
+        }
+    )
 
     override fun getInjectViewModel(): HomeViewModel {
         val viewModel: HomeViewModel by viewModels()
@@ -47,18 +50,42 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        paddingDecorator = PaddingItemDecoration(
-            topPd = requireContext().resources.getDimension(R.dimen.stnd_small_margin).toInt()
-        )
         binding.recyclerParent.apply {
             adapter = itemAdapter
-            addItemDecoration(paddingDecorator, 0)
+            addItemDecoration(
+                PaddingItemDecoration(topPd = requireContext().resources.getDimension(R.dimen.stnd_small_margin).toInt())
+            )
         }
         binding.recyclerParent.adapter = itemAdapter
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
-            binding.progressBar.isVisible = state.isLoading
             itemAdapter.submitList(state.menuItemList)
+
+            // Default State
+            binding.errorLayout.root.visibility = View.GONE
+            binding.recyclerParent.visibility = View.VISIBLE
+            binding.progressBar.isVisible = state.isLoading
+
+            // Loading State
+            if (state.isLoading) {
+                binding.errorLayout.root.visibility = View.GONE
+                binding.recyclerParent.visibility = View.GONE
+            }
+
+            // Error State
+            if (state.error != null) {
+                binding.progressBar.isVisible = false
+                binding.recyclerParent.visibility = View.INVISIBLE
+                binding.errorLayout.root.visibility = View.VISIBLE
+                binding.errorLayout.apply {
+                    errorText.text = getString(state.error.errorTitle)
+                    errorDescription.text = getString(state.error.errorDescription)
+                    errorButton.text = getString(state.error.errorButtonDescription)
+                }
+                binding.errorLayout.errorButton.setOnClickListener {
+                    viewModel.loadMoviesCategories()
+                }
+            }
         }
     }
 }
