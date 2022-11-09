@@ -6,7 +6,6 @@ import androidx.activity.viewModels
 import com.lefarmico.moviesfinder.databinding.ActivityMainBinding
 import com.lefarmico.moviesfinder.ui.base.BaseActivity
 import com.lefarmico.moviesfinder.ui.navigation.api.Router
-import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -29,7 +28,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         router.bind(this@MainActivity)
 
         // TODO create only once
-        router.navigate(ScreenDestination.Home)
+//        router.navigate(ScreenDestination.Home)
 
         viewModel.state.observe(this) { state ->
             state.apply {

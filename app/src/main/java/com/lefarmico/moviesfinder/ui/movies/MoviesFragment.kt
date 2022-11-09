@@ -15,7 +15,10 @@ import com.lefarmico.moviesfinder.ui.navigation.api.Router
 import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
 import com.lefarmico.moviesfinder.ui.navigation.api.params.MovieFragmentParams
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -29,8 +32,12 @@ class MoviesFragment : Fragment() {
 
     private val viewModel: MoviesViewModel by viewModels()
 
+    // TODO encapsulate it
+    private val job = Job()
+    private val fragmentScope = CoroutineScope(Dispatchers.Default + job)
+
     private var itemAdapter = MenuItemAdapter(
-        parentJob = Job(),
+        parentJob = job,
         onMovieClick = {
             router.navigate(
                 ScreenDestination.FromHomeToMovie,
@@ -91,5 +98,10 @@ class MoviesFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        fragmentScope.cancel()
     }
 }
