@@ -9,12 +9,15 @@ import com.lefarmico.moviesfinder.data.entity.CategoryData
 import com.lefarmico.moviesfinder.data.entity.MenuItem
 import com.lefarmico.moviesfinder.data.entity.MovieBriefData
 import com.lefarmico.moviesfinder.data.http.request.TmdbApi
-import com.lefarmico.moviesfinder.data.http.response.NetworkResponse
 import com.lefarmico.moviesfinder.data.http.response.entity.State
 import com.lefarmico.moviesfinder.data.http.response.entity.TmdbMovieResult
+import com.lefarmico.moviesfinder.data.http.response.onError
+import com.lefarmico.moviesfinder.data.http.response.onException
+import com.lefarmico.moviesfinder.data.http.response.onSuccess
 import com.lefarmico.moviesfinder.private.Private.API_KEY
 import com.lefarmico.moviesfinder.ui.common.adapter.pagingSource.MovieBriefDataPagingSource
 import com.lefarmico.moviesfinder.ui.common.adapter.pagingSource.NETWORK_PAGE_SIZE
+import com.lefarmico.moviesfinder.utils.exception.NetworkResponseException
 import com.lefarmico.moviesfinder.utils.mapper.toBriefViewData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,15 +46,19 @@ class MovieBriefListRepository @Inject constructor(
 
     override suspend fun getRecommendationsMovieBriefList(movieId: Int): Flow<State<List<MovieBriefData>>> = flow {
         emit(State.Loading)
-        when (val response = tmdbApi.getRecommendations(movieId, API_KEY)) {
-            is NetworkResponse.Success -> {
-                emit(State.Success(response.data.tmdbMovie.toBriefList()))
+        tmdbApi.getRecommendations(movieId, API_KEY).apply {
+            onError { code, message ->
+                emit(
+                    State.Error(
+                        NetworkResponseException(code, message)
+                    )
+                )
             }
-            is NetworkResponse.Error -> {
-                emit(State.Error(RuntimeException("Server side error with code: ${response.code}")))
+            onException { exception ->
+                emit(State.Error(exception))
             }
-            is NetworkResponse.Exception -> {
-                emit(State.Error(response.throwable))
+            onSuccess { result ->
+                emit(State.Success(result.tmdbMovie.toBriefList()))
             }
         }
     }

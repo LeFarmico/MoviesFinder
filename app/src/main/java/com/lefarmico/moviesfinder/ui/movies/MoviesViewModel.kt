@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MenuItem
-import com.lefarmico.moviesfinder.data.http.response.entity.State
 import com.lefarmico.moviesfinder.data.manager.useCase.GetNowPlayingMovieBriefListUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetPopularMovieBriefListUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetTopRatedMovieBriefListUseCase
@@ -41,18 +40,6 @@ class MoviesViewModel @Inject constructor(
         MoviesState(isLoading = true)
     )
 
-    val cancellationExceptionHandle = CoroutineExceptionHandler { _, _ ->
-        val error = Error(
-            R.string.error_def_title,
-            R.string.error_def_description,
-            R.string.error_def_button
-        )
-        state.value = state.value?.copy(
-            isLoading = false,
-            error = error
-        )
-    }
-
     init {
         loadMoviesCategories()
     }
@@ -66,40 +53,16 @@ class MoviesViewModel @Inject constructor(
 
             val menuItemList: MutableList<MenuItem> = mutableListOf()
 
-            // handle slow internet exception
-            val result = withTimeout(1_000) {
-                awaitAll(popularCategory, upcomingCategory, nowPlayingCategory, topRatedCategory)
-            }
-
-            result.merge().collectLatest { dataState ->
-                when (dataState) {
-                    State.Loading -> {
-                        state.value = state.value?.copy(
-                            isLoading = true,
-                            error = null
-                        )
-                    }
-                    is State.Success -> {
-                        menuItemList.add(dataState.data)
-                        state.value = state.value?.copy(
-                            isLoading = false,
-                            menuItemList = menuItemList,
-                            error = null
-                        )
-                    }
-                    is State.Error -> {
-                        val error = Error(
-                            R.string.error_def_title,
-                            R.string.error_def_description,
-                            R.string.error_def_button
-                        )
-                        state.value = state.value?.copy(
-                            isLoading = false,
-                            error = error
-                        )
-                    }
+            awaitAll(popularCategory, upcomingCategory, nowPlayingCategory, topRatedCategory)
+                .merge()
+                .collectLatest { resultData ->
+                    menuItemList.add(resultData)
+                    state.value = state.value?.copy(
+                        isLoading = false,
+                        menuItemList = menuItemList,
+                        error = null
+                    )
                 }
-            }
         }
     }
 
