@@ -56,7 +56,6 @@ class MovieBriefListRepository @Inject constructor(
         }
     }
 
-    // TODO Handle error and loading
     private suspend fun getMovieBriefListByCategoryAndPage(
         categoryData: CategoryData,
     ) = Pager(
@@ -67,17 +66,15 @@ class MovieBriefListRepository @Inject constructor(
         pagingSourceFactory = {
             MovieBriefDataPagingSource(tmdbApi, categoryData)
         }
-    ).flow.cachedIn(
-        CoroutineScope(Dispatchers.IO)
-    ).map {
-        val movieBriefList = it.map { movieResult -> movieResult.toBriefData() }
-        State.Success(
+    ).flow
+        .cachedIn(CoroutineScope(Dispatchers.IO))
+        .map {
+            val movieBriefList = it.map { movieResult -> movieResult.toBriefData() }
             MenuItem.Movies(
                 movieCategoryData = categoryData,
                 movieBriefDataList = movieBriefList
             )
-        )
-    }
+        }
 
     private suspend fun TmdbMovieResult.toBriefData(): MovieBriefData {
         val savedMovie = savedMoviesDao.getMovieDetailed(this.id)
