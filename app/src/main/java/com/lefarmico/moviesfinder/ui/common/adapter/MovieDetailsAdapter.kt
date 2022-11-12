@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieBriefData
-import com.lefarmico.moviesfinder.data.entity.MovieDetailsAdapterModel
+import com.lefarmico.moviesfinder.data.entity.MovieDetailsModel
 import com.lefarmico.moviesfinder.databinding.*
 import com.lefarmico.moviesfinder.private.Private
 import com.lefarmico.moviesfinder.ui.common.decorator.FirstLastPaddingItemDecorator
@@ -23,7 +23,7 @@ import com.squareup.picasso.Picasso
 class MovieDetailsAdapter(
     private val onWatchListClick: (Boolean) -> Unit,
     private val onRecommendedMovieClick: (MovieBriefData) -> Unit
-) : ListAdapter<MovieDetailsAdapterModel, MovieDetailsAdapter.MovieDetailsViewHolder>(WidgetDiffUtilCallback()) {
+) : ListAdapter<MovieDetailsModel, MovieDetailsAdapter.MovieDetailsViewHolder>(WidgetDiffUtilCallback()) {
 
     sealed class MovieDetailsViewHolder(
         viewBinding: ViewBinding,
@@ -35,8 +35,8 @@ class MovieDetailsAdapter(
 
         val root = widgetHeaderBinding.root
 
-        fun bind(movieDetailsAdapterModel: MovieDetailsAdapterModel.Header) {
-            widgetHeaderBinding.header.text = root.context.getText(movieDetailsAdapterModel.headerRes)
+        fun bind(movieDetailsModel: MovieDetailsModel.Header) {
+            widgetHeaderBinding.header.text = root.context.getText(movieDetailsModel.headerRes)
         }
     }
 
@@ -48,7 +48,7 @@ class MovieDetailsAdapter(
         private val usersRating = widgetRatingOverviewBinding.movieRate
         private val watchlistToggle = widgetRatingOverviewBinding.watchlistToggle
 
-        fun bind(ratingOverview: MovieDetailsAdapterModel.RatingOverview) {
+        fun bind(ratingOverview: MovieDetailsModel.RatingOverview) {
             usersRating.setRatingValue(ratingOverview.usesRating ?: 0f)
             watchlistToggle.isChecked = ratingOverview.isWatchList
         }
@@ -68,7 +68,7 @@ class MovieDetailsAdapter(
         private val length = widgetMovieOverviewBinding.length
         private val releaseDate = widgetMovieOverviewBinding.releaseDate
 
-        fun bind(movieInfoOverView: MovieDetailsAdapterModel.MovieInfoOverviewAdapter) {
+        fun bind(movieInfoOverView: MovieDetailsModel.MovieInfoOverview) {
             genres.text = movieInfoOverView.genres
             length.text = movieInfoOverView.length
             releaseDate.text = movieInfoOverView.releaseDate
@@ -83,7 +83,7 @@ class MovieDetailsAdapter(
         private val text = widgetHeaderAndTextBinding.description
         private val root = widgetHeaderAndTextBinding.root
 
-        fun bind(headerAndTextExpandable: MovieDetailsAdapterModel.HeaderAndTextExpandable) {
+        fun bind(headerAndTextExpandable: MovieDetailsModel.HeaderAndTextExpandable) {
             header.text = root.context.getString(headerAndTextExpandable.header)
             text.text = headerAndTextExpandable.description
         }
@@ -96,7 +96,7 @@ class MovieDetailsAdapter(
         private val spinner = widgetWhereToWatchBinding.root
         private val binding = widgetWhereToWatchBinding
 
-        fun bind(whereToWatch: MovieDetailsAdapterModel.WhereToWatch) {
+        fun bind(whereToWatch: MovieDetailsModel.WhereToWatch) {
             if (whereToWatch.providerList == null || whereToWatch.providerList.isEmpty()) {
                 spinner.visibility = View.GONE
             } else {
@@ -116,7 +116,7 @@ class MovieDetailsAdapter(
         private val rating = widgetMovieLargeBinding.movieRate
         val root = widgetMovieLargeBinding.root
 
-        fun bind(movieLargeWidget: MovieDetailsAdapterModel.MovieWidgetAdapter) {
+        fun bind(movieLargeWidget: MovieDetailsModel.AddedMovie) {
             Picasso.get()
                 .load(Private.IMAGES_URL + "w342" + movieLargeWidget.movieBriefData.posterPath)
                 .error(R.drawable.ic_launcher_foreground)
@@ -143,24 +143,24 @@ class MovieDetailsAdapter(
         }
         private val root = widgetHeaderWithRecyclerBinding.root
 
-        fun bind(castAndCrewMovieDetailsAdapterModel: MovieDetailsAdapterModel.CastAndCrewMovieDetailsAdapterModel) {
-            if (castAndCrewMovieDetailsAdapterModel.castList.isEmpty()) {
+        fun bind(castAndCrew: MovieDetailsModel.CastAndCrew) {
+            if (castAndCrew.castList.isEmpty()) {
                 root.visibility = View.GONE
             } else {
                 root.visibility = View.VISIBLE
                 (recycler.adapter as CastAdapter)
-                    .submitList(castAndCrewMovieDetailsAdapterModel.castList)
+                    .submitList(castAndCrew.castList)
                 Log.d("DECORATION_COUNT", "${recycler.itemDecorationCount}")
             }
         }
     }
 
-    class WidgetDiffUtilCallback : DiffUtil.ItemCallback<MovieDetailsAdapterModel>() {
-        override fun areItemsTheSame(oldItem: MovieDetailsAdapterModel, newItem: MovieDetailsAdapterModel): Boolean =
+    class WidgetDiffUtilCallback : DiffUtil.ItemCallback<MovieDetailsModel>() {
+        override fun areItemsTheSame(oldItem: MovieDetailsModel, newItem: MovieDetailsModel): Boolean =
             oldItem::class == newItem::class && oldItem === newItem
 
         @SuppressLint("DiffUtilEquals")
-        override fun areContentsTheSame(oldItem: MovieDetailsAdapterModel, newItem: MovieDetailsAdapterModel): Boolean =
+        override fun areContentsTheSame(oldItem: MovieDetailsModel, newItem: MovieDetailsModel): Boolean =
             oldItem == newItem
     }
 
@@ -169,19 +169,19 @@ class MovieDetailsAdapter(
         viewType: Int
     ): MovieDetailsViewHolder {
         return when (viewType) {
-            MovieDetailsAdapterModel.Header.ordinal() -> HeaderViewHolder(
+            MovieDetailsModel.Header.ordinal() -> HeaderViewHolder(
                 WidgetHeaderBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
-            MovieDetailsAdapterModel.RatingOverview.ordinal() -> {
+            MovieDetailsModel.RatingOverview.ordinal() -> {
                 RatingViewHolder(
                     WidgetRatingOverviewBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
                     )
                 )
             }
-            MovieDetailsAdapterModel.CastAndCrewMovieDetailsAdapterModel.ordinal() -> CastAndCrewViewHolder(
+            MovieDetailsModel.CastAndCrew.ordinal() -> CastAndCrewViewHolder(
                 WidgetHeaderWithRecyclerBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
@@ -199,22 +199,22 @@ class MovieDetailsAdapter(
                     )
                 )
             }
-            MovieDetailsAdapterModel.MovieInfoOverviewAdapter.ordinal() -> MovieOverviewViewHolder(
+            MovieDetailsModel.MovieInfoOverview.ordinal() -> MovieOverviewViewHolder(
                 WidgetMovieOverviewBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
-            MovieDetailsAdapterModel.MovieWidgetAdapter.ordinal() -> MovieLargeViewHolder(
+            MovieDetailsModel.AddedMovie.ordinal() -> MovieLargeViewHolder(
                 WidgetMovieLargeBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
-            MovieDetailsAdapterModel.WhereToWatch.ordinal() -> WhereToWatchViewHolder(
+            MovieDetailsModel.WhereToWatch.ordinal() -> WhereToWatchViewHolder(
                 WidgetWhereToWatchBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
-            MovieDetailsAdapterModel.HeaderAndTextExpandable.ordinal() -> HeaderAndTextViewHolder(
+            MovieDetailsModel.HeaderAndTextExpandable.ordinal() -> HeaderAndTextViewHolder(
                 WidgetHeaderAndTextBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
@@ -228,11 +228,11 @@ class MovieDetailsAdapter(
 
     override fun onBindViewHolder(holder: MovieDetailsViewHolder, position: Int) {
         when (val model = getItem(position)) {
-            is MovieDetailsAdapterModel.Header -> {
+            is MovieDetailsModel.Header -> {
                 holder as HeaderViewHolder
                 holder.bind(model)
             }
-            is MovieDetailsAdapterModel.RatingOverview -> {
+            is MovieDetailsModel.RatingOverview -> {
                 holder as RatingViewHolder
                 holder.bind(model)
                 holder.onCheckedWatchlistClick(
@@ -240,19 +240,19 @@ class MovieDetailsAdapter(
                     notChecked = { onWatchListClick(false) }
                 )
             }
-            is MovieDetailsAdapterModel.CastAndCrewMovieDetailsAdapterModel -> {
+            is MovieDetailsModel.CastAndCrew -> {
                 holder as CastAndCrewViewHolder
                 holder.bind(model)
             }
-            is MovieDetailsAdapterModel.HeaderAndTextExpandable -> {
+            is MovieDetailsModel.HeaderAndTextExpandable -> {
                 holder as HeaderAndTextViewHolder
                 holder.bind(model)
             }
-            is MovieDetailsAdapterModel.MovieInfoOverviewAdapter -> {
+            is MovieDetailsModel.MovieInfoOverview -> {
                 holder as MovieOverviewViewHolder
                 holder.bind(model)
             }
-            is MovieDetailsAdapterModel.MovieWidgetAdapter -> {
+            is MovieDetailsModel.AddedMovie -> {
                 holder as MovieLargeViewHolder
                 holder.bind(model)
                 // TODO debug
@@ -260,7 +260,7 @@ class MovieDetailsAdapter(
                     onRecommendedMovieClick(model.movieBriefData)
                 }
             }
-            is MovieDetailsAdapterModel.WhereToWatch -> {
+            is MovieDetailsModel.WhereToWatch -> {
                 holder as WhereToWatchViewHolder
                 holder.bind(model)
             }
