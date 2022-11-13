@@ -14,12 +14,16 @@ import com.lefarmico.moviesfinder.ui.common.decorator.PaddingItemDecoration
 import com.lefarmico.moviesfinder.ui.navigation.api.Router
 import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
 import com.lefarmico.moviesfinder.ui.navigation.api.params.MovieFragmentParams
+import com.lefarmico.moviesfinder.utils.delegation.lifecycle.FragmentLifecycleScopeDelegation
+import com.lefarmico.moviesfinder.utils.delegation.lifecycle.FragmentLifecycleScopeDelegationImpl
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MoviesFragment : Fragment() {
+class MoviesFragment :
+    Fragment(),
+    FragmentLifecycleScopeDelegation by FragmentLifecycleScopeDelegationImpl() {
 
     private lateinit var _binding: FragmentMoviesBinding
     private val binding get() = _binding
@@ -29,18 +33,7 @@ class MoviesFragment : Fragment() {
 
     private val viewModel: MoviesViewModel by viewModels()
 
-    private var itemAdapter = MenuItemAdapter(
-        parentJob = Job(),
-        onMovieClick = {
-            router.navigate(
-                ScreenDestination.FromHomeToMovie,
-                MovieFragmentParams(it.movieId)
-            )
-        },
-        onErrorAction = {
-            viewModel.setErrorState(it)
-        }
-    )
+    private lateinit var itemAdapter: MenuItemAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,6 +46,21 @@ class MoviesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        registerFragmentScope(lifecycle)
+
+        itemAdapter = MenuItemAdapter(
+            parentJob = fragmentJob,
+            onMovieClick = {
+                router.navigate(
+                    ScreenDestination.FromHomeToMovie,
+                    MovieFragmentParams(it.movieId)
+                )
+            },
+            onErrorAction = {
+                viewModel.setErrorState(it)
+            }
+        )
 
         binding.recyclerParent.apply {
             adapter = itemAdapter
@@ -91,5 +99,10 @@ class MoviesFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        fragmentScope.cancel()
     }
 }

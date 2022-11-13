@@ -7,13 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DimenRes
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieBriefData
-import com.lefarmico.moviesfinder.data.entity.MovieDetailsAdapterModel
+import com.lefarmico.moviesfinder.data.entity.MovieDetailsModel
 import com.lefarmico.moviesfinder.databinding.*
 import com.lefarmico.moviesfinder.private.Private
 import com.lefarmico.moviesfinder.ui.common.decorator.FirstLastPaddingItemDecorator
@@ -23,261 +21,208 @@ import com.squareup.picasso.Picasso
 class MovieDetailsAdapter(
     private val onWatchListClick: (Boolean) -> Unit,
     private val onRecommendedMovieClick: (MovieBriefData) -> Unit
-) : ListAdapter<MovieDetailsAdapterModel, MovieDetailsAdapter.MovieDetailsViewHolder>(WidgetDiffUtilCallback()) {
+) : ListAdapter<MovieDetailsModel, MovieDetailsAdapter.DefaultViewHolder<*>>(WidgetDiffUtilCallback()) {
 
-    sealed class MovieDetailsViewHolder(
-        viewBinding: ViewBinding,
-    ) : RecyclerView.ViewHolder(viewBinding.root)
+    sealed class DefaultViewHolder<T>(view: View) : RecyclerView.ViewHolder(view) {
+        abstract fun bind(model: T)
+    }
 
-    class HeaderViewHolder(
-        private val widgetHeaderBinding: WidgetHeaderBinding
-    ) : MovieDetailsViewHolder(widgetHeaderBinding) {
+    class HeaderViewHolder(view: View) : DefaultViewHolder<MovieDetailsModel.Header>(view) {
 
-        val root = widgetHeaderBinding.root
+        private val binding = WidgetHeaderBinding.bind(view)
+        private val header = binding.header
 
-        fun bind(movieDetailsAdapterModel: MovieDetailsAdapterModel.Header) {
-            widgetHeaderBinding.header.text = root.context.getText(movieDetailsAdapterModel.headerRes)
+        override fun bind(model: MovieDetailsModel.Header) {
+            header.text = header.context.getText(model.headerRes)
         }
     }
 
     class RatingViewHolder(
-        widgetRatingOverviewBinding: WidgetRatingOverviewBinding
-    ) : MovieDetailsViewHolder(widgetRatingOverviewBinding) {
+        view: View,
+        private val onChecked: () -> Unit,
+        private val notChecked: () -> Unit
+    ) : DefaultViewHolder<MovieDetailsModel.RatingOverview>(view) {
 
-        private val userRating = widgetRatingOverviewBinding.userRate
-        private val usersRating = widgetRatingOverviewBinding.movieRate
-        private val watchlistToggle = widgetRatingOverviewBinding.watchlistToggle
+        private val binding = WidgetRatingOverviewBinding.bind(view)
+        private val userRating = binding.userRate
+        private val usersRating = binding.movieRate
+        private val watchlistToggle = binding.watchlistToggle
 
-        fun bind(ratingOverview: MovieDetailsAdapterModel.RatingOverview) {
-            usersRating.setRatingValue(ratingOverview.usesRating ?: 0f)
-            watchlistToggle.isChecked = ratingOverview.isWatchList
-        }
+        override fun bind(model: MovieDetailsModel.RatingOverview) {
+            usersRating.setRatingValue(model.usesRating ?: 0f)
+            watchlistToggle.isChecked = model.isWatchList
 
-        fun onCheckedWatchlistClick(onChecked: () -> Unit, notChecked: () -> Unit) {
             watchlistToggle.setOnClickListener {
                 if (watchlistToggle.isChecked) { onChecked() } else { notChecked() }
             }
         }
     }
 
-    class MovieOverviewViewHolder(
-        widgetMovieOverviewBinding: WidgetMovieOverviewBinding
-    ) : MovieDetailsViewHolder(widgetMovieOverviewBinding) {
+    class MovieOverviewViewHolder(view: View) :
+        DefaultViewHolder<MovieDetailsModel.MovieInfoOverview>(view) {
 
-        private val genres = widgetMovieOverviewBinding.genres
-        private val length = widgetMovieOverviewBinding.length
-        private val releaseDate = widgetMovieOverviewBinding.releaseDate
+        private val binding = WidgetMovieOverviewBinding.bind(view)
+        private val genres = binding.genres
+        private val length = binding.length
+        private val releaseDate = binding.releaseDate
 
-        fun bind(movieInfoOverView: MovieDetailsAdapterModel.MovieInfoOverviewAdapter) {
-            genres.text = movieInfoOverView.genres
-            length.text = movieInfoOverView.length
-            releaseDate.text = movieInfoOverView.releaseDate
+        override fun bind(model: MovieDetailsModel.MovieInfoOverview) {
+            genres.text = model.genres
+            length.text = model.length
+            releaseDate.text = model.releaseDate
         }
     }
 
-    class HeaderAndTextViewHolder(
-        widgetHeaderAndTextBinding: WidgetHeaderAndTextBinding
-    ) : MovieDetailsViewHolder(widgetHeaderAndTextBinding) {
+    class HeaderAndTextViewHolder(view: View) :
+        DefaultViewHolder<MovieDetailsModel.HeaderAndTextExpandable>(view) {
 
-        private val header = widgetHeaderAndTextBinding.header
-        private val text = widgetHeaderAndTextBinding.description
-        private val root = widgetHeaderAndTextBinding.root
+        private val binding = WidgetHeaderAndTextBinding.bind(view)
+        private val header = binding.header
+        private val text = binding.description
+        private val root = binding.root
 
-        fun bind(headerAndTextExpandable: MovieDetailsAdapterModel.HeaderAndTextExpandable) {
-            header.text = root.context.getString(headerAndTextExpandable.header)
-            text.text = headerAndTextExpandable.description
+        override fun bind(model: MovieDetailsModel.HeaderAndTextExpandable) {
+            header.text = root.context.getString(model.header)
+            text.text = model.description
         }
     }
 
-    class WhereToWatchViewHolder(
-        widgetWhereToWatchBinding: WidgetWhereToWatchBinding
-    ) : MovieDetailsViewHolder(widgetWhereToWatchBinding) {
+    class WhereToWatchViewHolder(view: View) :
+        DefaultViewHolder<MovieDetailsModel.WhereToWatch>(view) {
 
-        private val spinner = widgetWhereToWatchBinding.root
-        private val binding = widgetWhereToWatchBinding
+        private val binding = WidgetWhereToWatchBinding.bind(view)
+        private val spinner = binding.root
 
-        fun bind(whereToWatch: MovieDetailsAdapterModel.WhereToWatch) {
-            if (whereToWatch.providerList == null || whereToWatch.providerList.isEmpty()) {
+        override fun bind(model: MovieDetailsModel.WhereToWatch) {
+            if (model.providerList == null || model.providerList.isEmpty()) {
                 spinner.visibility = View.GONE
             } else {
                 spinner.visibility = View.VISIBLE
-                spinner.adapter = SpinnerProviderAdapter(binding.root.context, whereToWatch.providerList)
+                spinner.adapter = SpinnerProviderAdapter(binding.root.context, model.providerList)
             }
         }
     }
 
-    class MovieLargeViewHolder(
-        widgetMovieLargeBinding: WidgetMovieLargeBinding
-    ) : MovieDetailsViewHolder(widgetMovieLargeBinding) {
+    class AddedMovieViewHolder(
+        view: View,
+        private val onClick: (Int) -> Unit
+    ) : DefaultViewHolder<MovieDetailsModel.AddedMovie>(view) {
 
-        private val poster = widgetMovieLargeBinding.poster
-        private val title = widgetMovieLargeBinding.title
-        private val description = widgetMovieLargeBinding.description
-        private val rating = widgetMovieLargeBinding.movieRate
-        val root = widgetMovieLargeBinding.root
+        private val binding = WidgetMovieLargeBinding.bind(view)
+        private val poster = binding.poster
+        private val title = binding.title
+        private val description = binding.description
+        private val rating = binding.movieRate
 
-        fun bind(movieLargeWidget: MovieDetailsAdapterModel.MovieWidgetAdapter) {
+        override fun bind(model: MovieDetailsModel.AddedMovie) {
             Picasso.get()
-                .load(Private.IMAGES_URL + "w342" + movieLargeWidget.movieBriefData.posterPath)
+                .load(Private.IMAGES_URL + "w342" + model.movieBriefData.posterPath)
                 .error(R.drawable.ic_launcher_foreground)
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(poster)
-            title.text = movieLargeWidget.movieBriefData.title
-            description.text = movieLargeWidget.movieBriefData.description
-            if (movieLargeWidget.movieBriefData.rating != null) {
-                rating.setRatingValue(movieLargeWidget.movieBriefData.rating)
+            title.text = model.movieBriefData.title
+            description.text = model.movieBriefData.description
+            if (model.movieBriefData.rating != null) {
+                rating.setRatingValue(model.movieBriefData.rating)
                 rating.visibility = View.VISIBLE
             } else {
                 rating.visibility = View.GONE
             }
+            binding.root.setOnClickListener { onClick(absoluteAdapterPosition) }
         }
     }
 
-    class CastAndCrewViewHolder(
-        widgetHeaderWithRecyclerBinding: WidgetHeaderWithRecyclerBinding
-    ) : MovieDetailsViewHolder(widgetHeaderWithRecyclerBinding) {
+    class CastAndCrewViewHolder(view: View) :
+        DefaultViewHolder<MovieDetailsModel.CastAndCrew>(view) {
 
-        val recycler = widgetHeaderWithRecyclerBinding.widgetRecycler.apply {
+        private val binding = WidgetHeaderWithRecyclerBinding.bind(view)
+        private val recycler = binding.widgetRecycler.apply {
             isNestedScrollingEnabled = false
             adapter = CastAdapter()
+            addItemDecoration(
+                PaddingItemDecoration(
+                    rightPd = view.getDimPx(R.dimen.stnd_small_margin)
+                )
+            )
+            addItemDecoration(
+                FirstLastPaddingItemDecorator(
+                    leftPd = view.getDimPx(R.dimen.stnd_margin)
+                )
+            )
         }
-        private val root = widgetHeaderWithRecyclerBinding.root
 
-        fun bind(castAndCrewMovieDetailsAdapterModel: MovieDetailsAdapterModel.CastAndCrewMovieDetailsAdapterModel) {
-            if (castAndCrewMovieDetailsAdapterModel.castList.isEmpty()) {
-                root.visibility = View.GONE
+        override fun bind(model: MovieDetailsModel.CastAndCrew) {
+            if (model.castList.isEmpty()) {
+                binding.root.visibility = View.GONE
             } else {
-                root.visibility = View.VISIBLE
+                binding.root.visibility = View.VISIBLE
                 (recycler.adapter as CastAdapter)
-                    .submitList(castAndCrewMovieDetailsAdapterModel.castList)
+                    .submitList(model.castList)
                 Log.d("DECORATION_COUNT", "${recycler.itemDecorationCount}")
             }
         }
+
+        private fun View.getDimPx(@DimenRes res: Int): Int =
+            this.context.resources.getDimensionPixelOffset(res)
     }
 
-    class WidgetDiffUtilCallback : DiffUtil.ItemCallback<MovieDetailsAdapterModel>() {
-        override fun areItemsTheSame(oldItem: MovieDetailsAdapterModel, newItem: MovieDetailsAdapterModel): Boolean =
+    class WidgetDiffUtilCallback : DiffUtil.ItemCallback<MovieDetailsModel>() {
+        override fun areItemsTheSame(oldItem: MovieDetailsModel, newItem: MovieDetailsModel): Boolean =
             oldItem::class == newItem::class && oldItem === newItem
 
         @SuppressLint("DiffUtilEquals")
-        override fun areContentsTheSame(oldItem: MovieDetailsAdapterModel, newItem: MovieDetailsAdapterModel): Boolean =
+        override fun areContentsTheSame(oldItem: MovieDetailsModel, newItem: MovieDetailsModel): Boolean =
             oldItem == newItem
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): MovieDetailsViewHolder {
+    ): DefaultViewHolder<*> {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val view = layoutInflater.inflate(viewType, parent, false)
         return when (viewType) {
-            MovieDetailsAdapterModel.Header.ordinal() -> HeaderViewHolder(
-                WidgetHeaderBinding.inflate(
-                    LayoutInflater.from(parent.context), parent, false
-                )
+            R.layout.widget_header_with_recycler -> CastAndCrewViewHolder(view)
+            R.layout.widget_header -> HeaderViewHolder(view)
+            R.layout.widget_header_and_text -> HeaderAndTextViewHolder(view)
+            R.layout.widget_movie_overview -> MovieOverviewViewHolder(view)
+            R.layout.widget_where_to_watch -> WhereToWatchViewHolder(view)
+            R.layout.widget_movie_large -> AddedMovieViewHolder(
+                view,
+                onClick = { position ->
+                    val item = getItem(position) as MovieDetailsModel.AddedMovie
+                    onRecommendedMovieClick(item.movieBriefData)
+                }
             )
-            MovieDetailsAdapterModel.RatingOverview.ordinal() -> {
-                RatingViewHolder(
-                    WidgetRatingOverviewBinding.inflate(
-                        LayoutInflater.from(parent.context), parent, false
-                    )
-                )
-            }
-            MovieDetailsAdapterModel.CastAndCrewMovieDetailsAdapterModel.ordinal() -> CastAndCrewViewHolder(
-                WidgetHeaderWithRecyclerBinding.inflate(
-                    LayoutInflater.from(parent.context), parent, false
-                )
-            ).apply {
-                val pagerSnapHelper = LinearSnapHelper()
-                pagerSnapHelper.attachToRecyclerView(recycler)
-                recycler.addItemDecoration(
-                    PaddingItemDecoration(
-                        rightPd = parent.getDimPx(R.dimen.stnd_small_margin)
-                    )
-                )
-                recycler.addItemDecoration(
-                    FirstLastPaddingItemDecorator(
-                        leftPd = parent.getDimPx(R.dimen.stnd_margin)
-                    )
-                )
-            }
-            MovieDetailsAdapterModel.MovieInfoOverviewAdapter.ordinal() -> MovieOverviewViewHolder(
-                WidgetMovieOverviewBinding.inflate(
-                    LayoutInflater.from(parent.context), parent, false
-                )
-            )
-            MovieDetailsAdapterModel.MovieWidgetAdapter.ordinal() -> MovieLargeViewHolder(
-                WidgetMovieLargeBinding.inflate(
-                    LayoutInflater.from(parent.context), parent, false
-                )
-            )
-            MovieDetailsAdapterModel.WhereToWatch.ordinal() -> WhereToWatchViewHolder(
-                WidgetWhereToWatchBinding.inflate(
-                    LayoutInflater.from(parent.context), parent, false
-                )
-            )
-            MovieDetailsAdapterModel.HeaderAndTextExpandable.ordinal() -> HeaderAndTextViewHolder(
-                WidgetHeaderAndTextBinding.inflate(
-                    LayoutInflater.from(parent.context), parent, false
-                )
+            R.layout.widget_rating_overview -> RatingViewHolder(
+                view,
+                onChecked = { onWatchListClick(true) },
+                notChecked = { onWatchListClick(false) }
             )
             else -> throw IllegalArgumentException("Illegal view type: viewType = $viewType")
         }
     }
 
-    private fun ViewGroup.getDimPx(@DimenRes res: Int): Int =
-        this.context.resources.getDimensionPixelOffset(res)
-
-    override fun onBindViewHolder(holder: MovieDetailsViewHolder, position: Int) {
-        when (val model = getItem(position)) {
-            is MovieDetailsAdapterModel.Header -> {
-                holder as HeaderViewHolder
-                holder.bind(model)
-            }
-            is MovieDetailsAdapterModel.RatingOverview -> {
-                holder as RatingViewHolder
-                holder.bind(model)
-                holder.onCheckedWatchlistClick(
-                    onChecked = { onWatchListClick(true) },
-                    notChecked = { onWatchListClick(false) }
-                )
-            }
-            is MovieDetailsAdapterModel.CastAndCrewMovieDetailsAdapterModel -> {
-                holder as CastAndCrewViewHolder
-                holder.bind(model)
-            }
-            is MovieDetailsAdapterModel.HeaderAndTextExpandable -> {
-                holder as HeaderAndTextViewHolder
-                holder.bind(model)
-            }
-            is MovieDetailsAdapterModel.MovieInfoOverviewAdapter -> {
-                holder as MovieOverviewViewHolder
-                holder.bind(model)
-            }
-            is MovieDetailsAdapterModel.MovieWidgetAdapter -> {
-                holder as MovieLargeViewHolder
-                holder.bind(model)
-                // TODO debug
-                holder.root.setOnClickListener {
-                    onRecommendedMovieClick(model.movieBriefData)
-                }
-            }
-            is MovieDetailsAdapterModel.WhereToWatch -> {
-                holder as WhereToWatchViewHolder
-                holder.bind(model)
-            }
+    override fun onBindViewHolder(holder: DefaultViewHolder<*>, position: Int) {
+        val item = getItem(position)
+        when (holder) {
+            is AddedMovieViewHolder -> holder.bind(item as MovieDetailsModel.AddedMovie)
+            is CastAndCrewViewHolder -> holder.bind(item as MovieDetailsModel.CastAndCrew)
+            is HeaderAndTextViewHolder -> holder.bind(item as MovieDetailsModel.HeaderAndTextExpandable)
+            is HeaderViewHolder -> holder.bind(item as MovieDetailsModel.Header)
+            is MovieOverviewViewHolder -> holder.bind(item as MovieDetailsModel.MovieInfoOverview)
+            is RatingViewHolder -> holder.bind(item as MovieDetailsModel.RatingOverview)
+            is WhereToWatchViewHolder -> holder.bind(item as MovieDetailsModel.WhereToWatch)
         }
     }
 
-    override fun getItemViewType(position: Int): Int = getItem(position).ordinal()
-
-    private inline fun <reified T : Any> T.ordinal(): Int {
-        if (T::class.isSealed) {
-            return T::class.java.classes.indexOfFirst { sub -> sub == javaClass }
-        }
-        val klass = if (T::class.isCompanion) {
-            javaClass.declaringClass
-        } else {
-            javaClass
-        }
-        return klass.superclass?.classes?.indexOfFirst { it == klass } ?: -1
+    override fun getItemViewType(position: Int): Int = when (getItem(position)) {
+        is MovieDetailsModel.AddedMovie -> R.layout.widget_movie_large
+        is MovieDetailsModel.CastAndCrew -> R.layout.widget_header_with_recycler
+        is MovieDetailsModel.Header -> R.layout.widget_header
+        is MovieDetailsModel.HeaderAndTextExpandable -> R.layout.widget_header_and_text
+        is MovieDetailsModel.MovieInfoOverview -> R.layout.widget_movie_overview
+        is MovieDetailsModel.RatingOverview -> R.layout.widget_rating_overview
+        is MovieDetailsModel.WhereToWatch -> R.layout.widget_where_to_watch
     }
 }

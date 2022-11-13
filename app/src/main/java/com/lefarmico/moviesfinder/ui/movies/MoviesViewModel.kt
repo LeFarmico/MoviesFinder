@@ -1,24 +1,32 @@
 package com.lefarmico.moviesfinder.ui.movies
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MenuItem
-import com.lefarmico.moviesfinder.data.http.response.entity.State
 import com.lefarmico.moviesfinder.data.manager.useCase.GetNowPlayingMovieBriefListUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetPopularMovieBriefListUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetTopRatedMovieBriefListUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetUpcomingMovieBriefListUseCase
-import com.lefarmico.moviesfinder.ui.home.Error
-import com.lefarmico.moviesfinder.ui.home.HomeState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+data class MoviesState(
+    val isLoading: Boolean = false,
+    val error: Error? = null,
+    val menuItemList: List<MenuItem> = emptyList()
+)
+
+data class Error(
+    @StringRes val errorTitle: Int,
+    @StringRes val errorDescription: Int,
+    @StringRes val errorButtonDescription: Int,
+)
 
 @HiltViewModel
 class MoviesViewModel @Inject constructor(
@@ -29,7 +37,7 @@ class MoviesViewModel @Inject constructor(
 ) : ViewModel() {
 
     val state = MutableLiveData(
-        HomeState(isLoading = true)
+        MoviesState(isLoading = true)
     )
 
     init {
@@ -42,41 +50,19 @@ class MoviesViewModel @Inject constructor(
             val upcomingCategory = async { getUpcomingMovies() }
             val nowPlayingCategory = async { getNowPlayingMovies() }
             val topRatedCategory = async { getTopRatedMovies() }
+
             val menuItemList: MutableList<MenuItem> = mutableListOf()
-            awaitAll(
-                popularCategory,
-                upcomingCategory,
-                nowPlayingCategory,
-                topRatedCategory
-            ).merge().collectLatest { dataState ->
-                when (dataState) {
-                    State.Loading -> {
-                        state.value = state.value?.copy(
-                            isLoading = true,
-                            error = null
-                        )
-                    }
-                    is State.Success -> {
-                        menuItemList.add(dataState.data)
-                        state.value = state.value?.copy(
-                            isLoading = false,
-                            menuItemList = menuItemList,
-                            error = null
-                        )
-                    }
-                    is State.Error -> {
-                        val error = Error(
-                            R.string.error_def_title,
-                            R.string.error_def_description,
-                            R.string.error_def_button
-                        )
-                        state.value = state.value?.copy(
-                            isLoading = false,
-                            error = error
-                        )
-                    }
+
+            awaitAll(popularCategory, upcomingCategory, nowPlayingCategory, topRatedCategory)
+                .merge()
+                .collectLatest { resultData ->
+                    menuItemList.add(resultData)
+                    state.value = state.value?.copy(
+                        isLoading = false,
+                        menuItemList = menuItemList,
+                        error = null
+                    )
                 }
-            }
         }
     }
 
