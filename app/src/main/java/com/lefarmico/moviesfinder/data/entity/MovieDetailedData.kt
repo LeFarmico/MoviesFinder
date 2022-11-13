@@ -2,10 +2,7 @@ package com.lefarmico.moviesfinder.data.entity
 
 import android.os.Parcelable
 import androidx.room.*
-import com.lefarmico.moviesfinder.utils.mapper.CastTypeConverter
-import com.lefarmico.moviesfinder.utils.mapper.CrewTypeConverter
-import com.lefarmico.moviesfinder.utils.mapper.ListOfStringsTypeConverters
-import com.lefarmico.moviesfinder.utils.mapper.ProviderTypeConverter
+import com.lefarmico.moviesfinder.utils.mapper.*
 import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "saved_movie", indices = [Index(value = ["movie_id"], unique = true)])
@@ -13,7 +10,8 @@ import kotlinx.parcelize.Parcelize
     ListOfStringsTypeConverters::class,
     ProviderTypeConverter::class,
     CastTypeConverter::class,
-    CrewTypeConverter::class
+    CrewTypeConverter::class,
+    MovieBriefDataConverter::class
 )
 @Parcelize
 data class MovieDetailedData(
@@ -30,5 +28,6 @@ data class MovieDetailedData(
     @ColumnInfo(name = "directors") val directors: List<MovieCrewData>?,
     @ColumnInfo(name = "watch_providers") val watchMovieProviderData: List<MovieProviderData>?,
     @ColumnInfo(name = "length") val length: Int,
-    @ColumnInfo(name = "release_date") val releaseDate: String
+    @ColumnInfo(name = "release_date") val releaseDate: String,
+    @ColumnInfo(name = "recommendations") val recommendations: List<MovieBriefData>?
 ) : Parcelable

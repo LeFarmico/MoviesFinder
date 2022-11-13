@@ -60,5 +60,7 @@ data class TmdbMovieDetailsResult(
     @SerializedName("watch/providers")
     val providers: TmdbProvidersResult?,
     @SerializedName("credits")
-    val credits: TmdbCreditsResult?
+    val credits: TmdbCreditsResult?,
+    @SerializedName("recommendations")
+    val recommendations: TmdbMovieListResult?,
 )

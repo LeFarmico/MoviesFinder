@@ -1,7 +1,10 @@
 package com.lefarmico.moviesfinder.data.http.response.entity
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class TmdbMovieResult(
     @SerializedName("adult")
     val adult: Boolean,
@@ -31,4 +34,4 @@ data class TmdbMovieResult(
     val voteAverage: Float,
     @SerializedName("vote_count")
     val voteCount: Int
-)
+) : Parcelable
