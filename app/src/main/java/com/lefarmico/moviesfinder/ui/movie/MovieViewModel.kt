@@ -14,6 +14,7 @@ import com.lefarmico.moviesfinder.data.http.response.entity.onSuccess
 import com.lefarmico.moviesfinder.data.manager.useCase.DeleteMovieDetailedFromDBUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetMovieDetailedApiUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.SaveMovieDetailedToDBUseCase
+import com.lefarmico.moviesfinder.ui.base.ErrorViewState
 import com.lefarmico.moviesfinder.utils.SingleLiveEvent
 import com.lefarmico.moviesfinder.utils.extension.roundTo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,8 +24,9 @@ import javax.inject.Inject
 
 data class MovieFragmentState(
     val isLoading: Boolean = false,
+    val error: ErrorViewState? = null,
     val movieData: MovieDetailedData? = null,
-    val movieDetailsModelList: List<MovieDetailsModel> = listOf()
+    val movieDetailsModelList: List<MovieDetailsModel>? = null
 )
 
 @HiltViewModel
@@ -97,15 +99,26 @@ class MovieViewModel @Inject constructor(
                         }
                         _state.value = currentState.copy(
                             isLoading = false,
+                            error = null,
                             movieData = movieDetailed,
                             movieDetailsModelList = movieDetailsModelList
                         )
                     }
                     onLoading {
-                        // TODO Not yet implemented
+                        _state.value = currentState.copy(
+                            isLoading = true,
+                            error = null,
+                        )
                     }
                     onError {
-                        // TODO Not yet implemented
+                        _state.value = currentState.copy(
+                            isLoading = false,
+                            error = ErrorViewState(
+                                title = R.string.error_def_title,
+                                description = R.string.error_def_description,
+                                buttonDescription = R.string.error_def_button
+                            )
+                        )
                     }
                 }
             }

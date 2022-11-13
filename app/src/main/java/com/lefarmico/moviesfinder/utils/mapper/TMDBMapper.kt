@@ -48,7 +48,7 @@ fun TmdbMovieDetailsResult.toDetailedViewData(
 fun List<TmdbMovieResult>.toBriefViewData(matchedRecommendations: List<MovieDetailedData>?): List<MovieBriefData> {
     val matchedIdList = matchedRecommendations?.map { it.id }
     return this.map { tmdbMovieResult ->
-        val matchedId = matchedIdList?.first { id ->
+        val matchedId = matchedIdList?.firstOrNull { id ->
             id == tmdbMovieResult.id
         }
 

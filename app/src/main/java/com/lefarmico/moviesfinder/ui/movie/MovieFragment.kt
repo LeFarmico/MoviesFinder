@@ -85,7 +85,7 @@ class MovieFragment :
         registerLifecycleLogger(this.lifecycle, this::class.java, "MovieFragment", true)
 
         try {
-            // getting saved state
+            // getting the saved state
             savedInstanceState!!
                 .getParcelable<MovieElementState>(BUNDLE_STATE)
                 .let { state ->
@@ -93,9 +93,10 @@ class MovieFragment :
                     removeArgument(BUNDLE_KEY)
                 }
         } catch (e: NullPointerException) {
+            // getting a new state
             getArgumentsData<MovieFragmentParams>(BUNDLE_KEY) { params ->
                 if (params == null) return@getArgumentsData
-                getNewState(params.movieId)
+                viewModel.launchMovieDetailed(params.movieId)
             }
         }
 
@@ -170,13 +171,22 @@ class MovieFragment :
         }
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
-            state.movieData?.let { movieDetailedData ->
+            if (state.movieDetailsModelList != null &&
+                state.movieData != null
+            ) {
+                halfExpandBottomSheet()
                 movieDetailsAdapter.submitList(state.movieDetailsModelList)
                 binding.bottomSheet.apply {
-                    collapsingToolbarLayout.title = movieDetailedData.title
-                    setBackgroundPoster(movieDetailedData.posterPath)
-                    setForegroundPoster(movieDetailedData.posterPath)
+                    collapsingToolbarLayout.title = state.movieData.title
+                    setBackgroundPoster(state.movieData.posterPath)
+                    setForegroundPoster(state.movieData.posterPath)
                 }
+            }
+
+            if (state.isLoading) {
+                binding.progressBar.visibility = View.VISIBLE
+            } else {
+                binding.progressBar.visibility = View.GONE
             }
         }
         viewModel.event.observe(viewLifecycleOwner) { event ->
@@ -241,14 +251,6 @@ class MovieFragment :
         backgroundAlpha = movieElementState.backgroundAlpha
         isScrollable = movieElementState.isScrollable
         isDraggable = movieElementState.isDraggable
-    }
-
-    private fun getNewState(movieId: Int) {
-        viewModel.launchMovieDetailed(movieId)
-        val observer = viewModel.state
-        observer.observe(viewLifecycleOwner) {
-            halfExpandBottomSheet()
-        }
     }
 
     private fun setBackgroundAlpha(alpha: Float) {
