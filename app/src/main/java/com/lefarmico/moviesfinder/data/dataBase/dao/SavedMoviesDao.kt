@@ -17,4 +17,7 @@ interface SavedMoviesDao {
 
     @Query("SELECT * FROM saved_movie WHERE is_watchlist = 1")
     suspend fun getWatchListMovieDetailed(): List<MovieDetailedData>
+
+    @Query("SELECT * FROM saved_movie WHERE movie_id IN (:idList)")
+    suspend fun getMatchedMovieDetailedByIdList(idList: List<Int>): List<MovieDetailedData>
 }

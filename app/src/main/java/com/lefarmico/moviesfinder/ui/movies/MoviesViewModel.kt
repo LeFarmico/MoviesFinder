@@ -1,6 +1,5 @@
 package com.lefarmico.moviesfinder.ui.movies
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,22 +9,19 @@ import com.lefarmico.moviesfinder.data.manager.useCase.GetNowPlayingMovieBriefLi
 import com.lefarmico.moviesfinder.data.manager.useCase.GetPopularMovieBriefListUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetTopRatedMovieBriefListUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetUpcomingMovieBriefListUseCase
+import com.lefarmico.moviesfinder.ui.base.ErrorViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class MoviesState(
     val isLoading: Boolean = false,
-    val error: Error? = null,
+    val error: ErrorViewState? = null,
     val menuItemList: List<MenuItem> = emptyList()
-)
-
-data class Error(
-    @StringRes val errorTitle: Int,
-    @StringRes val errorDescription: Int,
-    @StringRes val errorButtonDescription: Int,
 )
 
 @HiltViewModel
@@ -68,7 +64,7 @@ class MoviesViewModel @Inject constructor(
 
     // TODO split by error type
     fun setErrorState(throwable: Throwable) {
-        val error = Error(
+        val error = ErrorViewState(
             R.string.error_def_title,
             R.string.error_def_description,
             R.string.error_def_button

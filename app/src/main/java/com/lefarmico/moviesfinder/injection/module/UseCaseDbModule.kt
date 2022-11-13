@@ -17,15 +17,15 @@ class UseCaseDbModule {
     @Provides
     @Singleton
     fun provideSaveMovieDetailedToDBUseCase(movieDetailedRepository: MovieDetailedRepository) =
-        SaveMovieDetailedToDBUseCase(movieDetailedRepository::saveMovieDetailed)
+        SaveMovieDetailedToDBUseCase(movieDetailedRepository::saveToDBMovieDetailed)
 
     @Provides
     @Singleton
     fun provideDeleteMovieDetailedFromDBUseCase(movieDetailedRepository: MovieDetailedRepository) =
-        DeleteMovieDetailedFromDBUseCase(movieDetailedRepository::deleteMovieDetailed)
+        DeleteMovieDetailedFromDBUseCase(movieDetailedRepository::deleteFromDBMovieDetailed)
 
     @Provides
     @Singleton
     fun provideGetWatchListMovieFromDBUseCase(movieDetailedRepository: MovieDetailedRepository) =
-        GetWatchListMovieDetailedFromDBUseCase(movieDetailedRepository::getWatchListMovieDetailed)
+        GetWatchListMovieDetailedFromDBUseCase(movieDetailedRepository::getFromDBListMovieDetailed)
 }

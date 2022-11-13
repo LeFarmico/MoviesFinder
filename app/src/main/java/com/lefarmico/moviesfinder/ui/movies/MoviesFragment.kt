@@ -90,9 +90,9 @@ class MoviesFragment :
                 binding.recyclerParent.visibility = View.INVISIBLE
                 binding.errorLayout.root.visibility = View.VISIBLE
                 binding.errorLayout.apply {
-                    errorText.text = getString(state.error.errorTitle)
-                    errorDescription.text = getString(state.error.errorDescription)
-                    errorButton.text = getString(state.error.errorButtonDescription)
+                    errorText.text = getString(state.error.title)
+                    errorDescription.text = getString(state.error.description)
+                    errorButton.text = getString(state.error.buttonDescription)
                 }
                 binding.errorLayout.errorButton.setOnClickListener {
                     viewModel.loadMoviesCategories()
