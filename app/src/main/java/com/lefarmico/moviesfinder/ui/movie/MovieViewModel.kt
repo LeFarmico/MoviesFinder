@@ -5,13 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.data.entity.MovieDetailsAdapterModel
+import com.lefarmico.moviesfinder.data.entity.MovieDetailsModel
 import com.lefarmico.moviesfinder.data.http.response.entity.State
 import com.lefarmico.moviesfinder.data.manager.useCase.DeleteMovieDetailedFromDBUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetMovieDetailedApiUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetRecommendationsMovieBriefListUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.SaveMovieDetailedToDBUseCase
 import com.lefarmico.moviesfinder.utils.SingleLiveEvent
+import com.lefarmico.moviesfinder.utils.extension.roundTo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collectLatest
@@ -41,21 +42,21 @@ class MovieViewModel @Inject constructor(
             val recommendationsState = async {
                 getRecommendations(movieId)
             }
-            val movieDetailsAdapterModelList = mutableListOf<MovieDetailsAdapterModel>()
+            val movieDetailsModelList = mutableListOf<MovieDetailsModel>()
             when (val moveState = movieDetailedState.await()) {
                 is State.Error -> throw moveState.exception
                 is State.Success -> {
                     // TODO add builder
-                    movieDetailsAdapterModelList.add(
-                        MovieDetailsAdapterModel.MovieInfoOverviewAdapter(
+                    movieDetailsModelList.add(
+                        MovieDetailsModel.MovieInfoOverview(
                             genres = moveState.data.genres.reduce { acc, s -> "$acc / $s" },
                             length = "Length: ${moveState.data.length} min",
                             releaseDate = moveState.data.releaseDate
                         )
                     )
-                    movieDetailsAdapterModelList.add(
-                        MovieDetailsAdapterModel.RatingOverview(
-                            usesRating = moveState.data.rating,
+                    movieDetailsModelList.add(
+                        MovieDetailsModel.RatingOverview(
+                            usesRating = moveState.data.rating.roundTo(1),
                             userRating = moveState.data.yourRate,
                             isWatchList = moveState.data.isWatchlist
                         )
@@ -63,44 +64,44 @@ class MovieViewModel @Inject constructor(
                     if (moveState.data.watchMovieProviderData != null &&
                         moveState.data.watchMovieProviderData.isEmpty()
                     ) {
-                        movieDetailsAdapterModelList.add(
-                            MovieDetailsAdapterModel.WhereToWatch(
+                        movieDetailsModelList.add(
+                            MovieDetailsModel.WhereToWatch(
                                 providerList = moveState.data.watchMovieProviderData
                             )
                         )
                     }
-                    movieDetailsAdapterModelList.add(
-                        MovieDetailsAdapterModel.HeaderAndTextExpandable(
+                    movieDetailsModelList.add(
+                        MovieDetailsModel.HeaderAndTextExpandable(
                             header = R.string.storyline,
                             description = moveState.data.description
                         )
                     )
-                    movieDetailsAdapterModelList.add(
-                        MovieDetailsAdapterModel.Header(R.string.cast)
+                    movieDetailsModelList.add(
+                        MovieDetailsModel.Header(R.string.cast)
                     )
-                    movieDetailsAdapterModelList.add(
-                        MovieDetailsAdapterModel.CastAndCrewMovieDetailsAdapterModel(
+                    movieDetailsModelList.add(
+                        MovieDetailsModel.CastAndCrew(
                             castList = moveState.data.actors ?: listOf(),
                             crewList = moveState.data.directors ?: listOf()
                         )
                     )
                     _state.value = currentState.copy(
                         movieData = moveState.data,
-                        movieDetailsAdapterModelList = movieDetailsAdapterModelList
+                        movieDetailsModelList = movieDetailsModelList
                     )
                     val recommendationState = recommendationsState.await()
                     recommendationState.collectLatest { recState ->
-                        val recommendationModelList = mutableListOf<MovieDetailsAdapterModel>()
+                        val recommendationModelList = mutableListOf<MovieDetailsModel>()
                         when (recState) {
                             is State.Success -> {
                                 if (recState.data.isNotEmpty()) {
-                                    val movieWidgetList = recState.data.map { MovieDetailsAdapterModel.MovieWidgetAdapter(it) }
+                                    val addedMovieList = recState.data.map { MovieDetailsModel.AddedMovie(it) }
                                     recommendationModelList.add(
-                                        MovieDetailsAdapterModel.Header(
+                                        MovieDetailsModel.Header(
                                             R.string.you_may_also_like
                                         )
                                     )
-                                    recommendationModelList.addAll(movieWidgetList)
+                                    recommendationModelList.addAll(addedMovieList)
                                 }
                             }
                             is State.Error -> {}
@@ -108,7 +109,7 @@ class MovieViewModel @Inject constructor(
                         }
                         _state.value = currentState.copy(
                             movieData = moveState.data,
-                            movieDetailsAdapterModelList = movieDetailsAdapterModelList + recommendationModelList
+                            movieDetailsModelList = movieDetailsModelList + recommendationModelList
                         )
                     }
                 }

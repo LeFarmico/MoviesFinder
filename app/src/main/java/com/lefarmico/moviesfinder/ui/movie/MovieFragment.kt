@@ -171,7 +171,7 @@ class MovieFragment :
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             state.movieData?.let { movieDetailedData ->
-                movieDetailsAdapter.submitList(state.movieDetailsAdapterModelList)
+                movieDetailsAdapter.submitList(state.movieDetailsModelList)
                 binding.bottomSheet.apply {
                     collapsingToolbarLayout.title = movieDetailedData.title
                     setBackgroundPoster(movieDetailedData.posterPath)
