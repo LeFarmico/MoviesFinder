@@ -7,6 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.data.entity.MovieDetailsModel
 import com.lefarmico.moviesfinder.data.http.response.entity.State
+import com.lefarmico.moviesfinder.data.http.response.entity.onError
+import com.lefarmico.moviesfinder.data.http.response.entity.onLoading
+import com.lefarmico.moviesfinder.data.http.response.entity.onSuccess
 import com.lefarmico.moviesfinder.data.manager.useCase.DeleteMovieDetailedFromDBUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetMovieDetailedApiUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetRecommendationsMovieBriefListUseCase
@@ -14,7 +17,6 @@ import com.lefarmico.moviesfinder.data.manager.useCase.SaveMovieDetailedToDBUseC
 import com.lefarmico.moviesfinder.utils.SingleLiveEvent
 import com.lefarmico.moviesfinder.utils.extension.roundTo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,84 +38,70 @@ class MovieViewModel @Inject constructor(
 
     fun launchMovieDetailed(movieId: Int) {
         viewModelScope.launch {
-            val movieDetailedState = async {
-                getMovieDetailed(movieId)
-            }
-            val recommendationsState = async {
-                getRecommendations(movieId)
-            }
-            val movieDetailsModelList = mutableListOf<MovieDetailsModel>()
-            when (val moveState = movieDetailedState.await()) {
-                is State.Error -> throw moveState.exception
-                is State.Success -> {
-                    // TODO add builder
-                    movieDetailsModelList.add(
-                        MovieDetailsModel.MovieInfoOverview(
-                            genres = moveState.data.genres.reduce { acc, s -> "$acc / $s" },
-                            length = "Length: ${moveState.data.length} min",
-                            releaseDate = moveState.data.releaseDate
-                        )
-                    )
-                    movieDetailsModelList.add(
-                        MovieDetailsModel.RatingOverview(
-                            usesRating = moveState.data.rating.roundTo(1),
-                            userRating = moveState.data.yourRate,
-                            isWatchList = moveState.data.isWatchlist
-                        )
-                    )
-                    if (moveState.data.watchMovieProviderData != null &&
-                        moveState.data.watchMovieProviderData.isEmpty()
-                    ) {
+            getMovieDetailed(movieId).collectLatest { state ->
+                state.apply {
+                    onSuccess { movieDetailed ->
+                        val movieDetailsModelList = mutableListOf<MovieDetailsModel>()
+                        // TODO add builder
                         movieDetailsModelList.add(
-                            MovieDetailsModel.WhereToWatch(
-                                providerList = moveState.data.watchMovieProviderData
+                            MovieDetailsModel.MovieInfoOverview(
+                                genres = movieDetailed.genres.reduce { acc, s -> "$acc / $s" },
+                                length = "Length: ${movieDetailed.length} min",
+                                releaseDate = movieDetailed.releaseDate
                             )
                         )
-                    }
-                    movieDetailsModelList.add(
-                        MovieDetailsModel.HeaderAndTextExpandable(
-                            header = R.string.storyline,
-                            description = moveState.data.description
+                        movieDetailsModelList.add(
+                            MovieDetailsModel.RatingOverview(
+                                usesRating = movieDetailed.rating.roundTo(1),
+                                userRating = movieDetailed.yourRate,
+                                isWatchList = movieDetailed.isWatchlist
+                            )
                         )
-                    )
-                    movieDetailsModelList.add(
-                        MovieDetailsModel.Header(R.string.cast)
-                    )
-                    movieDetailsModelList.add(
-                        MovieDetailsModel.CastAndCrew(
-                            castList = moveState.data.actors ?: listOf(),
-                            crewList = moveState.data.directors ?: listOf()
+                        if (movieDetailed.watchMovieProviderData != null &&
+                            movieDetailed.watchMovieProviderData.isEmpty()
+                        ) {
+                            movieDetailsModelList.add(
+                                MovieDetailsModel.WhereToWatch(
+                                    providerList = movieDetailed.watchMovieProviderData
+                                )
+                            )
+                        }
+                        movieDetailsModelList.add(
+                            MovieDetailsModel.HeaderAndTextExpandable(
+                                header = R.string.storyline,
+                                description = movieDetailed.description
+                            )
                         )
-                    )
-                    _state.value = currentState.copy(
-                        movieData = moveState.data,
-                        movieDetailsModelList = movieDetailsModelList
-                    )
-                    val recommendationState = recommendationsState.await()
-                    recommendationState.collectLatest { recState ->
-                        val recommendationModelList = mutableListOf<MovieDetailsModel>()
-                        when (recState) {
-                            is State.Success -> {
-                                if (recState.data.isNotEmpty()) {
-                                    val addedMovieList = recState.data.map { MovieDetailsModel.AddedMovie(it) }
-                                    recommendationModelList.add(
-                                        MovieDetailsModel.Header(
-                                            R.string.you_may_also_like
-                                        )
-                                    )
-                                    recommendationModelList.addAll(addedMovieList)
-                                }
-                            }
-                            is State.Error -> {}
-                            State.Loading -> {}
+                        movieDetailsModelList.add(
+                            MovieDetailsModel.Header(R.string.cast)
+                        )
+                        movieDetailsModelList.add(
+                            MovieDetailsModel.CastAndCrew(
+                                castList = movieDetailed.actors ?: listOf(),
+                                crewList = movieDetailed.directors ?: listOf()
+                            )
+                        )
+                        if (!movieDetailed.recommendations.isNullOrEmpty()) {
+                            val addedMovieList = movieDetailed.recommendations.map { MovieDetailsModel.AddedMovie(it) }
+                            movieDetailsModelList.add(
+                                MovieDetailsModel.Header(
+                                    R.string.you_may_also_like
+                                )
+                            )
+                            movieDetailsModelList.addAll(addedMovieList)
                         }
                         _state.value = currentState.copy(
-                            movieData = moveState.data,
-                            movieDetailsModelList = movieDetailsModelList + recommendationModelList
+                            movieData = movieDetailed,
+                            movieDetailsModelList = movieDetailsModelList
                         )
                     }
+                    onLoading {
+                        // TODO Not yet implemented
+                    }
+                    onError {
+                        // TODO Not yet implemented
+                    }
                 }
-                else -> throw IllegalStateException("State.Loading is not able in this function")
             }
         }
     }

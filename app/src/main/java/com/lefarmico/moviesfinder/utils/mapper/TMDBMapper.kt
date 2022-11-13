@@ -25,7 +25,8 @@ fun TmdbMovieResult.toBriefViewData(
 fun TmdbMovieDetailsResult.toDetailedViewData(
     isWatchList: Boolean = false,
     userRate: Int? = null,
-    country: String = "US"
+    country: String,
+    matchedRecommendations: List<MovieDetailedData>?
 ) = MovieDetailedData(
     id = this.id,
     movieId = this.id,
@@ -40,8 +41,28 @@ fun TmdbMovieDetailsResult.toDetailedViewData(
     directors = this.credits?.tmdbCrew?.toCrewListViewData(),
     watchMovieProviderData = providers?.results?.toProvidersList(country),
     length = this.runtime,
-    releaseDate = this.release_date
+    releaseDate = this.release_date,
+    recommendations = this.recommendations?.tmdbMovie?.toBriefViewData(matchedRecommendations)
 )
+
+fun List<TmdbMovieResult>.toBriefViewData(matchedRecommendations: List<MovieDetailedData>?): List<MovieBriefData> {
+    val matchedIdList = matchedRecommendations?.map { it.id }
+    return this.map { tmdbMovieResult ->
+        val matchedId = matchedIdList?.first { id ->
+            id == tmdbMovieResult.id
+        }
+
+        if (matchedId != null) {
+            val matchedMovie = matchedRecommendations[matchedId]
+            tmdbMovieResult.toBriefViewData(
+                isWatchList = matchedMovie.isWatchlist,
+                yourRate = matchedMovie.yourRate
+            )
+        } else {
+            tmdbMovieResult.toBriefViewData()
+        }
+    }
+}
 
 fun List<TmdbGenre>.toGenreList() = this.map { it.name }
 

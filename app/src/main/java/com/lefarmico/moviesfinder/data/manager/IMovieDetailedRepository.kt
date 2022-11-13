@@ -5,8 +5,8 @@ import com.lefarmico.moviesfinder.data.http.response.entity.State
 import kotlinx.coroutines.flow.Flow
 
 interface IMovieDetailedRepository {
-    suspend fun getMovieDetailedData(movieId: Int): State<MovieDetailedData>
-    suspend fun saveMovieDetailed(movieDetailedData: MovieDetailedData): Flow<State<Int>>
-    suspend fun deleteMovieDetailed(movieDetailedData: MovieDetailedData): Flow<State<Int>>
-    suspend fun getWatchListMovieDetailed(): Flow<State<List<MovieDetailedData>>>
+    suspend fun getMovieDetailedData(movieId: Int): Flow<State<MovieDetailedData>>
+    suspend fun saveToDBMovieDetailed(movieDetailedData: MovieDetailedData): Flow<State<Int>>
+    suspend fun deleteFromDBMovieDetailed(movieDetailedData: MovieDetailedData): Flow<State<Int>>
+    suspend fun getFromDBListMovieDetailed(): Flow<State<List<MovieDetailedData>>>
 }
