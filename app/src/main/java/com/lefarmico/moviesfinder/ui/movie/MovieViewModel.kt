@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lefarmico.moviesfinder.R
+import com.lefarmico.moviesfinder.data.entity.MovieDetailedData
 import com.lefarmico.moviesfinder.data.entity.MovieDetailsModel
 import com.lefarmico.moviesfinder.data.http.response.entity.State
 import com.lefarmico.moviesfinder.data.http.response.entity.onError
@@ -12,7 +13,6 @@ import com.lefarmico.moviesfinder.data.http.response.entity.onLoading
 import com.lefarmico.moviesfinder.data.http.response.entity.onSuccess
 import com.lefarmico.moviesfinder.data.manager.useCase.DeleteMovieDetailedFromDBUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.GetMovieDetailedApiUseCase
-import com.lefarmico.moviesfinder.data.manager.useCase.GetRecommendationsMovieBriefListUseCase
 import com.lefarmico.moviesfinder.data.manager.useCase.SaveMovieDetailedToDBUseCase
 import com.lefarmico.moviesfinder.utils.SingleLiveEvent
 import com.lefarmico.moviesfinder.utils.extension.roundTo
@@ -21,12 +21,17 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+data class MovieFragmentState(
+    val isLoading: Boolean = false,
+    val movieData: MovieDetailedData? = null,
+    val movieDetailsModelList: List<MovieDetailsModel> = listOf()
+)
+
 @HiltViewModel
 class MovieViewModel @Inject constructor(
     private val saveMovieDetailedToDBUseCase: SaveMovieDetailedToDBUseCase,
     private val deleteMovieDetailedFromDBUseCase: DeleteMovieDetailedFromDBUseCase,
-    private val getMovieDetailed: GetMovieDetailedApiUseCase,
-    private val getRecommendations: GetRecommendationsMovieBriefListUseCase,
+    private val getMovieDetailed: GetMovieDetailedApiUseCase
 ) : ViewModel() {
 
     private var _state = MutableLiveData<MovieFragmentState>()
@@ -91,6 +96,7 @@ class MovieViewModel @Inject constructor(
                             movieDetailsModelList.addAll(addedMovieList)
                         }
                         _state.value = currentState.copy(
+                            isLoading = false,
                             movieData = movieDetailed,
                             movieDetailsModelList = movieDetailsModelList
                         )
