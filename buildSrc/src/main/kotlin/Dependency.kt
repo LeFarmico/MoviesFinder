@@ -59,4 +59,8 @@ object Dependency {
 
     // Views
     const val circleImageView = "de.hdodenhof:circleimageview:3.1.0"
+
+    // DataStore
+    const val dataStore = "androidx.datastore:datastore-preferences:${Version.dataStore}"
+    const val typedDataStore = "androidx.datastore:datastore:${Version.dataStore}"
 }
