@@ -4,9 +4,9 @@ import com.lefarmico.moviesfinder.data.dataStore.parameter.Language
 
 interface UserSettingsDataStore {
 
-    fun setLanguage(language: Language)
+    suspend fun setLanguage(language: Language)
 
-    fun getLanguage(): Language
+    suspend fun getLanguage(): Language
 
-    fun getLanguageAsString(): String
+    suspend fun getLanguageAsString(): String
 }
