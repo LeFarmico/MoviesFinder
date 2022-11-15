@@ -27,4 +27,5 @@ object Version {
 
     // Jetpack
     const val pagingVersion = "3.1.1"
+    const val dataStore = "1.0.0"
 }

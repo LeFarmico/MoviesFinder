@@ -131,6 +131,8 @@ dependencies {
 
     // Jetpack
     implementation(Dependency.jetpackPaging)
+    implementation(Dependency.dataStore)
+    implementation(Dependency.typedDataStore)
 
     // Views
     implementation(Dependency.circleImageView)
