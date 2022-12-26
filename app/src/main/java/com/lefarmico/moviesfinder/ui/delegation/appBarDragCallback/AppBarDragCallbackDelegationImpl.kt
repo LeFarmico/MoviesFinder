@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.utils.delegation.appBarDragCallback
+package com.lefarmico.moviesfinder.ui.delegation.appBarDragCallback
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -6,7 +6,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.appbar.AppBarLayout
 
-class AppBarDragCallbackImpl : AppBarDragCallback, DefaultLifecycleObserver {
+class AppBarDragCallbackDelegationImpl : AppBarDragCallbackDelegation, DefaultLifecycleObserver {
 
     private var dragCallbackBehavior = object : AppBarLayout.Behavior.DragCallback() {
         override fun canDrag(appBarLayout: AppBarLayout): Boolean {

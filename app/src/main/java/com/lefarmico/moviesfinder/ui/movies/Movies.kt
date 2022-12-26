@@ -11,19 +11,19 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.FragmentMoviesBinding
 import com.lefarmico.moviesfinder.ui.common.adapter.MenuItemAdapter
 import com.lefarmico.moviesfinder.ui.common.decorator.PaddingItemDecoration
+import com.lefarmico.moviesfinder.ui.delegation.lifecycle.LifecycleScopeDelegation
+import com.lefarmico.moviesfinder.ui.delegation.lifecycle.LifecycleScopeDelegationImpl
 import com.lefarmico.moviesfinder.ui.navigation.api.Router
 import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
 import com.lefarmico.moviesfinder.ui.navigation.api.params.MovieFragmentParams
-import com.lefarmico.moviesfinder.utils.delegation.lifecycle.FragmentLifecycleScopeDelegation
-import com.lefarmico.moviesfinder.utils.delegation.lifecycle.FragmentLifecycleScopeDelegationImpl
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MoviesFragment :
+class Movies :
     Fragment(),
-    FragmentLifecycleScopeDelegation by FragmentLifecycleScopeDelegationImpl() {
+    LifecycleScopeDelegation by LifecycleScopeDelegationImpl() {
 
     private lateinit var _binding: FragmentMoviesBinding
     private val binding get() = _binding
@@ -47,7 +47,7 @@ class MoviesFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        registerFragmentScope(lifecycle)
+        registerScope(lifecycle)
 
         itemAdapter = MenuItemAdapter(
             parentJob = fragmentJob,
