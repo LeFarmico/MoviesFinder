@@ -1,12 +1,12 @@
-package com.lefarmico.moviesfinder.utils.delegation.lifecycle
+package com.lefarmico.moviesfinder.ui.delegation.lifecycle
 
 import androidx.lifecycle.Lifecycle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 
-interface FragmentLifecycleScopeDelegation {
+interface LifecycleScopeDelegation {
     val fragmentJob: Job
     val fragmentScope: CoroutineScope
 
-    fun registerFragmentScope(lifecycle: Lifecycle)
+    fun registerScope(lifecycle: Lifecycle)
 }

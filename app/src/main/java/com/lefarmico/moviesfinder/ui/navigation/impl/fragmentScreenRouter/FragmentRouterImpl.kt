@@ -3,7 +3,7 @@ package com.lefarmico.moviesfinder.ui.navigation.impl.fragmentScreenRouter
 import android.os.Parcelable
 import androidx.fragment.app.FragmentManager
 import com.lefarmico.moviesfinder.R
-import com.lefarmico.moviesfinder.ui.movies.MoviesFragment
+import com.lefarmico.moviesfinder.ui.movies.Movies
 import com.lefarmico.moviesfinder.ui.navigation.api.fragmentRouter.FragmentDestination
 import com.lefarmico.moviesfinder.ui.navigation.api.fragmentRouter.FragmentRouter
 import javax.inject.Inject
@@ -26,7 +26,7 @@ class FragmentRouterImpl @Inject constructor() : FragmentRouter {
                 fragmentManager!!.beginTransaction()
                     .replace(
                         R.id.home_fragment_container,
-                        MoviesFragment::class.java,
+                        Movies::class.java,
                         null
                     ).commit()
             }

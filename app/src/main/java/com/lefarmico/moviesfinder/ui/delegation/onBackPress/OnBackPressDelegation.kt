@@ -1,9 +1,9 @@
-package com.lefarmico.moviesfinder.utils.delegation.onBackPress
+package com.lefarmico.moviesfinder.ui.delegation.onBackPress
 
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 
-interface OnBackPressHandler {
+interface OnBackPressDelegation {
     fun registerOnBackPress(
         fragmentActivity: FragmentActivity?,
         lifecycle: Lifecycle,

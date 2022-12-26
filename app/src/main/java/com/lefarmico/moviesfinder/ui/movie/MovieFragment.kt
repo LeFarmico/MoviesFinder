@@ -6,13 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.FragmentMovieBinding
-import com.lefarmico.moviesfinder.ui.base.BaseFragment
 import com.lefarmico.moviesfinder.ui.common.adapter.MovieDetailsAdapter
 import com.lefarmico.moviesfinder.ui.common.adapter.decorator.MovieDetailsDecorator
+import com.lefarmico.moviesfinder.ui.delegation.appBarDragCallback.AppBarDragCallbackDelegation
+import com.lefarmico.moviesfinder.ui.delegation.appBarDragCallback.AppBarDragCallbackDelegationImpl
+import com.lefarmico.moviesfinder.ui.delegation.appBarListener.AppBarStateHandlerDelegation
+import com.lefarmico.moviesfinder.ui.delegation.appBarListener.AppBarStateHandlerDelegationImpl
+import com.lefarmico.moviesfinder.ui.delegation.onBackPress.OnBackPressDelegation
+import com.lefarmico.moviesfinder.ui.delegation.onBackPress.OnBackPressDelegationImpl
 import com.lefarmico.moviesfinder.ui.navigation.api.NotificationType
 import com.lefarmico.moviesfinder.ui.navigation.api.Router
 import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
@@ -21,12 +27,6 @@ import com.lefarmico.moviesfinder.utils.component.appBar.AppBarStateChangeListen
 import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetBehaviourHandler
 import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetBehaviourHandlerImpl
 import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetStateListener
-import com.lefarmico.moviesfinder.utils.delegation.appBarDragCallback.AppBarDragCallback
-import com.lefarmico.moviesfinder.utils.delegation.appBarDragCallback.AppBarDragCallbackImpl
-import com.lefarmico.moviesfinder.utils.delegation.appBarListener.AppBarStateChangeHandler
-import com.lefarmico.moviesfinder.utils.delegation.appBarListener.AppBarStateChangeHandlerImpl
-import com.lefarmico.moviesfinder.utils.delegation.onBackPress.OnBackPressHandler
-import com.lefarmico.moviesfinder.utils.delegation.onBackPress.OnBackPressHandlerImpl
 import com.lefarmico.moviesfinder.utils.extension.getArgumentsData
 import com.lefarmico.moviesfinder.utils.extension.getDrawable
 import com.lefarmico.moviesfinder.utils.extension.removeArgument
@@ -47,15 +47,22 @@ data class MovieElementState(
 
 @AndroidEntryPoint
 class MovieFragment :
-    BaseFragment<MovieViewModel, FragmentMovieBinding>(),
+    Fragment(),
     BottomSheetStateListener,
-    AppBarStateChangeHandler by AppBarStateChangeHandlerImpl(),
-    AppBarDragCallback by AppBarDragCallbackImpl(),
-    OnBackPressHandler by OnBackPressHandlerImpl(),
+    AppBarStateHandlerDelegation by AppBarStateHandlerDelegationImpl(),
+    AppBarDragCallbackDelegation by AppBarDragCallbackDelegationImpl(),
+    OnBackPressDelegation by OnBackPressDelegationImpl(),
     BottomSheetBehaviourHandler by BottomSheetBehaviourHandlerImpl(),
     LifecycleLogger by LifecycleLoggerImpl() {
 
-    @Inject lateinit var router: Router
+    private lateinit var _binding: FragmentMovieBinding
+    private val binding get() = _binding
+
+    @Inject
+    lateinit var router: Router
+
+    val viewModel: MovieViewModel by viewModels()
+
     private lateinit var movieDetailsAdapter: MovieDetailsAdapter
 
     private var sheetState: Int = BottomSheetBehavior.STATE_SETTLING
@@ -64,19 +71,13 @@ class MovieFragment :
     private var isDraggable: Boolean = true
     private var isScrollable: Boolean = false
 
-    override fun getInjectViewModel(): MovieViewModel {
-        val viewModel: MovieViewModel by viewModels()
-        return viewModel
-    }
-
-    override fun getViewBinding(
+    override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): FragmentMovieBinding {
-        return FragmentMovieBinding.inflate(
-            LayoutInflater.from(context), container, false
-        )
+    ): View {
+        _binding = FragmentMovieBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
