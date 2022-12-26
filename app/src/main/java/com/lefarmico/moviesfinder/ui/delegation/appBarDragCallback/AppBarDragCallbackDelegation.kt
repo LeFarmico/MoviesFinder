@@ -1,9 +1,9 @@
-package com.lefarmico.moviesfinder.utils.delegation.appBarDragCallback
+package com.lefarmico.moviesfinder.ui.delegation.appBarDragCallback
 
 import androidx.lifecycle.Lifecycle
 import com.google.android.material.appbar.AppBarLayout
 
-interface AppBarDragCallback {
+interface AppBarDragCallbackDelegation {
 
     fun registerDragCallback(
         appBarLayout: AppBarLayout?,

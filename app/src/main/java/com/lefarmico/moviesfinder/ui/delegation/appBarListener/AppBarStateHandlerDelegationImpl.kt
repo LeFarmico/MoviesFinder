@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.utils.delegation.appBarListener
+package com.lefarmico.moviesfinder.ui.delegation.appBarListener
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
@@ -6,7 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.appbar.AppBarLayout
 import com.lefarmico.moviesfinder.utils.component.appBar.AppBarStateChangeListener
 
-class AppBarStateChangeHandlerImpl : AppBarStateChangeHandler, DefaultLifecycleObserver {
+class AppBarStateHandlerDelegationImpl : AppBarStateHandlerDelegation, DefaultLifecycleObserver {
 
     private var stateChangeListener = object : AppBarStateChangeListener() {
         override fun onStateChanged(appBarLayout: AppBarLayout?, state: State) {
