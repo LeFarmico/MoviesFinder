@@ -175,7 +175,9 @@ class MovieFragment :
             if (state.movieDetailsModelList != null &&
                 state.movieData != null
             ) {
-                halfExpandBottomSheet()
+                if (sheetState == BottomSheetBehavior.STATE_SETTLING) {
+                    halfExpandBottomSheet()
+                }
                 movieDetailsAdapter.submitList(state.movieDetailsModelList)
                 binding.bottomSheet.apply {
                     collapsingToolbarLayout.title = state.movieData.title

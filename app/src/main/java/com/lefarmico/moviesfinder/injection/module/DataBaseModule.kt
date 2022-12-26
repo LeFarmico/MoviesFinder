@@ -1,6 +1,8 @@
 package com.lefarmico.moviesfinder.injection.module
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
 import com.lefarmico.moviesfinder.data.dataBase.AppDatabase
 import com.lefarmico.moviesfinder.data.dataBase.dao.SavedMoviesDao
@@ -31,8 +33,9 @@ class DataBaseModule {
     @Singleton
     fun provideMovieDetailedRepository(
         savedMoviesDao: SavedMoviesDao,
-        tmdbApi: TmdbApi
-    ): MovieDetailedRepository = MovieDetailedRepository(savedMoviesDao, tmdbApi)
+        tmdbApi: TmdbApi,
+        dataStore: DataStore<Preferences>
+    ): MovieDetailedRepository = MovieDetailedRepository(savedMoviesDao, tmdbApi, dataStore)
 
     @Provides
     @Singleton

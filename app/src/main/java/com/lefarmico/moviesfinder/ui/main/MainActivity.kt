@@ -1,7 +1,6 @@
 package com.lefarmico.moviesfinder.ui.main
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -21,15 +20,10 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var router: Router
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-        _binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        _binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         router.bind(this@MainActivity)
 
         // TODO create only once

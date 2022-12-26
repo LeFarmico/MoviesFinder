@@ -1,7 +1,7 @@
 package com.lefarmico.moviesfinder.ui
 
-import com.lefarmico.moviesfinder.ui.base.BaseApp
+import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class App : BaseApp()
+class App : Application()

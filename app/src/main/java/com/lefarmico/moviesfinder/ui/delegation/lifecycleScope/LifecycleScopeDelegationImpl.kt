@@ -1,4 +1,4 @@
-package com.lefarmico.moviesfinder.ui.delegation.lifecycle
+package com.lefarmico.moviesfinder.ui.delegation.lifecycleScope
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver

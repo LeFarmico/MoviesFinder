@@ -11,8 +11,8 @@ import com.lefarmico.moviesfinder.R
 import com.lefarmico.moviesfinder.databinding.FragmentMoviesBinding
 import com.lefarmico.moviesfinder.ui.common.adapter.MenuItemAdapter
 import com.lefarmico.moviesfinder.ui.common.decorator.PaddingItemDecoration
-import com.lefarmico.moviesfinder.ui.delegation.lifecycle.LifecycleScopeDelegation
-import com.lefarmico.moviesfinder.ui.delegation.lifecycle.LifecycleScopeDelegationImpl
+import com.lefarmico.moviesfinder.ui.delegation.lifecycleScope.LifecycleScopeDelegation
+import com.lefarmico.moviesfinder.ui.delegation.lifecycleScope.LifecycleScopeDelegationImpl
 import com.lefarmico.moviesfinder.ui.navigation.api.Router
 import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
 import com.lefarmico.moviesfinder.ui.navigation.api.params.MovieFragmentParams
@@ -21,7 +21,7 @@ import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class Movies :
+class MoviesFragment :
     Fragment(),
     LifecycleScopeDelegation by LifecycleScopeDelegationImpl() {
 
