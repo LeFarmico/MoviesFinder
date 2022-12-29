@@ -3,7 +3,7 @@ package com.lefarmico.moviesfinder.utils.component.bottomSheet
 import android.view.View
 import androidx.lifecycle.Lifecycle
 
-interface BottomSheetBehaviourHandler {
+interface BottomSheetBehaviourController {
 
     // Binds Bottom Sheet have to Implement BottomSheetBehaviour
     fun registerBottomSheetHandler(bottomSheet: View, lifecycle: Lifecycle, listener: BottomSheetStateListener?)

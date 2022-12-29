@@ -24,8 +24,8 @@ import com.lefarmico.moviesfinder.ui.navigation.api.Router
 import com.lefarmico.moviesfinder.ui.navigation.api.ScreenDestination
 import com.lefarmico.moviesfinder.ui.navigation.api.params.MovieFragmentParams
 import com.lefarmico.moviesfinder.utils.component.appBar.AppBarStateChangeListener
-import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetBehaviourHandler
-import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetBehaviourHandlerImpl
+import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetBehaviourController
+import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetBehaviourControllerImpl
 import com.lefarmico.moviesfinder.utils.component.bottomSheet.BottomSheetStateListener
 import com.lefarmico.moviesfinder.utils.extension.getArgumentsData
 import com.lefarmico.moviesfinder.utils.extension.getDrawable
@@ -37,7 +37,7 @@ import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 @Parcelize
-data class MovieElementState(
+data class MovieScreenElementsState(
     val sheetState: Int = BottomSheetBehavior.STATE_SETTLING,
     val backgroundAlpha: Float = 0f,
     val appBarState: AppBarStateChangeListener.State = AppBarStateChangeListener.State.Idle,
@@ -52,7 +52,7 @@ class MovieFragment :
     AppBarStateHandlerDelegation by AppBarStateHandlerDelegationImpl(),
     AppBarDragCallbackDelegation by AppBarDragCallbackDelegationImpl(),
     OnBackPressDelegation by OnBackPressDelegationImpl(),
-    BottomSheetBehaviourHandler by BottomSheetBehaviourHandlerImpl(),
+    BottomSheetBehaviourController by BottomSheetBehaviourControllerImpl(),
     LifecycleLogger by LifecycleLoggerImpl() {
 
     private lateinit var _binding: FragmentMovieBinding
@@ -88,7 +88,7 @@ class MovieFragment :
         try {
             // getting the saved state
             savedInstanceState!!
-                .getParcelable<MovieElementState>(BUNDLE_STATE)
+                .getParcelable<MovieScreenElementsState>(BUNDLE_STATE)
                 .let { state ->
                     recoverState(state!!)
                     removeArgument(BUNDLE_KEY)
@@ -248,12 +248,12 @@ class MovieFragment :
         setBackgroundAlpha(offset)
     }
 
-    private fun recoverState(movieElementState: MovieElementState) {
-        appBarState = movieElementState.appBarState
-        sheetState = movieElementState.sheetState
-        backgroundAlpha = movieElementState.backgroundAlpha
-        isScrollable = movieElementState.isScrollable
-        isDraggable = movieElementState.isDraggable
+    private fun recoverState(movieScreenElementsState: MovieScreenElementsState) {
+        appBarState = movieScreenElementsState.appBarState
+        sheetState = movieScreenElementsState.sheetState
+        backgroundAlpha = movieScreenElementsState.backgroundAlpha
+        isScrollable = movieScreenElementsState.isScrollable
+        isDraggable = movieScreenElementsState.isDraggable
     }
 
     private fun setBackgroundAlpha(alpha: Float) {
@@ -275,7 +275,7 @@ class MovieFragment :
         hideBottomSheet()
     }
 
-    private fun createElementState() = MovieElementState(
+    private fun createElementState() = MovieScreenElementsState(
         sheetState, backgroundAlpha, appBarState, isDraggable, isScrollable
     )
 

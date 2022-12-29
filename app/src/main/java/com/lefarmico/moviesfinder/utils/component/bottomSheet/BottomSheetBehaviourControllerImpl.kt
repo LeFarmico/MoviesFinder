@@ -6,7 +6,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class BottomSheetBehaviourHandlerImpl : BottomSheetBehaviourHandler, DefaultLifecycleObserver {
+class BottomSheetBehaviourControllerImpl : BottomSheetBehaviourController, DefaultLifecycleObserver {
 
     private var bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
